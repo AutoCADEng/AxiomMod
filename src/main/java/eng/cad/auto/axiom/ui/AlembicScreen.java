@@ -1,12 +1,8 @@
 package eng.cad.auto.axiom.ui;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.axiomancy.blockentitiy.AlembicBlockEntity;
-import eng.cad.auto.axiom.compat.jei.AlembicRecipeCategory;
-import eng.cad.auto.axiom.compat.jei.AxiologyJEICompat;
-import eng.cad.auto.axiom.recipes.AlembicRecipe;
+import eng.cad.auto.axiom.common.blockentitiy.AlembicBlockEntity;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -15,7 +11,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 
 @OnlyIn(Dist.CLIENT)

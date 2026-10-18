@@ -1,6 +1,6 @@
 package eng.cad.auto.axiom.ui;
 
-import eng.cad.auto.axiom.axiomancy.blockentitiy.AlembicBlockEntity;
+import eng.cad.auto.axiom.common.blockentitiy.AlembicBlockEntity;
 import eng.cad.auto.axiom.registry.BlockRegistry;
 import eng.cad.auto.axiom.registry.MenuRegistry;
 import net.minecraft.network.FriendlyByteBuf;

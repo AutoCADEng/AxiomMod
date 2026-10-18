@@ -1,4 +1,4 @@
-package eng.cad.auto.axiom.axiomancy.items;
+package eng.cad.auto.axiom.common.items;
 
 import net.minecraft.world.item.Item;
 

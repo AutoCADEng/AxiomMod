@@ -1,16 +1,11 @@
-package eng.cad.auto.axiom.axiomancy.block;
+package eng.cad.auto.axiom.common.block;
 
-import eng.cad.auto.axiom.axiomancy.blockentitiy.AlembicBlockEntity;
+import eng.cad.auto.axiom.common.blockentitiy.AlembicBlockEntity;
 import eng.cad.auto.axiom.registry.BlockEntityRegistry;
-import eng.cad.auto.axiom.ui.AlembicMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;

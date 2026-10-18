@@ -1,6 +1,6 @@
 package eng.cad.auto.axiom.client.colors;
 
-import eng.cad.auto.axiom.axiomancy.items.AxiomShard;
+import eng.cad.auto.axiom.common.items.AxiomShard;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;

@@ -1,8 +1,7 @@
-package eng.cad.auto.axiom.axiomancy.blockentitiy;
+package eng.cad.auto.axiom.common.blockentitiy;
 
 import eng.cad.auto.axiom.recipes.AlembicRecipe;
 import eng.cad.auto.axiom.registry.BlockEntityRegistry;
-import eng.cad.auto.axiom.registry.recipes.AlembicRecipeRegistry;
 import eng.cad.auto.axiom.tags.CustomTags;
 import eng.cad.auto.axiom.ui.AlembicMenu;
 import net.minecraft.core.BlockPos;
@@ -14,7 +13,6 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

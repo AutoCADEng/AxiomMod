@@ -1,10 +1,8 @@
 package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.axiomancy.blockentitiy.AlembicBlockEntity;
-import net.minecraft.core.BlockPos;
+import eng.cad.auto.axiom.common.blockentitiy.AlembicBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
