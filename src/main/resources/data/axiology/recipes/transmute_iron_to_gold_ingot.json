@@ -1,0 +1,13 @@
+{
+  "type": "axiology:alembic_recipe",
+  "input": {
+    "item": "minecraft:iron_ingot",
+    "count": 1
+  },
+  "outputs": [
+    {
+      "item": "minecraft:gold_ingot",
+      "count": 1
+    }
+  ]
+}
