@@ -23,7 +23,7 @@ public class ClientAxiomShardColorer {
                     }
 
                     return 0xFFFFFF;
-                }, AxiomRegistry.AXIOMS.stream().map(RegistryObject::get).toArray(ItemLike[]::new)
+                }, AxiomRegistry.AXIOM_CRYSTALS.stream().map(RegistryObject::get).toArray(ItemLike[]::new)
         );
     }
 }

@@ -28,14 +28,14 @@ public class FluidRegistry {
     public static final ArrayList<RegistryObject<? extends Fluid>> FLUIDLIST = new ArrayList<>();
 
     public static final FluidHelper DEATHWATER = new FluidHelper(
-            "deathwater", 0x55330033, MapColor.COLOR_BLACK, (level, pos, entity) -> {
+            "deathwater", 0xDD330033, MapColor.COLOR_BLACK, (level, pos, entity) -> {
                 if (!level.isClientSide && entity instanceof LivingEntity living) {
                     living.hurt(level.damageSources().magic(), 2.0F);
                 }
             });
 
     private void registerAxiomFluid(String name, int color){
-
+        new FluidHelper(name, color, MapColor.COLOR_BLACK);
     }
 
     public static <T extends Fluid> RegistryObject<T> registerFluid(String name, Supplier<T> fluid){

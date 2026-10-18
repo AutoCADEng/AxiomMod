@@ -33,18 +33,8 @@ public class FluidHelper {
     public MapColor mapColor;
     private final GenericFluid.FluidBehaviour entityBehaviour;
 
-    public FluidHelper(String name, int color){
-        this.SOURCE = registerSource(name);
-        this.FLOWING = registerFlowing(name);
-        this.FLUIDTYPE = registerFluidType(name);
-        this.BLOCK = registerBlock(name);
-        this.BUCKET = registerBucket(name);
-        this.color = color;
-        this.entityBehaviour = new GenericFluid.FluidBehaviour() {
-            @Override
-            public void onEntityInside(Level level, BlockPos pos, Entity entity) {
-            }
-        };
+    public FluidHelper(String name, int color, MapColor mapColor){
+        this(name,color,mapColor, (a,b,c) -> {});
     }
 
     public FluidHelper(String name, int color, MapColor mapColor, GenericFluid.FluidBehaviour entitiyBehaviour){
