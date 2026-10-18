@@ -2,7 +2,7 @@ package eng.cad.auto.axiom;
 
 import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiom.client.colors.ClientAxiomShardColorer;
-import eng.cad.auto.axiom.client.subscribers.ClientSetup;
+import eng.cad.auto.axiom.client.ClientSetup;
 import eng.cad.auto.axiom.registry.*;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 import eng.cad.auto.axiom.registry.recipes.AlembicRecipeRegistry;

@@ -4,9 +4,7 @@ import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.items.AxiomShard;
 import eng.cad.auto.axiom.common.items.CustomBucket;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -17,13 +15,8 @@ import java.util.function.Supplier;
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AxiomMod.MODID);
 
-    public static final RegistryObject<Item> MORTIS_BUCKET = registerItem("bucket_of_mortis",
-            ()-> new CustomBucket(FluidRegistry.MORTIS, new Item.Properties()));
-
-
-
     public static RegistryObject<Item> registerAxiomShard(String name, int color) {
-            String itemName = name+"_shard";
+            String itemName = name + "_shard";
             return registerItem(itemName, () -> new AxiomShard(new Item.Properties(), color));
     }
 

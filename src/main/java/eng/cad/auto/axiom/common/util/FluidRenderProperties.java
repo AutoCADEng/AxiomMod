@@ -23,6 +23,7 @@ public class FluidRenderProperties implements IClientFluidTypeExtensions {
         this.fluidFlowing = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "block/fluid/generic_still");
         this.color = color;
     }
+
     @Override
     public ResourceLocation getStillTexture() {
         return fluidSource;
