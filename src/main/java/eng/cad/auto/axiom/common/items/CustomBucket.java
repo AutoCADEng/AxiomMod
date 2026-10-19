@@ -11,12 +11,18 @@ import net.minecraftforge.registries.RegistryObject;
 import javax.annotation.ParametersAreNullableByDefault;
 
 public class CustomBucket extends BucketItem {
-    public CustomBucket(RegistryObject<Fluid> fluid, Properties properties) {
+    private int color;
+    public CustomBucket(RegistryObject<Fluid> fluid, Properties properties, int color) {
         super(fluid, properties);
+        this.color = color;
     }
 
     @Override @ParametersAreNullableByDefault
     public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
         return new FluidBucketWrapper(stack);
+    }
+
+    public int getColor() {
+        return color;
     }
 }

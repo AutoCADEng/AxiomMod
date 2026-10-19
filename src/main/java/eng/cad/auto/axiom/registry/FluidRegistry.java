@@ -6,8 +6,11 @@ import eng.cad.auto.axiom.common.fluid.GenericFluid;
 import eng.cad.auto.axiom.common.util.FluidHelper;
 import eng.cad.auto.axiom.common.util.FluidRenderProperties;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -28,11 +31,19 @@ public class FluidRegistry {
     public static final ArrayList<RegistryObject<? extends Fluid>> FLUIDLIST = new ArrayList<>();
 
     public static final FluidHelper DEATHWATER = new FluidHelper(
-            "deathwater", 0xDD330033, MapColor.COLOR_BLACK, (level, pos, entity) -> {
+            "deathwater", 0xFF330033, MapColor.COLOR_BLACK, (level, pos, entity) -> {
                 if (!level.isClientSide && entity instanceof LivingEntity living) {
+                    living.invulnerableTime = 0;
                     living.hurt(level.damageSources().magic(), 2.0F);
                 }
             });
+
+    public static final FluidHelper Ethanol = new FluidHelper(
+            "ethanol", 0xCCF5DEB3, MapColor.COLOR_BLACK, (level, pos, entity) -> {
+        if (!level.isClientSide && entity instanceof LivingEntity living) {
+            living.addEffect(new MobEffectInstance(MobEffects.CONFUSION,200,1));
+        }
+    });
 
     private void registerAxiomFluid(String name, int color){
         new FluidHelper(name, color, MapColor.COLOR_BLACK);

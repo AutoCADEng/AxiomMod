@@ -14,5 +14,8 @@ public class BlockEntityRegistry
     public static final RegistryObject<BlockEntityType<AlembicBlockEntity>> ALEMBIC =
             BLOCKENTITYTYPES.register("alembic",
                     () -> BlockEntityType.Builder.of(AlembicBlockEntity::new, BlockRegistry.ALEMBIC.get()).build(null));
-    
+    public static final RegistryObject<BlockEntityType<AlembicBlockEntity>> FERMENTER =
+            BLOCKENTITYTYPES.register("fermenter",
+                    () -> BlockEntityType.Builder.of(AlembicBlockEntity::new, BlockRegistry.FERMENTER.get()).build(null));
+
 }

@@ -28,7 +28,7 @@ public class FluidHelper {
     public RegistryObject<Fluid> FLOWING;
     public RegistryObject<FluidType> FLUIDTYPE;
     public RegistryObject<LiquidBlock> BLOCK;
-    public RegistryObject<Item> BUCKET;
+    public RegistryObject<CustomBucket> BUCKET;
     public int color;
     public MapColor mapColor;
     private final GenericFluid.FluidBehaviour entityBehaviour;
@@ -98,8 +98,11 @@ public class FluidHelper {
         );
     }
 
-    private RegistryObject<Item> registerBucket(String name){
-        return ItemRegistry.registerItem(name+"_bucket", ()-> new CustomBucket(SOURCE, new Item.Properties()));
+    private RegistryObject<CustomBucket> registerBucket(String name){
+        return ItemRegistry.registerItem(name+"_bucket", ()-> new CustomBucket(SOURCE, new Item.Properties(), color));
     }
 
+    public RegistryObject<CustomBucket> getBucket() {
+        return BUCKET;
+    }
 }
