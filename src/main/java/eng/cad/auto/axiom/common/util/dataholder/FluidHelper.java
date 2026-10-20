@@ -1,4 +1,4 @@
-package eng.cad.auto.axiom.common.util;
+package eng.cad.auto.axiom.common.util.dataholder;
 
 import eng.cad.auto.axiom.common.fluid.GenericFluid;
 import eng.cad.auto.axiom.common.items.CustomBucket;

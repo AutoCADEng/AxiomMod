@@ -1,7 +1,5 @@
-package eng.cad.auto.axiom.common.block;
+package eng.cad.auto.axiom.common.machine.core;
 
-import eng.cad.auto.axiom.common.blockentitiy.AlembicBlockEntity;
-import eng.cad.auto.axiom.registry.BlockEntityRegistry;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,40 +15,40 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.registries.RegistryObject;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
-public class FermenterBlock extends BaseEntityBlock {
-
-    public FermenterBlock(Properties properties) {
+public class GenericMachineBlock extends BaseEntityBlock {
+    RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity;
+    GenericMachine.Config config;
+    public GenericMachineBlock(Properties properties, RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity, GenericMachine.Config config) {
         super(properties);
+        this.blockEntity = blockEntity;
+        this.config = config;
     }
 
     @Override @ParametersAreNonnullByDefault
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new AlembicBlockEntity(blockPos, blockState);
+        return blockEntity.get().create(blockPos, blockState);
     }
-    
+
     @Override @ParametersAreNonnullByDefault @MethodsReturnNonnullByDefault
     public RenderShape getRenderShape(BlockState p_50950_) {
         return RenderShape.MODEL;
     }
 
     @Override @ParametersAreNonnullByDefault @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if(pLevel.isClientSide()) {
-            return null;
-        }
-
-        return createTickerHelper(pBlockEntityType, BlockEntityRegistry.FERMENTER.get(),
-                (pLevel1, pPos, pState1, pBlockEntity) -> pBlockEntity.serverTick(pLevel1, pPos, pState1));
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide()) return null;
+        return createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::tick);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
-        if (level.getBlockEntity(blockPos) instanceof FermenterBlockEntity machine){
+        if (level.getBlockEntity(blockPos) instanceof GenericBlockEntity machine){
             if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;
             NetworkHooks.openScreen(serverPlayer, machine, blockPos);
         }

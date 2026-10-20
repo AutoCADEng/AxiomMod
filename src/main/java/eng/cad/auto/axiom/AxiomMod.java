@@ -6,7 +6,6 @@ import eng.cad.auto.axiom.client.ClientSetup;
 import eng.cad.auto.axiom.registry.*;
 import eng.cad.auto.axiom.registry.custom.AxiomList;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
-import eng.cad.auto.axiom.registry.recipes.AlembicRecipeRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,12 +24,12 @@ public class AxiomMod {
         AxiomRegistry.AXIOM_DEFERRED_REGISTER.register(modEventBus);
         AxiomList.init();
         BlockRegistry.BLOCKS.register(modEventBus);
-        BlockEntityRegistry.BLOCKENTITYTYPES.register(modEventBus);
+        MachineRegistry.MACHINES.register(modEventBus);
+        MachineRegistry.init();
         ItemRegistry.ITEMS.register(modEventBus);
         MenuRegistry.MENUS.register(modEventBus);
         FluidRegistry.FLUIDS.register(modEventBus);
         FluidRegistry.FLUIDTYPES.register(modEventBus);
-        AlembicRecipeRegistry.SERIALIZER.register(modEventBus);
         //Client Event Hooks
         ClientSetup.init(modEventBus);
         ClientItemColorer.init(modEventBus);

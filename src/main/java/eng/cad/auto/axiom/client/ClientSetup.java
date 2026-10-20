@@ -1,8 +1,11 @@
 package eng.cad.auto.axiom.client;
 
+import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
+import eng.cad.auto.axiom.common.machine.core.GenericMachine;
+import eng.cad.auto.axiom.common.machine.core.GenericUI;
 import eng.cad.auto.axiom.registry.FluidRegistry;
-import eng.cad.auto.axiom.registry.MenuRegistry;
-import eng.cad.auto.axiom.ui.AlembicScreen;
+import eng.cad.auto.axiom.registry.MachineRegistry;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -17,9 +20,22 @@ public class ClientSetup {
     }
 
     private static void clientSetup(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(MenuRegistry.ALEMBIC_MENU.get(), AlembicScreen::new);
-        });
+
+        for (GenericMachine machine: MachineRegistry.MACHINELIST.values()) {
+            event.enqueueWork(() ->
+                    MenuScreens.<GenericUI.Menu, GenericUI.Screen>register(
+                        machine.ui.menu.get(),
+                        (menu, inventory, title) ->
+                                machine.ui.new Screen(
+                                        machine.config.name(),
+                                        menu,
+                                        inventory,
+                                        title
+                                )
+                    )
+            );
+        }
+
         for (RegistryObject<? extends Fluid> fluid:FluidRegistry.FLUIDLIST) {
             event.enqueueWork(() ->
                     ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent())

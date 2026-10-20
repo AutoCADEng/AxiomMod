@@ -2,27 +2,19 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 
-import eng.cad.auto.axiom.common.fluid.GenericFluid;
-import eng.cad.auto.axiom.common.util.FluidHelper;
-import eng.cad.auto.axiom.common.util.FluidRenderProperties;
-import net.minecraft.core.BlockPos;
+import eng.cad.auto.axiom.common.util.dataholder.FluidHelper;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.alchemy.PotionBrewing;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FluidRegistry {
