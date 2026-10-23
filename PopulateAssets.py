@@ -30,12 +30,12 @@ def main():
         addAxiom("depotenti"+axiomName)
 
 def addAxiom(axiomName):
-    with open(f"{resource_dir}{mod_id}/blockstates/liquid_{axiomName}.json","w") as f:
+    with open(f"{resource_dir}{mod_id}/blockstates/{axiomName}.json","w") as f:
 
         f.write(f"""{{
   "variants": {{
     "": {{
-      "model": "{mod_id}:block/liquid_{axiomName}"
+      "model": "{mod_id}:block/{axiomName}"
     }}
   }}
 }}""")
@@ -58,7 +58,7 @@ def addAxiom(axiomName):
   "parent": "{mod_id}:item/axiom_shard"
 }}""")
 
-    with open(f"{resource_dir}{mod_id}/models/item/liquid_{axiomName}_bucket.json", "w") as f:
+    with open(f"{resource_dir}{mod_id}/models/item/{axiomName}_bucket.json", "w") as f:
             f.write(f"""{{
   "parent": "minecraft:item/generated",
   "textures": {{

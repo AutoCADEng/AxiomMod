@@ -2,7 +2,7 @@ package eng.cad.auto.axiom.client.colors;
 
 import eng.cad.auto.axiom.common.items.AxiomShard;
 import eng.cad.auto.axiom.common.items.CustomBucket;
-import eng.cad.auto.axiom.common.util.dataholder.FluidHelper;
+import eng.cad.auto.axiom.common.fluid.FluidHolder;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -35,7 +35,7 @@ public class ClientItemColorer {
                         if (tintIndex == 1) return bucket.getColor();
                     }
                     return 0xFFFFFF;
-                }, AxiomRegistry.AXIOM_FLUIDS.stream().map(FluidHelper::getBucket).map(RegistryObject::get).toArray(ItemLike[]::new)
+                }, AxiomRegistry.AXIOM_FLUIDS.stream().map(FluidHolder::getBucket).map(RegistryObject::get).toArray(ItemLike[]::new)
         );
     }
 }

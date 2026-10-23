@@ -1,0 +1,28 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:fermenter",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "minecraft:sugar",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:wheat",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "minecraft:water",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:ethanol",
+      "count": 1
+    }
+  ]
+}

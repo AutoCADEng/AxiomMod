@@ -1,6 +1,5 @@
-package eng.cad.auto.axiom.common.util.dataholder;
+package eng.cad.auto.axiom.common.fluid;
 
-import eng.cad.auto.axiom.common.fluid.GenericFluid;
 import eng.cad.auto.axiom.common.items.CustomBucket;
 import eng.cad.auto.axiom.registry.FluidRegistry;
 import eng.cad.auto.axiom.registry.ItemRegistry;
@@ -23,7 +22,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.function.Consumer;
 
-public class FluidHelper {
+public class FluidHolder {
     public RegistryObject<Fluid> SOURCE;
     public RegistryObject<Fluid> FLOWING;
     public RegistryObject<FluidType> FLUIDTYPE;
@@ -31,17 +30,16 @@ public class FluidHelper {
     public RegistryObject<CustomBucket> BUCKET;
     public int color;
     public MapColor mapColor;
-    private final GenericFluid.FluidBehaviour entityBehaviour;
+    private final IFluidBehaviour entityBehaviour;
 
-    public FluidHelper(String name, int color, MapColor mapColor){
+    public FluidHolder(String name, int color, MapColor mapColor){
         this(name,color,mapColor, (a,b,c) -> {});
     }
 
-    public FluidHelper(String name, int color, MapColor mapColor, GenericFluid.FluidBehaviour entitiyBehaviour){
+    public FluidHolder(String name, int color, MapColor mapColor, IFluidBehaviour entitiyBehaviour){
         this.color = color;
         this.mapColor = mapColor;
         this.entityBehaviour = entitiyBehaviour;
-
         this.SOURCE = registerSource(name);
         this.FLOWING = registerFlowing(name);
         this.FLUIDTYPE = registerFluidType(name);

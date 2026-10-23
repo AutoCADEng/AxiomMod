@@ -22,8 +22,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class GenericMachineBlock extends BaseEntityBlock {
     RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity;
-    GenericMachine.Config config;
-    public GenericMachineBlock(Properties properties, RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity, GenericMachine.Config config) {
+    MachineHolder.Config config;
+    public GenericMachineBlock(Properties properties, RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity, MachineHolder.Config config) {
         super(properties);
         this.blockEntity = blockEntity;
         this.config = config;

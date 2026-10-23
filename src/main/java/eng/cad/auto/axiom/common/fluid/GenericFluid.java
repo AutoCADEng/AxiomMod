@@ -25,10 +25,6 @@ public class GenericFluid {
         public Block (Supplier<? extends FlowingFluid> fluid, Properties properties) {
             super(fluid, properties);
         }
-
-        @Override
-        public void entityInside(BlockState state, Level level, BlockPos blockPos, Entity entity) {
-        }
     }
 
     public static class Source extends ForgeFlowingFluid.Source {
@@ -41,10 +37,5 @@ public class GenericFluid {
         public Flowing(ForgeFlowingFluid.Properties properties) {
             super(properties);
         }
-    }
-
-    @FunctionalInterface
-    public interface FluidBehaviour {
-        void onEntityInside(Level level, BlockPos pos, Entity entity);
     }
 }

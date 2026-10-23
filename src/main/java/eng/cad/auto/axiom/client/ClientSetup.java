@@ -1,11 +1,9 @@
 package eng.cad.auto.axiom.client;
 
-import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
-import eng.cad.auto.axiom.common.machine.core.GenericMachine;
-import eng.cad.auto.axiom.common.machine.core.GenericUI;
+import eng.cad.auto.axiom.common.machine.core.MachineHolder;
+import eng.cad.auto.axiom.common.machine.ui.GenericUI;
 import eng.cad.auto.axiom.registry.FluidRegistry;
 import eng.cad.auto.axiom.registry.MachineRegistry;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -21,7 +19,7 @@ public class ClientSetup {
 
     private static void clientSetup(final FMLClientSetupEvent event) {
 
-        for (GenericMachine machine: MachineRegistry.MACHINELIST.values()) {
+        for (MachineHolder machine: MachineRegistry.MACHINELIST.values()) {
             event.enqueueWork(() ->
                     MenuScreens.<GenericUI.Menu, GenericUI.Screen>register(
                         machine.ui.menu.get(),
@@ -36,7 +34,7 @@ public class ClientSetup {
             );
         }
 
-        for (RegistryObject<? extends Fluid> fluid:FluidRegistry.FLUIDLIST) {
+        for (RegistryObject<? extends Fluid> fluid:FluidRegistry.FLUIDLIST.values()) {
             event.enqueueWork(() ->
                     ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent())
             );

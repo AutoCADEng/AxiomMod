@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiom.client.colors.ClientItemColorer;
 import eng.cad.auto.axiom.client.ClientSetup;
 import eng.cad.auto.axiom.registry.*;
-import eng.cad.auto.axiom.registry.custom.AxiomList;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -30,6 +29,8 @@ public class AxiomMod {
         MenuRegistry.MENUS.register(modEventBus);
         FluidRegistry.FLUIDS.register(modEventBus);
         FluidRegistry.FLUIDTYPES.register(modEventBus);
+        RecipeRegistry.RECIPE_TYPES.register(modEventBus);
+        RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         //Client Event Hooks
         ClientSetup.init(modEventBus);
         ClientItemColorer.init(modEventBus);
