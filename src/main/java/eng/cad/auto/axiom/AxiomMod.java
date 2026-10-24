@@ -3,6 +3,7 @@ package eng.cad.auto.axiom;
 import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiom.client.colors.ClientItemColorer;
 import eng.cad.auto.axiom.client.ClientSetup;
+import eng.cad.auto.axiom.network.FluidNetwork;
 import eng.cad.auto.axiom.registry.*;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -20,15 +21,17 @@ public class AxiomMod {
         //Registry Event Hooks
         modEventBus.register(AxiomRegistry.class);
         //Registries
+        FluidRegistry.FLUIDS.register(modEventBus);
+        FluidRegistry.FLUIDTYPES.register(modEventBus);
         AxiomRegistry.AXIOM_DEFERRED_REGISTER.register(modEventBus);
         AxiomList.init();
         BlockRegistry.BLOCKS.register(modEventBus);
+        FluidNetwork.register();
         MachineRegistry.MACHINES.register(modEventBus);
         MachineRegistry.init();
         ItemRegistry.ITEMS.register(modEventBus);
         MenuRegistry.MENUS.register(modEventBus);
-        FluidRegistry.FLUIDS.register(modEventBus);
-        FluidRegistry.FLUIDTYPES.register(modEventBus);
+
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         //Client Event Hooks

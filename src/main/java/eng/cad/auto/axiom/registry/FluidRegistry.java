@@ -2,6 +2,8 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 
+import eng.cad.auto.axiom.common.fluid.Deathwater;
+import eng.cad.auto.axiom.common.fluid.Ethanol;
 import eng.cad.auto.axiom.common.fluid.FluidHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -19,9 +21,13 @@ public class FluidRegistry {
     public static final DeferredRegister<FluidType> FLUIDTYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, AxiomMod.MODID);
     public static final HashMap<String, RegistryObject<? extends Fluid>> FLUIDLIST = new HashMap<>();
 
+    public static final FluidHolder ETHANOL = new FluidHolder("ethanol", Ethanol.color, MapColor.COLOR_BLACK, new Ethanol.FluidBehaviour());
+    public static final FluidHolder DEATHWATER = new FluidHolder("deathwater", Deathwater.color, MapColor.COLOR_BLACK, new Deathwater.FluidBehaviour());
+
     private void registerAxiomFluid(String name, int color){
         new FluidHolder(name, color, MapColor.COLOR_BLACK);
     }
+
     public static <T extends Fluid> RegistryObject<T> registerFluid(String name, Supplier<T> fluid){
         RegistryObject<T> newFluid = FLUIDS.register(name, fluid);
         FLUIDLIST.put(name, newFluid);

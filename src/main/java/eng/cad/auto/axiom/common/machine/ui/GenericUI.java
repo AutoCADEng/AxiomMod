@@ -4,6 +4,8 @@ import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.crafting.core.FluidStackHandler;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
+import eng.cad.auto.axiom.network.FluidNetwork;
+import eng.cad.auto.axiom.network.FluidSyncPacket;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.MenuRegistry;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
@@ -44,6 +47,20 @@ public class GenericUI {
             this.level = inventory.player.level();
             this.blockEntity = blockEntity;
             this.tanks = blockEntity.machine.tanks;
+
+            if (inventory.player instanceof ServerPlayer player
+                    && this.tanks != null) {
+                for (int idx = 0; idx < this.tanks.getTanks(); idx++) {
+                    FluidNetwork.sendToClient(
+                            player,
+                            new FluidSyncPacket(
+                                    blockEntity.getBlockPos(),
+                                    idx,
+                                    this.tanks.getFluidInTank(idx)
+                            )
+                    );
+                }
+            }
             this.data = blockEntity.machine.metadata;
             addDataSlots(data);
             checkContainerSize(inventory, blockEntity.machineConfig.itemSlots());

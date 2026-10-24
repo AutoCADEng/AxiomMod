@@ -2,6 +2,7 @@ package eng.cad.auto.axiom.common.machine;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
@@ -19,16 +20,24 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.joml.Vector2i;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class FermenterMachine {
     MachineHolder INSTANCE;
@@ -46,7 +55,7 @@ public class FermenterMachine {
     }
     static class Logic {
 
-        static final int Max_Processing_Ticks = 24000/20;
+        static final int Max_Processing_Ticks = 24000/60;
 
         static final int waterTank = 0;
         static final int ethanolTank = 1;
@@ -75,40 +84,70 @@ public class FermenterMachine {
                     return;
                 }
 
+                if (!hasSpace(blockEntity.machine.tanks.getFluidInTank(ethanolTank), activeRecipe.getCraftingOutput().get(0).getFluid())){
+                    resetProgress(blockEntity);
+                    return;
+                }
+
                 if (blockEntity.machine.metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
-                    craftRecipe(blockEntity, activeRecipe, true);
+                    //Final chance to check the recipe before I commit!
+                    if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
+                    resetProgress(blockEntity);
                     return;
                 }
                 incrementProgress(blockEntity,1);
-                resetProgress(blockEntity);
+            }
+
+            private boolean hasSpace(FluidStack tank, FluidStack fluid) {
+                if (!tank.isFluidEqual(fluid) && !tank.isEmpty()) return false;
+                return !(tank.getAmount()+fluid.getAmount() > 16000); // I need to do away with these annoying fixed volumes >_>
             }
 
             @Override
-            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulateFirst) {
-                boolean recipeSafe = true;
-                for(CraftingIngredient ingredient:recipe.getCraftingIngredients()){
-                    if (ingredient.isFluid()){
-                        IFluidHandler.FluidAction doSim = IFluidHandler.FluidAction.SIMULATE;
-                        if (!simulateFirst) {
-                            doSim = IFluidHandler.FluidAction.EXECUTE;
-                        }
-                        FluidStack output = entity.machine.tanks.drain(ingredient.getFluid(), doSim);
-                        if (!CraftingIngredient.CheckIngredient(ingredient, new CraftingIngredient(output))) {
-                            recipeSafe = false;
-                            break;
-                        }
-                    }else{
-                        for (int slot = 0; slot<entity.machine.config.itemSlots(); slot++) {
-                            ItemStack output = entity.machine.inventory.extractItem(slot, ingredient.getItem().getCount(), simulateFirst);
-                            if (!CraftingIngredient.CheckIngredient(ingredient, new CraftingIngredient(output))) {
-                                recipeSafe = false;
-                                break;
+            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
+                for (CraftingIngredient ingredient:recipe.getCraftingIngredients()){
+                    int required = 0;
+                    if (ingredient.isItem()){
+                        required = ingredient.getItem().getCount();
+                        for(int idx = 0; idx<entity.machine.inventory.getSlots(); idx++){
+                            ItemStack itemStack = entity.machine.inventory.getStackInSlot(idx);
+                            if (itemStack.is(ingredient.getItem().getItem())){
+                                if (required<= 0) continue;
+
+                                int originalCount = itemStack.getCount();
+
+                                int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
+                                if (!simulate){
+                                    entity.machine.inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY: new ItemStack(itemStack.getItem(), remainingItems));
+                                }
+                                required = originalCount - remainingItems;
                             }
                         }
+                        if (required>0) AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} {} left", recipe.getId(), required, ingredient.isFluid() ? ingredient.getFluid().toString():ingredient.getItem().toString());
+                    }
+
+                    if (ingredient.isFluid()){
+                        required = ingredient.getFluid().getAmount();
+                        for(int idx = 0; idx<entity.machine.tanks.getTanks(); idx++){
+                            FluidStack fluidStack = entity.machine.tanks.getFluidInTank(idx);
+                            if (fluidStack.isFluidEqual(ingredient.getFluid())){
+                                if (required<= 0) continue;
+
+                                int originalCount = fluidStack.getAmount();
+
+                                int remainingVolume = Math.max(originalCount - Math.min(entity.machine.tanks.getTankCapacity(idx), required), 0);
+                                if (!simulate){
+                                    entity.machine.tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY: new FluidStack(fluidStack.getFluid(), remainingVolume));
+                                }
+                                required = originalCount - remainingVolume;
+                            }
+                        }
+                        if (required>0) AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} {} left", recipe.getId(), required, ingredient.isFluid() ? ingredient.getFluid().toString():ingredient.getItem().toString());
+
+                        if (simulate) entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), IFluidHandler.FluidAction.SIMULATE);
+                        if (!simulate) entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), IFluidHandler.FluidAction.EXECUTE);
                     }
                 }
-                if (!recipeSafe) return;
-                if (simulateFirst) craftRecipe(entity, recipe,false);
             }
 
             @Override
@@ -161,34 +200,28 @@ public class FermenterMachine {
 
             @Override
             public void renderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
-                doSlots(guiGraphics, screen, mouse_x, mouse_y, tick);
+
                 doProgressBar(guiGraphics, screen, mouse_x, mouse_y, tick);
                 doRenderFluids(guiGraphics, screen, mouse_x, mouse_y, tick);
             }
 
-            private void doSlots(GuiGraphics guiGraphics, GenericUI.Screen screen, int mouseX, int mouseY, float tick) {
-
-            }
-
             private void doRenderFluids(GuiGraphics guiGraphics, GenericUI.Screen screen, int mouseX, int mouseY, float tick) {
-                float waterTankPercentage = (float) screen.getMenu().tanks.getFluidInTank(waterTank).getAmount() / (float) maxFluidCapacity;
-                float ethanolTankPercentage = (float) screen.getMenu().tanks.getFluidInTank(ethanolTank).getAmount() / (float) maxFluidCapacity;
-                float waterTankLevel = 0.75f; //temporary
-                float ethanolTankLevel = 1f;
 
-                //final implementation should be : screen.getMenu().tanks.getFluidInTank(waterTank).getFluid().getFluidType()
-                FluidType waterType = Fluids.WATER.getFluidType();
-                FluidType ethanolType = Fluids.WATER.getFluidType();
+                float waterTankLevel = (float) screen.getMenu().tanks.getFluidInTank(waterTank).getAmount() / (float) maxFluidCapacity;
+                if (waterTankLevel>0){
+                    FluidType waterType = screen.getMenu().tanks.getFluidInTank(waterTank).getFluid().getFluidType();
+                    ResourceLocation waterTankResource = IClientFluidTypeExtensions.of(waterType).getStillTexture();
+                    renderFluidTank(screen, guiGraphics, waterTankResource, water_tank_coords, tank_size, IClientFluidTypeExtensions.of(waterType).getTintColor(), waterTankLevel);
+                }
 
-                ResourceLocation waterTankResource = IClientFluidTypeExtensions.of(waterType).getStillTexture();
-                ResourceLocation ethanolTankResource = IClientFluidTypeExtensions.of(ethanolType).getStillTexture();
+                float ethanolTankLevel = (float) screen.getMenu().tanks.getFluidInTank(ethanolTank).getAmount() / (float) maxFluidCapacity;
+                if (ethanolTankLevel>0) {
+                    FluidType ethanolType = screen.getMenu().tanks.getFluidInTank(ethanolTank).getFluid().getFluidType();
+                    ResourceLocation ethanolTankResource = IClientFluidTypeExtensions.of(ethanolType).getStillTexture();
+                    renderFluidTank(screen, guiGraphics, ethanolTankResource,  ethanol_tank_coords, tank_size, IClientFluidTypeExtensions.of(ethanolType).getTintColor(), ethanolTankLevel);
+                }
 
-                int waterTint = IClientFluidTypeExtensions.of(waterType).getTintColor();
-                int ethanolTint = IClientFluidTypeExtensions.of(ethanolType).getTintColor();
-
-                renderFluidTank(screen, guiGraphics, waterTankResource, water_tank_coords, tank_size, waterTint, waterTankLevel);
-                renderFluidTank(screen, guiGraphics, ethanolTankResource,  ethanol_tank_coords, tank_size, ethanolTint, ethanolTankLevel);
-                //Glass Overlay
+                //Glass Overlays
                 guiGraphics.blit(screen.GUI, screen.getGuiLeft() + water_tank_coords.x, screen.getGuiTop() + water_tank_coords.y,
                         glass_overlay_coords.x, glass_overlay_coords.y, glass_overlay_size.x, glass_overlay_size.y);
                 guiGraphics.blit(screen.GUI, screen.getGuiLeft() + ethanol_tank_coords.x, screen.getGuiTop() + ethanol_tank_coords.y,

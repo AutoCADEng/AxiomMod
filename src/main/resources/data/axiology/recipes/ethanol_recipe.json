@@ -15,14 +15,14 @@
     {
       "type": "fluid",
       "input": "minecraft:water",
-      "count": 1
+      "count": 500
     }
   ],
   "outputs": [
     {
       "type": "fluid",
       "input": "axiology:ethanol",
-      "count": 1
+      "count": 250
     }
   ]
 }

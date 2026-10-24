@@ -96,12 +96,13 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     }
     @Override
     public int getTanks() {
-        return 0;
+        return stacks.size();
     }
 
     @Override
     public @NotNull FluidStack getFluidInTank(int tank) {
-        return FluidStack.EMPTY;
+        validateSlotIndex(tank);
+        return stacks.get(tank);
     }
 
     @Override
@@ -116,29 +117,49 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        int firstEmptyTank = -1;
-        for (int idx =0; idx<stacks.size(); idx++){
-            if (stacks.get(idx).isEmpty()){
-                firstEmptyTank = idx;
-            }
-            fillTank(idx, resource, action);
-        }
-        if (firstEmptyTank == -1) return 0;
-        return fillTank(firstEmptyTank, resource, action);
-    }
+        if (resource.isEmpty()) return 0;
 
-    private int fillTank(int idx, FluidStack resource, FluidAction action){
-        if (stacks.get(idx).getFluid().isSame(resource.getFluid())){
-            int oldVolume = stacks.get(idx).getAmount();
-            int newVolume = Math.min(oldVolume + resource.getAmount(), maxVolume);
-            int deltaVolume = newVolume - oldVolume;
-            if (action.execute()) {
-                stacks.get(idx).setAmount(newVolume);
+        for (int i = 0; i < stacks.size(); i++) {
+            if (!stacks.get(i).isEmpty()
+                    && stacks.get(i).isFluidEqual(resource)) {
+                return fillTank(i, resource, action);
             }
-            return deltaVolume;
         }
+
+        for (int i = 0; i < stacks.size(); i++) {
+            if (stacks.get(i).isEmpty()) {
+                return fillTank(i, resource, action);
+            }
+        }
+
         return 0;
     }
+
+    private int fillTank(int idx, FluidStack resource, FluidAction action) {
+        FluidStack existing = stacks.get(idx);
+
+        if (!existing.isEmpty() && !existing.isFluidEqual(resource)) {
+            return 0;
+        }
+
+        int currentAmount = existing.isEmpty() ? 0 : existing.getAmount();
+        int accepted = Math.min(resource.getAmount(), maxVolume - currentAmount);
+
+        if (accepted <= 0) return 0;
+
+        if (action.execute()) {
+            if (existing.isEmpty()) {
+                stacks.set(idx, new FluidStack(resource, accepted));
+            } else {
+                existing.grow(accepted);
+            }
+
+            onContentsChanged(idx);
+        }
+
+        return accepted;
+    }
+
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         for (FluidStack tank:stacks){
@@ -156,22 +177,31 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         return FluidStack.EMPTY;
     }
 
-    @Override @Deprecated
-    /**
-     * This variation of drain is NOT SUPPORTED and will default to draining the first tank!
-     * Do not use!
-     */
+    @Override
     public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
-        for (FluidStack tank:stacks){
-            int oldVolume = tank.getAmount();
-            int newVolume = Math.max(oldVolume - maxDrain, 0);
-            int deltaVolume = newVolume - oldVolume;
+        if (maxDrain <= 0) return FluidStack.EMPTY;
+
+        for (int i = 0; i < stacks.size(); i++) {
+            FluidStack tank = stacks.get(i);
+
+            if (tank.isEmpty()) continue;
+
+            int drained = Math.min(maxDrain, tank.getAmount());
+            FluidStack result = new FluidStack(tank, drained);
+
             if (action.execute()) {
-                tank.setAmount(newVolume);
+                tank.shrink(drained);
+
+                if (tank.isEmpty()) {
+                    stacks.set(i, FluidStack.EMPTY);
+                }
+
+                onContentsChanged(i);
             }
-            FluidStack output = new FluidStack(tank.getFluid(), deltaVolume);
-            return output.getAmount()>0?output:FluidStack.EMPTY;
+
+            return result;
         }
+
         return FluidStack.EMPTY;
     }
 }

@@ -9,13 +9,17 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -46,9 +50,12 @@ public class GenericRecipe implements Recipe<CustomContainer> {
 
     @Override
     public ItemStack assemble(CustomContainer container, RegistryAccess registryAccess) {
-        if (this.output.isEmpty()) return ItemStack.EMPTY;
-        if (this.output.get(0).isItem()) return ItemStack.EMPTY;
-        return this.output.get(0).getItem().copy();
+        return output.stream()
+                .filter(CraftingIngredient::isItem)
+                .map(CraftingIngredient::getItem)
+                .findFirst()
+                .map(ItemStack::copy)
+                .orElse(ItemStack.EMPTY);
     }
 
     @Override @ParametersAreNonnullByDefault
@@ -82,27 +89,26 @@ public class GenericRecipe implements Recipe<CustomContainer> {
     }
 
     public boolean contains(CraftingIngredient target, Level level) {
-        if (target.isEmpty()) {
-            return false;
-        }
+        if (target.isEmpty()) return false;
 
         return level.getRecipeManager()
                 .getAllRecipesFor(recipeType)
                 .stream()
                 .flatMap(recipe -> recipe.output.stream())
                 .anyMatch(output -> {
+                    if (output.isEmpty()) return false;
 
+                    if (target.isItem() && output.isItem()) {
+                        return output.getItem().getItem()
+                                .equals(target.getItem().getItem());
+                    }
 
+                    if (target.isFluid() && output.isFluid()) {
+                        return output.getFluid()
+                                .containsFluid(target.getFluid());
+                    }
 
-                    boolean matchesItem = !target.getItem().isEmpty()
-                            && output.getItem().is(target.getItem().getItem());
-
-
-
-                    boolean matchesFluid = !target.getItem().isEmpty()
-                            && output.getFluid().containsFluid(target.getFluid());
-
-                    return matchesItem || matchesFluid;
+                    return false;
                 });
     }
 
@@ -123,7 +129,7 @@ public class GenericRecipe implements Recipe<CustomContainer> {
                 }))) return false;
             }
         }
-        return false;
+        return true;
     }
 
     public static GenericRecipe getActiveRecipe(CustomContainer machineInventory, RecipeType<GenericRecipe> type, Level level, GenericBlockEntity blockEntity ){
@@ -141,6 +147,49 @@ public class GenericRecipe implements Recipe<CustomContainer> {
 
     public NonNullList<CraftingIngredient> getCraftingOutput() {
         return output;
+    }
+
+    public boolean validateCraft(GenericBlockEntity entity){
+            HashMap<Item, Integer> recipeItems = new HashMap<>();
+            HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
+
+            for (CraftingIngredient ingredient: getCraftingIngredients()){
+                if (ingredient.isItem()) {
+                    ItemStack itemStack = ingredient.getItem();
+
+                    if (recipeItems.containsKey(itemStack.getItem())){
+                        recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
+                    } else {
+                        recipeItems.put(itemStack.getItem(),  itemStack.getCount());
+                    }
+                }
+
+                if (ingredient.isFluid()) {
+                    FluidStack fluidStack = ingredient.getFluid();
+
+                    if (recipeFluids.containsKey(fluidStack.getFluid())){
+                        recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
+                    } else {
+                        recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+                    }
+                }
+            }
+
+            for (int idx = 0; idx<entity.machine.inventory.getSlots(); idx++){
+                ItemStack stack = entity.machine.inventory.getStackInSlot(idx);
+                if(recipeItems.containsKey(stack.getItem())){
+                    recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
+                }
+            }
+
+            for (int idx = 0; idx<entity.machine.tanks.getTanks(); idx++){
+                FluidStack stack = entity.machine.tanks.getFluidInTank(idx);
+                if(recipeFluids.containsKey(stack.getFluid())){
+                    recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
+                }
+            }
+
+        return recipeItems.values().stream().allMatch(count -> count <= 0) && recipeFluids.values().stream().allMatch(count -> count <= 0);
     }
 
     public static class Type implements RecipeType<GenericRecipe> {

@@ -19,13 +19,16 @@ public class MachineInventory{
         inventory = config.itemSlots() > 0 ? new ItemStackHandler(config.itemSlots()){
             @Override
             protected void onContentsChanged(int slot) {
+
                 blockEntity.setChanged();
+                blockEntity.syncFluidTank(slot);
             }
         } : null;
-        tanks = config.itemSlots() > 0 ? new FluidStackHandler(config.itemSlots()){
+        tanks = config.fluidSlots() > 0 ? new FluidStackHandler(config.fluidSlots()){
             @Override
             protected void onContentsChanged(int slot) {
                 blockEntity.setChanged();
+                blockEntity.syncFluidTank(slot);
             }
         } : null;
         metadata = config.dataSlots() > 0 ? new SimpleContainerData(config.dataSlots()) : null;

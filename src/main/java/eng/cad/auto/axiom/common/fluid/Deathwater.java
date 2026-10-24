@@ -7,11 +7,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
 
 public class Deathwater {
-    static int color = 0xFF330033;
-    public static final FluidHolder DEATHWATER = new FluidHolder(
-            "deathwater", color, MapColor.COLOR_BLACK, new FluidBehaviour());
+    public static int color = 0xFF330033;
 
-    static class FluidBehaviour implements IFluidBehaviour {
+    public static class FluidBehaviour implements IFluidBehaviour {
         @Override
         public void onEntityInside(Level level, BlockPos pos, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {

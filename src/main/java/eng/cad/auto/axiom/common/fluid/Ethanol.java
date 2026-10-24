@@ -10,12 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
 
 public class Ethanol {
-    static int color = 0xCCF5DEB3;
-
-    public static final FluidHolder Ethanol = new FluidHolder(
-            "ethanol", color, MapColor.COLOR_BLACK, new FluidBehaviour());
-
-    static class FluidBehaviour implements IFluidBehaviour {
+    public static int color = 0xCCF5DEB3;
+    public static class FluidBehaviour implements IFluidBehaviour {
         @Override
         public void onEntityInside(Level level, BlockPos pos, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
