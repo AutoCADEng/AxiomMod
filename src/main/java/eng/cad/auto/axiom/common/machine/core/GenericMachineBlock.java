@@ -41,17 +41,13 @@ public class GenericMachineBlock extends BaseEntityBlock {
 
     @Override @ParametersAreNonnullByDefault @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        if (level.isClientSide()) return null;
-        return createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::tick);
+        return level.isClientSide() ? createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::tick) : createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::clientTick);
     }
 
     @Override
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
-        if (level.getBlockEntity(blockPos) instanceof GenericBlockEntity machine){
-            if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;
-            NetworkHooks.openScreen(serverPlayer, machine, blockPos);
-        }
-        return InteractionResult.CONSUME;
+        if (!(level.getBlockEntity(blockPos) instanceof GenericBlockEntity genericBlockEntity)) return InteractionResult.FAIL;
+        return genericBlockEntity.machineConfig.rightClickLogic().useMachine(blockState, level, blockPos, player, interactionHand, result);
     }
+
 }

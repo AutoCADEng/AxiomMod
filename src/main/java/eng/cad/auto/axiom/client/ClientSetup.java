@@ -20,6 +20,7 @@ public class ClientSetup {
     private static void clientSetup(final FMLClientSetupEvent event) {
 
         for (MachineHolder machine: MachineRegistry.MACHINELIST.values()) {
+            if (machine.config.noGui()) continue;
             event.enqueueWork(() ->
                     MenuScreens.<GenericUI.Menu, GenericUI.Screen>register(
                         machine.ui.menu.get(),
