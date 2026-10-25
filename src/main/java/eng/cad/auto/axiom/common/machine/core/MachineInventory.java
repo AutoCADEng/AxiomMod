@@ -3,7 +3,6 @@ package eng.cad.auto.axiom.common.machine.core;
 import eng.cad.auto.axiom.common.crafting.core.FluidStackHandler;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class MachineInventory{
@@ -19,7 +18,6 @@ public class MachineInventory{
         inventory = config.itemSlots() > 0 ? new ItemStackHandler(config.itemSlots()){
             @Override
             protected void onContentsChanged(int slot) {
-
                 blockEntity.setChanged();
                 blockEntity.syncFluidTank(slot);
             }
