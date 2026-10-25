@@ -40,11 +40,11 @@ public class FluidHolder {
         this.color = color;
         this.mapColor = mapColor;
         this.entityBehaviour = entitiyBehaviour;
+        this.BUCKET = registerBucket(name);
         this.SOURCE = registerSource(name);
         this.FLOWING = registerFlowing(name);
         this.FLUIDTYPE = registerFluidType(name);
         this.BLOCK = registerBlock(name);
-        this.BUCKET = registerBucket(name);
     }
 
     private ForgeFlowingFluid.Properties fluidProps() {
@@ -53,7 +53,7 @@ public class FluidHolder {
                 () -> (ForgeFlowingFluid) SOURCE.get(),
                 () -> (ForgeFlowingFluid) FLOWING.get())
                 .block(BLOCK)
-                .bucket(BUCKET)
+                .bucket(() -> BUCKET.get())
                 .tickRate(2);
     }
     private FluidType.Properties fluidTypeProps(int density, int viscosity) {
