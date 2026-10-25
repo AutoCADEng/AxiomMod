@@ -6,7 +6,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
@@ -82,7 +84,7 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     protected void validateSlotIndex(int slot)
     {
         if (slot < 0 || slot >= stacks.size())
-            throw new RuntimeException("Slot " + slot + " not in valid range - [0," + stacks.size() + ")");
+            throw new RuntimeException("Slot " + slot + " not in valid range - [0," + stacks.size() + "]");
     }
 
     protected void onLoad()
@@ -203,5 +205,23 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         }
 
         return FluidStack.EMPTY;
+    }
+
+    public static boolean fluidToItem(NonNullList<ItemStack> returnedItems, IFluidHandler inputTank, ItemStack outputStack) {
+        FluidActionResult result = FluidUtil.tryFillContainer(outputStack, inputTank, 1000, null, true);
+        if (result.isSuccess()) {
+            returnedItems.add(result.getResult());
+            outputStack.shrink(1);
+        }
+        return result.isSuccess();
+    }
+
+    public static boolean fluidFromItem(NonNullList<ItemStack> returnedItems, IFluidHandler inputTank, ItemStack outputStack) {
+        FluidActionResult result = FluidUtil.tryEmptyContainer(outputStack, inputTank, 1000, null, true);
+        if (result.isSuccess()) {
+            returnedItems.add(result.getResult());
+            outputStack.shrink(1);
+        }
+        return result.isSuccess();
     }
 }
