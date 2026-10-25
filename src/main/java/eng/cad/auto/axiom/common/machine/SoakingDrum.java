@@ -3,8 +3,8 @@ package eng.cad.auto.axiom.common.machine;
 import eng.cad.auto.axiom.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiom.common.crafting.core.FluidStackHandler;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
+import eng.cad.auto.axiom.common.items.CustomBucket;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
 import eng.cad.auto.axiom.common.machine.interfaces.IMachineLogic;
@@ -14,7 +14,6 @@ import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.RecipeRegistry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
@@ -27,8 +26,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.FluidActionResult;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Objects;
@@ -155,24 +152,20 @@ public class SoakingDrum {
 
             @Override
             public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                if (!(level.getBlockEntity(blockPos) instanceof GenericBlockEntity machine))
-                    return InteractionResult.CONSUME;
-                ;
-                if (!machine.machineConfig.name().equals(SoakingDrum.name)) return InteractionResult.CONSUME;
-
-                onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
-
-                return InteractionResult.CONSUME;
+                if (!(level.getBlockEntity(blockPos) instanceof GenericBlockEntity machine)) return InteractionResult.PASS;
+                if (!machine.machineConfig.name().equals(SoakingDrum.name)) return InteractionResult.PASS;
+                boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
+                return success? InteractionResult.SUCCESS : InteractionResult.PASS;
             }
 
-            private void onRightClick(GenericBlockEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                if (player.isShiftKeyDown()) return;
-                if (interactionHand == InteractionHand.OFF_HAND) return;
-                if (bucketInHand(blockEntity, blockState, level, blockPos, player, interactionHand, result)) return;
+            private boolean onRightClick(GenericBlockEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
+                if (player.isShiftKeyDown()) return false;
+                if (interactionHand == InteractionHand.OFF_HAND) return false;
+                if (bucketInHand(blockEntity, blockState, level, blockPos, player, interactionHand, result)) return true;
                 ItemStack playerHand = player.getItemInHand(interactionHand);
                 ItemStack machineItem = blockEntity.machine.inventory.getStackInSlot(item_slot);
                 if (machineItem.isEmpty()) {
-                    if (playerHand.isEmpty()) return;
+                    if (playerHand.isEmpty()) return false;
                     ItemStack toInsert = playerHand.copy();
                     toInsert.setCount(1);
                     ItemStack remainder = blockEntity.machine.inventory.insertItem(item_slot, toInsert, false);
@@ -180,16 +173,16 @@ public class SoakingDrum {
                         level.playSound(null, blockPos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                         playerHand.shrink(1);
                     }
-                    return;
+                    return true;
                 }
 
                 if (playerHand.isEmpty() || playerHand.is(machineItem.getItem())) {
                     int maxHandLimit = playerHand.isEmpty() ? machineItem.getMaxStackSize() : playerHand.getMaxStackSize();
                     int currentHandCount = playerHand.isEmpty() ? 0 : playerHand.getCount();
                     int maxTransferable = maxHandLimit - currentHandCount;
-                    if (maxTransferable <= 0) return;
+                    if (maxTransferable <= 0) return false;
                     ItemStack simulatedExtract = blockEntity.machine.inventory.extractItem(item_slot, maxTransferable, true);
-                    if (simulatedExtract.isEmpty()) return;
+                    if (simulatedExtract.isEmpty()) return false;
                     ItemStack extracted = blockEntity.machine.inventory.extractItem(item_slot, simulatedExtract.getCount(), false);
                     level.playSound(null, blockPos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                     if (playerHand.isEmpty()) {
@@ -198,22 +191,17 @@ public class SoakingDrum {
                         playerHand.grow(extracted.getCount());
                     }
                 }
+                return false;
             }
 
             private boolean bucketInHand(GenericBlockEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
                 ItemStack playerHand = player.getItemInHand(interactionHand);
                 Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
                 if (bucketHandler.isPresent()) {
-                    NonNullList<ItemStack> returnedItems = NonNullList.create();
                     if (bucketHandler.get().getFluidInTank(0).isEmpty()) {
-                        if (FluidStackHandler.fluidToItem(returnedItems, blockEntity.machine.tanks, playerHand))
-                            level.playSound(null, blockPos, SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        CustomBucket.fluidToItem(blockEntity, player, interactionHand);
                     } else {
-                        if (FluidStackHandler.fluidFromItem(returnedItems, blockEntity.machine.tanks, playerHand))
-                            level.playSound(null, blockPos, SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    }
-                    for (ItemStack item:returnedItems){
-                        player.addItem(item);
+                        CustomBucket.fluidFromItem(blockEntity, player, interactionHand);
                     }
                     return true;
                 }

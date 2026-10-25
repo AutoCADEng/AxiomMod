@@ -82,7 +82,6 @@ public class FermenterMachine {
                 }
 
                 if (blockEntity.machine.metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
-                    //Final chance to check the recipe before I commit!
                     if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
                     resetProgress(blockEntity);
                     return;
@@ -92,7 +91,7 @@ public class FermenterMachine {
 
             private boolean hasSpace(FluidStack tank, FluidStack fluid) {
                 if (!tank.isFluidEqual(fluid) && !tank.isEmpty()) return false;
-                return !(tank.getAmount()+fluid.getAmount() > 16000); // I need to do away with these annoying fixed volumes >_>
+                return !(tank.getAmount() + fluid.getAmount() > 16000); // I need to do away with these annoying fixed volumes >_>
             }
 
             @Override

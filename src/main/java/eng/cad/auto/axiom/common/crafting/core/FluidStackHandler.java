@@ -4,6 +4,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidActionResult;
@@ -207,21 +208,4 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         return FluidStack.EMPTY;
     }
 
-    public static boolean fluidToItem(NonNullList<ItemStack> returnedItems, IFluidHandler inputTank, ItemStack outputStack) {
-        FluidActionResult result = FluidUtil.tryFillContainer(outputStack, inputTank, 1000, null, true);
-        if (result.isSuccess()) {
-            returnedItems.add(result.getResult());
-            outputStack.shrink(1);
-        }
-        return result.isSuccess();
-    }
-
-    public static boolean fluidFromItem(NonNullList<ItemStack> returnedItems, IFluidHandler inputTank, ItemStack outputStack) {
-        FluidActionResult result = FluidUtil.tryEmptyContainer(outputStack, inputTank, 1000, null, true);
-        if (result.isSuccess()) {
-            returnedItems.add(result.getResult());
-            outputStack.shrink(1);
-        }
-        return result.isSuccess();
-    }
 }

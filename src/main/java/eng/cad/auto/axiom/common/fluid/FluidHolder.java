@@ -53,7 +53,7 @@ public class FluidHolder {
                 () -> (ForgeFlowingFluid) SOURCE.get(),
                 () -> (ForgeFlowingFluid) FLOWING.get())
                 .block(BLOCK)
-                .bucket(() -> BUCKET.get())
+                .bucket(BUCKET)
                 .tickRate(2);
     }
     private FluidType.Properties fluidTypeProps(int density, int viscosity) {
@@ -97,7 +97,7 @@ public class FluidHolder {
     }
 
     private RegistryObject<CustomBucket> registerBucket(String name){
-        return ItemRegistry.registerItem(name+"_bucket", ()-> new CustomBucket(SOURCE, new Item.Properties(), color));
+        return ItemRegistry.registerItem(name+"_bucket", ()-> new CustomBucket(SOURCE, new Item.Properties().stacksTo(1), color));
     }
 
     public RegistryObject<CustomBucket> getBucket() {
