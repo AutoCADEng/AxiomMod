@@ -45,9 +45,8 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
         AxiomMod.LOGGER.warn("FAILED TO OVERWRITE TICK METHOD FOR BLOCK ENTITY {}", level.getBlockEntity(blockPos).getType().toString());
     }
 
-    public static  void tick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity){
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity){
         blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
-
     }
 
     @Override
@@ -146,5 +145,9 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
                         machine.tanks.getFluidInTank(tank)
                 )
         );
+    }
+
+    public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity) {
+        blockEntity.machineConfig.clientLogic().clientTick(level, blockPos, blockState, blockEntity);
     }
 }

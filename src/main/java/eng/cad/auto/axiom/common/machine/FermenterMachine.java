@@ -2,9 +2,8 @@ package eng.cad.auto.axiom.common.machine;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
-import eng.cad.auto.axiom.common.crafting.core.CustomContainer;
+import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.ui.GenericUI;
@@ -20,24 +19,16 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.joml.Vector2i;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Objects;
 
 public class FermenterMachine {
     MachineHolder INSTANCE;
@@ -69,8 +60,9 @@ public class FermenterMachine {
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
+                if (!(Objects.equals(blockEntity.machineConfig.name(), "fermenter"))) return;
                 GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
-                        new CustomContainer(blockEntity)
+                        new CustomCraftingContainer(blockEntity)
                         .addTank(blockEntity.machine.tanks.getFluidInTank(waterTank))
                         .addTank(blockEntity.machine.tanks.getFluidInTank(ethanolTank))
                         .addSlot(blockEntity.machine.inventory.getStackInSlot(inputSlot0))
@@ -106,47 +98,8 @@ public class FermenterMachine {
             @Override
             public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
                 for (CraftingIngredient ingredient:recipe.getCraftingIngredients()){
-                    int required = 0;
-                    if (ingredient.isItem()){
-                        required = ingredient.getItem().getCount();
-                        for(int idx = 0; idx<entity.machine.inventory.getSlots(); idx++){
-                            ItemStack itemStack = entity.machine.inventory.getStackInSlot(idx);
-                            if (itemStack.is(ingredient.getItem().getItem())){
-                                if (required<= 0) continue;
-
-                                int originalCount = itemStack.getCount();
-
-                                int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
-                                if (!simulate){
-                                    entity.machine.inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY: new ItemStack(itemStack.getItem(), remainingItems));
-                                }
-                                required = originalCount - remainingItems;
-                            }
-                        }
-                        if (required>0) AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} {} left", recipe.getId(), required, ingredient.isFluid() ? ingredient.getFluid().toString():ingredient.getItem().toString());
-                    }
-
-                    if (ingredient.isFluid()){
-                        required = ingredient.getFluid().getAmount();
-                        for(int idx = 0; idx<entity.machine.tanks.getTanks(); idx++){
-                            FluidStack fluidStack = entity.machine.tanks.getFluidInTank(idx);
-                            if (fluidStack.isFluidEqual(ingredient.getFluid())){
-                                if (required<= 0) continue;
-
-                                int originalCount = fluidStack.getAmount();
-
-                                int remainingVolume = Math.max(originalCount - Math.min(entity.machine.tanks.getTankCapacity(idx), required), 0);
-                                if (!simulate){
-                                    entity.machine.tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY: new FluidStack(fluidStack.getFluid(), remainingVolume));
-                                }
-                                required = originalCount - remainingVolume;
-                            }
-                        }
-                        if (required>0) AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} {} left", recipe.getId(), required, ingredient.isFluid() ? ingredient.getFluid().toString():ingredient.getItem().toString());
-
-                        if (simulate) entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), IFluidHandler.FluidAction.SIMULATE);
-                        if (!simulate) entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), IFluidHandler.FluidAction.EXECUTE);
-                    }
+                    recipe.performCraft(ingredient, entity, simulate);
+                    entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
                 }
             }
 
@@ -170,7 +123,6 @@ public class FermenterMachine {
                     entity.machine.tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
                 if (tag.contains("Progress")) entity.machine.metadata.set(progressBar_Data, tag.getInt("Progress"));
-
             }
 
             @Override
@@ -203,6 +155,11 @@ public class FermenterMachine {
 
                 doProgressBar(guiGraphics, screen, mouse_x, mouse_y, tick);
                 doRenderFluids(guiGraphics, screen, mouse_x, mouse_y, tick);
+            }
+
+            @Override
+            public void clientTick(Level level, BlockPos pos, BlockState state, GenericBlockEntity blockEntity) {
+                //Do nothing yet
             }
 
             private void doRenderFluids(GuiGraphics guiGraphics, GenericUI.Screen screen, int mouseX, int mouseY, float tick) {
