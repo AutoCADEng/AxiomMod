@@ -41,7 +41,7 @@ public class GenericMachineBlock extends BaseEntityBlock {
 
     @Override @ParametersAreNonnullByDefault @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::tick) : createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::clientTick);
+        return !level.isClientSide() ? createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::tick) : createTickerHelper(blockEntityType, blockEntity.get(), GenericBlockEntity::clientTick);
     }
 
     @Override

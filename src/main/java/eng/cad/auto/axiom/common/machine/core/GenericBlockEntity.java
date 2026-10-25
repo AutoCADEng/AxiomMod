@@ -7,13 +7,18 @@ import eng.cad.auto.axiom.registry.MachineRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +37,8 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
     private LazyOptional<IItemHandler> itemCapability;
     private LazyOptional<IFluidHandler> fluidCapability;
     public MachineHolder.Config machineConfig;
-
+    private int[] lastSyncedData;
+    private long lastDataSyncTime;
 
     public GenericBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineHolder.Config machineConfig){
         super(type, pos, state);
@@ -47,6 +53,7 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity){
         blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
+        if (blockEntity.machineConfig.noGui()) blockEntity.syncData();
     }
 
     @Override
@@ -131,6 +138,33 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
                 : LazyOptional.empty();
     }
 
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tag = saveWithoutMetadata();
+        if (machine.metadata != null) {
+            int[] data = new int[machine.metadata.getCount()];
+            for (int i = 0; i < data.length; i++) data[i] = machine.metadata.get(i);
+            tag.putIntArray("AxiomData", data);
+        }
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        load(tag);
+        if (machine.metadata != null && tag.contains("AxiomData", Tag.TAG_INT_ARRAY)) {
+            int[] data = tag.getIntArray("AxiomData");
+            for (int i = 0; i < Math.min(data.length, machine.metadata.getCount()); i++) {
+                machine.metadata.set(i, data[i]);
+            }
+        }
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     public void syncFluidTank(int tank) {
         if (level == null) return;
         if (level.isClientSide) return;
@@ -145,6 +179,33 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
                         machine.tanks.getFluidInTank(tank)
                 )
         );
+    }
+
+    public void syncToClients() {
+        if (level == null || level.isClientSide) return;
+        setChanged();
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+    }
+
+    public void syncData(){
+        if (level == null || level.isClientSide || machine.metadata == null) return;
+        if (lastSyncedData == null) lastSyncedData = new int[machineConfig.dataSlots()];
+        boolean changed = false;
+        boolean skipTimer = false;
+        for (int idx = 0; idx<machineConfig.dataSlots(); idx++){
+            int newDataValue = machine.metadata.get(idx);
+            if (newDataValue != lastSyncedData[idx]){
+                changed = true;
+                if ((newDataValue == 0 && lastSyncedData[idx] != 0) || (newDataValue != 0 && lastSyncedData[idx] == 0)) skipTimer = true;
+            }
+        }
+
+        if (!changed) return;
+        long time = level.getGameTime();
+        if (!skipTimer && time - lastDataSyncTime < 20) return;
+        for (int idx = 0; idx < machineConfig.dataSlots(); idx++) lastSyncedData[idx] = machine.metadata.get(idx);
+        lastDataSyncTime = time;
+        syncToClients();
     }
 
     public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity) {

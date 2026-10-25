@@ -26,6 +26,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Objects;
@@ -41,8 +42,8 @@ public class SoakingDrum {
                 .addItemSlots(1)
                 .addDataSlots(2)
                 .addFluidSlots(1)
-                .addServerLogic(new FermenterMachine.Logic.Server())
-                .addClientLogic(new FermenterMachine.Logic.Client())
+                .addServerLogic(new Logic.Server())
+                .addClientLogic(new Logic.Client())
                 .noGui(new Logic.RightClickLogic())
                 .build());
     }
@@ -52,12 +53,13 @@ public class SoakingDrum {
         public static final int ready_to_harvest = 1;
         public static final int item_slot = 0;
         public static final int fluid_tank = 0;
-        public static final int MAX_PROGRESS = 24000;
+        public static final int MAX_PROGRESS = 24000/60;
 
         public static class Server implements IMachineLogic {
 
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
+                if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), SoakingDrum.name))) return;
                 if (blockEntity.machine.metadata.get(ready_to_harvest) == 1) return;
@@ -75,20 +77,23 @@ public class SoakingDrum {
                     return;
                 }
 
-                if (blockEntity.machine.metadata.get(progress)>=MAX_PROGRESS){
-                    if (activeRecipe.validateCraft(blockEntity)){
-                        for (CraftingIngredient ingredient:activeRecipe.getCraftingIngredients()){
-                            activeRecipe.performCraft(ingredient,blockEntity,false);
-                        }
-                    }
+                // Not sure why this was different to the fermenter. Revert if broken!
+                if (blockEntity.machine.metadata.get(progress) >= MAX_PROGRESS) {
+                    if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
+                    level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    blockEntity.machine.metadata.set(ready_to_harvest, 1);
                     resetProgress(blockEntity);
+                    return;
                 }
+                if (level.random.nextFloat() < 0.1F) level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
+                incrementProgress(blockEntity,1);
             }
 
             @Override
             public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
                 for (CraftingIngredient ingredient:recipe.getCraftingIngredients()) {
                     recipe.performCraft(ingredient, entity, simulate);
+                    entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
                 }
             }
 
@@ -132,9 +137,10 @@ public class SoakingDrum {
 
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericBlockEntity blockEntity) {
+                if (!level.isClientSide()) return;
                 if (blockEntity.machine.metadata.get(ready_to_harvest) == 1) return;
-                if (blockEntity.machine.metadata.get(progress)<= 0) return;
-                if (level.random.nextFloat() < 0.25F) {
+                if (blockEntity.machine.metadata.get(progress) <= 0) return;
+                if (level.random.nextFloat() < 0.33F) {
 
                     double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
                     double y = pos.getY() + 1.0D;
@@ -144,7 +150,7 @@ public class SoakingDrum {
                     double ySpeed = 0.05D;
                     double zSpeed = 0.0D;
 
-                    level.addParticle(ParticleTypes.BUBBLE_POP, x, y, z, xSpeed, ySpeed, zSpeed);
+                    level.addParticle(ParticleTypes.SMOKE, x, y, z, xSpeed, ySpeed, zSpeed);
                 }
             }
         }
@@ -189,6 +195,11 @@ public class SoakingDrum {
                         player.setItemInHand(interactionHand, extracted);
                     } else {
                         playerHand.grow(extracted.getCount());
+                    }
+
+                    if(blockEntity.machine.metadata.get(ready_to_harvest) == 1){
+                        blockEntity.machine.metadata.set(ready_to_harvest, 0);
+                        blockEntity.syncData();
                     }
                 }
                 return false;

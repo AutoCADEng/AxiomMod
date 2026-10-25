@@ -167,7 +167,6 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         for (int i = 0; i < stacks.size(); i++) {
             FluidStack tank = stacks.get(i);
             if (tank.isEmpty() || !tank.isFluidEqual(resource)) continue;
-
             int drained = Math.min(resource.getAmount(), tank.getAmount());
             FluidStack result = new FluidStack(tank, drained);
 
@@ -187,22 +186,17 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
 
         for (int i = 0; i < stacks.size(); i++) {
             FluidStack tank = stacks.get(i);
-
             if (tank.isEmpty()) continue;
-
             int drained = Math.min(maxDrain, tank.getAmount());
             FluidStack result = new FluidStack(tank, drained);
 
             if (action.execute()) {
                 tank.shrink(drained);
-
                 if (tank.isEmpty()) {
                     stacks.set(i, FluidStack.EMPTY);
                 }
-
                 onContentsChanged(i);
             }
-
             return result;
         }
 

@@ -59,6 +59,7 @@ public class FermenterMachine {
         static class Server implements IMachineLogic {
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
+                if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), "fermenter"))) return;
                 GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(

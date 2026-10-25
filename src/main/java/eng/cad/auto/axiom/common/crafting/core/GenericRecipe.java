@@ -133,8 +133,8 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
     }
 
     public static GenericRecipe getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<GenericRecipe> type, Level level, GenericBlockEntity blockEntity ){
-
-        Optional<GenericRecipe> recipeOutput = level.getRecipeManager().getAllRecipesFor(type)
+        Optional<GenericRecipe> recipeOutput = level.getRecipeManager()
+                .getAllRecipesFor(type)
                 .stream()
                 .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level)).findFirst();
 
