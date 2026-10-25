@@ -6,13 +6,12 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class CustomContainer implements Container {
+public class CustomCraftingContainer implements Container {
     NonNullList<FluidStack> tanks = NonNullList.create();
     NonNullList<ItemStack> items= NonNullList.create();
     GenericBlockEntity blockEntity;
-    public CustomContainer(GenericBlockEntity blockEntity){
+    public CustomCraftingContainer(GenericBlockEntity blockEntity){
         this.blockEntity = blockEntity;
     }
     @Override
@@ -91,11 +90,11 @@ public class CustomContainer implements Container {
         return false;
     }
 
-    public CustomContainer addTank(FluidStack tank) {
+    public CustomCraftingContainer addTank(FluidStack tank) {
         this.tanks.add(tank);
         return this;
     }
-    public CustomContainer addSlot(ItemStack stack) {
+    public CustomCraftingContainer addSlot(ItemStack stack) {
         this.items.add(stack);
         return this;
     }
