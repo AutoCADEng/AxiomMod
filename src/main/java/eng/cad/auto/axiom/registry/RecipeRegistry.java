@@ -18,4 +18,6 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeSerializer<GenericRecipe>> GENERIC_SERIALIZER = RECIPE_SERIALIZERS.register("generic", () -> GenericRecipe.Serializer.INSTANCE);
     public static final RegistryObject<RecipeType<GenericRecipe>> FERMENTATION =
             RecipeRegistry.RECIPE_TYPES.register("fermenter", GenericRecipe.Type::new);
+    public static final RegistryObject<RecipeType<GenericRecipe>> SOAKING_DRUM =
+            RecipeRegistry.RECIPE_TYPES.register("soaking_drum", GenericRecipe.Type::new);
 }

@@ -2,6 +2,7 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.machine.FermenterMachine;
+import eng.cad.auto.axiom.common.machine.SoakingDrum;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -23,6 +24,7 @@ public class MachineRegistry
 
     public static void init(){
         new FermenterMachine();
+        new SoakingDrum();
     }
 
 }
