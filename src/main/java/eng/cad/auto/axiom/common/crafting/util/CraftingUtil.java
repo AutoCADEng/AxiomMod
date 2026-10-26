@@ -129,21 +129,23 @@ public class CraftingUtil {
                 }
             }
         }
-
-        for (int idx = 0; idx<entity.machine.inventory.getSlots(); idx++){
-            ItemStack stack = entity.machine.inventory.getStackInSlot(idx);
-            if(recipeItems.containsKey(stack.getItem())){
-                recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
+        if (entity.machine.inventory != null) {
+            for (int idx = 0; idx < entity.machine.inventory.getSlots(); idx++) {
+                ItemStack stack = entity.machine.inventory.getStackInSlot(idx);
+                if (recipeItems.containsKey(stack.getItem())) {
+                    recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
+                }
             }
         }
 
-        for (int idx = 0; idx<entity.machine.tanks.getTanks(); idx++){
-            FluidStack stack = entity.machine.tanks.getFluidInTank(idx);
-            if(recipeFluids.containsKey(stack.getFluid())){
-                recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
+        if (entity.machine.tanks != null) {
+            for (int idx = 0; idx < entity.machine.tanks.getTanks(); idx++) {
+                FluidStack stack = entity.machine.tanks.getFluidInTank(idx);
+                if (recipeFluids.containsKey(stack.getFluid())) {
+                    recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
+                }
             }
         }
-
         return recipeItems.values().stream().allMatch(count -> count <= 0) && recipeFluids.values().stream().allMatch(count -> count <= 0);
     }
 
