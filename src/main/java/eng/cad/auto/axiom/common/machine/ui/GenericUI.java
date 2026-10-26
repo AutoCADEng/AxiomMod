@@ -65,7 +65,7 @@ public class GenericUI {
             addDataSlots(data);
             checkContainerSize(inventory, blockEntity.machineConfig.itemSlots());
 
-            blockEntity.machineConfig.menuSlots().loadMenuSlots(this); //adds 2 right now from another class
+            blockEntity.machineConfig.menuSlots().loadMenuSlots(this);
             AddPlayerInventory(inventory);
             AddPlayerHotbar(inventory);
         }

@@ -35,7 +35,6 @@ import java.util.Optional;
 public class SoakingDrum {
     MachineHolder INSTANCE;
     public static final String name = "soaking_drum";
-    static final int maxFluidCapacity = 16000;
     public SoakingDrum() {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineHolder
                 .Builder(name)

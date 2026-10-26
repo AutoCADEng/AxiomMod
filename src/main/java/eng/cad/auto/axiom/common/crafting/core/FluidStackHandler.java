@@ -1,5 +1,9 @@
 package eng.cad.auto.axiom.common.crafting.core;
 
+import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotConfig;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -15,34 +19,37 @@ import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
-    protected NonNullList<FluidStack> stacks;
-    int maxVolume = 16000;
+    protected NonNullList<FluidStackLimiter> stacks = NonNullList.create();
 
-    public FluidStackHandler()
+    public FluidStackHandler(SlotConfig config)
     {
-        this(1);
+        this(1, new SlotConfig[] {config});
     }
 
-    public FluidStackHandler(int size)
+    public FluidStackHandler(int size, SlotConfig[] configs)
     {
-        stacks = NonNullList.withSize(size, FluidStack.EMPTY);
+        if (size != configs.length){
+            AxiomMod.LOGGER.error("Invalid FluidStack Config Provided to FLUIDSTACKHANDLER !");
+            return;
+        };
+        for (int idx = 0; idx<configs.length;idx++){
+            stacks.add(idx, new FluidStackLimiter(FluidStack.EMPTY, configs[idx]));
+        }
+
     }
 
-    public FluidStackHandler(NonNullList<FluidStack> stacks)
+    private void setSize(int size)
     {
-        this.stacks = stacks;
-    }
-
-    public void setSize(int size)
-    {
-        stacks = NonNullList.withSize(size, FluidStack.EMPTY);
+        // This should be okay because we overwrite it immediately?
+        stacks = NonNullList.withSize(size, new FluidStackLimiter(FluidStack.EMPTY, new SlotConfig(SlotType.FLUID,0,SlotIORestriction.IN_OUT,0)));
     }
 
     @Override
     public void setStackInSlot(int slot, @NotNull FluidStack stack)
     {
         validateSlotIndex(slot);
-        this.stacks.set(slot, stack);
+        SlotConfig config = stacks.get(slot).config;
+        this.stacks.set(slot, new FluidStackLimiter(stack, config));
         onContentsChanged(slot);
     }
 
@@ -51,11 +58,13 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         ListTag nbtTagList = new ListTag();
         for (int i = 0; i < stacks.size(); i++)
         {
-            if (!stacks.get(i).isEmpty())
+            if (!stacks.get(i).stack.isEmpty())
             {
                 CompoundTag fluidTag = new CompoundTag();
                 fluidTag.putInt("Slot", i);
-                stacks.get(i).writeToNBT(fluidTag);
+                fluidTag.putInt("Limit", stacks.get(i).config.capacity());
+                fluidTag.putString("Restrictions", stacks.get(i).config.restriction().name());
+                stacks.get(i).stack.writeToNBT(fluidTag);
                 nbtTagList.add(fluidTag);
             }
         }
@@ -73,10 +82,13 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         {
             CompoundTag fluidSlot = tagList.getCompound(i);
             int slot = fluidSlot.getInt("Slot");
+            int capacity = fluidSlot.getInt("Limit");
+            SlotIORestriction restrictions = SlotIORestriction.valueOf(fluidSlot.getString("Restrictions"));
 
+            SlotConfig config = new SlotConfig(SlotType.FLUID, slot, restrictions, capacity);
             if (slot >= 0 && slot < stacks.size())
             {
-                stacks.set(slot, FluidStack.loadFluidStackFromNBT(fluidSlot));
+                stacks.set(slot, new FluidStackLimiter(FluidStack.loadFluidStackFromNBT(fluidSlot), config));
             }
         }
         onLoad();
@@ -105,12 +117,12 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     @Override
     public @NotNull FluidStack getFluidInTank(int tank) {
         validateSlotIndex(tank);
-        return stacks.get(tank);
+        return stacks.get(tank).stack;
     }
 
     @Override
     public int getTankCapacity(int tank) {
-        return maxVolume;
+        return stacks.get(tank).config.capacity();
     }
 
     @Override
@@ -123,14 +135,14 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         if (resource.isEmpty()) return 0;
 
         for (int i = 0; i < stacks.size(); i++) {
-            if (!stacks.get(i).isEmpty()
-                    && stacks.get(i).isFluidEqual(resource)) {
+            if (!stacks.get(i).stack.isEmpty()
+                    && stacks.get(i).stack.isFluidEqual(resource)) {
                 return fillTank(i, resource, action);
             }
         }
 
         for (int i = 0; i < stacks.size(); i++) {
-            if (stacks.get(i).isEmpty()) {
+            if (stacks.get(i).stack.isEmpty()) {
                 return fillTank(i, resource, action);
             }
         }
@@ -141,17 +153,18 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     private int fillTank(int idx, FluidStack resource, FluidAction action) {
         if (resource.isEmpty()) return 0;
 
-        FluidStack existing = stacks.get(idx);
+        FluidStack existing = stacks.get(idx).stack;
         if (!existing.isFluidEqual(resource) && !existing.isEmpty()) return 0;
 
         int oldVolume = existing.isEmpty() ? 0 : existing.getAmount();
-        int maxFill = Math.max(maxVolume - oldVolume, 0);
+        int maxFill = Math.max(getTankCapacity(idx) - oldVolume, 0);
         int deltaFluid = Math.min(resource.getAmount(), maxFill);
         if (deltaFluid <= 0) return 0;
 
         if (action.execute()) {
             if (existing.isEmpty()) {
-                stacks.set(idx, new FluidStack(resource, deltaFluid));
+                SlotConfig config = stacks.get(idx).config;
+                stacks.set(idx, new FluidStackLimiter(new FluidStack(resource, deltaFluid), config));
             } else {
                 existing.grow(deltaFluid);
             }
@@ -164,16 +177,17 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         if (resource.isEmpty()) return FluidStack.EMPTY;
-        for (int i = 0; i < stacks.size(); i++) {
-            FluidStack tank = stacks.get(i);
+        for (int idx = 0; idx < stacks.size(); idx++) {
+            FluidStack tank = stacks.get(idx).stack;
             if (tank.isEmpty() || !tank.isFluidEqual(resource)) continue;
             int drained = Math.min(resource.getAmount(), tank.getAmount());
             FluidStack result = new FluidStack(tank, drained);
 
             if (action.execute()) {
                 tank.shrink(drained);
-                if (tank.isEmpty()) stacks.set(i, FluidStack.EMPTY);
-                onContentsChanged(i);
+                SlotConfig config = stacks.get(idx).config;
+                if (tank.isEmpty()) stacks.set(idx, new FluidStackLimiter(FluidStack.EMPTY, config));
+                onContentsChanged(idx);
             }
             return result;
         }
@@ -184,8 +198,8 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
         if (maxDrain <= 0) return FluidStack.EMPTY;
 
-        for (int i = 0; i < stacks.size(); i++) {
-            FluidStack tank = stacks.get(i);
+        for (int idx = 0; idx < stacks.size(); idx++) {
+            FluidStack tank = stacks.get(idx).stack;
             if (tank.isEmpty()) continue;
             int drained = Math.min(maxDrain, tank.getAmount());
             FluidStack result = new FluidStack(tank, drained);
@@ -193,9 +207,10 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
             if (action.execute()) {
                 tank.shrink(drained);
                 if (tank.isEmpty()) {
-                    stacks.set(i, FluidStack.EMPTY);
+                    SlotConfig config = stacks.get(idx).config;
+                    stacks.set(idx, new FluidStackLimiter(FluidStack.EMPTY, config));
                 }
-                onContentsChanged(i);
+                onContentsChanged(idx);
             }
             return result;
         }
@@ -203,4 +218,7 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         return FluidStack.EMPTY;
     }
 
+    public record FluidStackLimiter(FluidStack stack, SlotConfig config){
+
+    }
 }

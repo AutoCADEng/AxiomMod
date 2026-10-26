@@ -6,6 +6,8 @@ import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
 import eng.cad.auto.axiom.common.machine.ui.GenericUI;
 import eng.cad.auto.axiom.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axiom.common.machine.interfaces.IMachineLogic;
@@ -32,11 +34,15 @@ import java.util.Objects;
 
 public class FermenterMachine {
     MachineHolder INSTANCE;
-    static final int maxFluidCapacity = 16000;
+    public static final String name = "fermenter";
     public FermenterMachine() {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineHolder
-                .Builder("fermenter")
+                .Builder(name)
                 .addItemSlots(2)
+                .modifySlot(0, SlotType.ITEM, 64, SlotIORestriction.INPUT)
+                .modifySlot(1, SlotType.ITEM, 64, SlotIORestriction.INPUT)
+                .modifySlot(0, SlotType.FLUID, 4000, SlotIORestriction.INPUT)
+                .modifySlot(1, SlotType.FLUID, 4000, SlotIORestriction.OUTPUT)
                 .addDataSlots(1)
                 .addFluidSlots(2)
                 .addServerLogic(new Logic.Server())
@@ -61,7 +67,7 @@ public class FermenterMachine {
             public void serverTick(Level level, BlockPos pos, BlockState state) {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
-                if (!(Objects.equals(blockEntity.machineConfig.name(), "fermenter"))) return;
+                if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
                 GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                         .addTank(blockEntity.machine.tanks.getFluidInTank(waterTank))
@@ -77,7 +83,7 @@ public class FermenterMachine {
                     return;
                 }
 
-                if (!hasSpace(blockEntity.machine.tanks.getFluidInTank(ethanolTank), activeRecipe.getCraftingOutput().get(0).getFluid())){
+                if (!hasSpace(blockEntity, ethanolTank, activeRecipe.getCraftingOutput().get(0).getFluid())){
                     resetProgress(blockEntity);
                     return;
                 }
@@ -90,9 +96,10 @@ public class FermenterMachine {
                 incrementProgress(blockEntity,1);
             }
 
-            private boolean hasSpace(FluidStack tank, FluidStack fluid) {
+            private boolean hasSpace(GenericBlockEntity blockEntity, int slot, FluidStack fluid) {
+                FluidStack tank = blockEntity.machine.tanks.getFluidInTank(slot);
                 if (!tank.isFluidEqual(fluid) && !tank.isEmpty()) return false;
-                return !(tank.getAmount() + fluid.getAmount() > 16000); // I need to do away with these annoying fixed volumes >_>
+                return !(tank.getAmount() + fluid.getAmount() > blockEntity.machineConfig.fluidSlotConfig().get(slot).capacity());
             }
 
             @Override
@@ -164,14 +171,14 @@ public class FermenterMachine {
 
             private void doRenderFluids(GuiGraphics guiGraphics, GenericUI.Screen screen, int mouseX, int mouseY, float tick) {
 
-                float waterTankLevel = (float) screen.getMenu().tanks.getFluidInTank(waterTank).getAmount() / (float) maxFluidCapacity;
+                float waterTankLevel = (float) screen.getMenu().tanks.getFluidInTank(waterTank).getAmount() / (float) screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(waterTank).capacity();
                 if (waterTankLevel>0){
                     FluidType waterType = screen.getMenu().tanks.getFluidInTank(waterTank).getFluid().getFluidType();
                     ResourceLocation waterTankResource = IClientFluidTypeExtensions.of(waterType).getStillTexture();
                     renderFluidTank(screen, guiGraphics, waterTankResource, water_tank_coords, tank_size, IClientFluidTypeExtensions.of(waterType).getTintColor(), waterTankLevel);
                 }
 
-                float ethanolTankLevel = (float) screen.getMenu().tanks.getFluidInTank(ethanolTank).getAmount() / (float) maxFluidCapacity;
+                float ethanolTankLevel = (float) screen.getMenu().tanks.getFluidInTank(ethanolTank).getAmount() / (float)  screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(ethanolTank).capacity();
                 if (ethanolTankLevel>0) {
                     FluidType ethanolType = screen.getMenu().tanks.getFluidInTank(ethanolTank).getFluid().getFluidType();
                     ResourceLocation ethanolTankResource = IClientFluidTypeExtensions.of(ethanolType).getStillTexture();
@@ -202,7 +209,7 @@ public class FermenterMachine {
                 float u1 = sprite.getU1();
                 float v0 = sprite.getV0();
                 float v1 = sprite.getV1();
-                //float cropped_v = v1 - (v1 - v0) * tankLevel;
+
                 setUITint(tint);
                 guiGraphics.blit(
                         screen.getGuiLeft()+tank_pos.x,

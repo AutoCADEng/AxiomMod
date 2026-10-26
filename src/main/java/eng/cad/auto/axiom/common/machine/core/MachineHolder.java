@@ -3,6 +3,9 @@ package eng.cad.auto.axiom.common.machine.core;
 import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotConfig;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
 import eng.cad.auto.axiom.common.machine.interfaces.IMachineLogic;
 import eng.cad.auto.axiom.common.machine.interfaces.IRightClickBehaviour;
 import eng.cad.auto.axiom.common.machine.ui.GenericUI;
@@ -25,6 +28,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MachineHolder {
     public RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity;
@@ -60,19 +66,30 @@ public class MachineHolder {
             ui = new GenericUI(config, blockEntity);
         }
     }
-    //Helper Nested Classes
-    public record Config(boolean noGui, int itemSlots, int fluidSlots, int dataSlots, IMachineLogic serverLogic, IMachineClientLogic clientLogic, IMenuSlotLogic menuSlots,
-                         IRightClickBehaviour rightClickLogic, String name) {
 
+    //This is getting comically long :(
+    public record Config(boolean noGui,
+                         int itemSlots,
+                         int fluidSlots,
+                         int dataSlots,
+                         IMachineLogic serverLogic,
+                         IMachineClientLogic clientLogic,
+                         IMenuSlotLogic menuSlots,
+                         IRightClickBehaviour rightClickLogic,
+                         String name,
+                         HashMap<Integer, SlotConfig> itemSlotConfig,
+                         HashMap<Integer, SlotConfig> fluidSlotConfig) {
     }
 
     public static class Builder {
-
+        // this is a builder, it runs once per machine so it probably doesn't matter that I hate this data structure :<
+        public HashMap<SlotType, HashMap<Integer, SlotConfig>> slotConfig = new HashMap<>();
         int itemSlots = 0;
         int fluidSlots = 0;
         int dataSlots = 0;
         boolean noGui = false;
         String name;
+
         IMenuSlotLogic menuSlot = new IMenuSlotLogic() {
             @Override
             public void loadMenuSlots(GenericUI.Menu menu) {
@@ -141,12 +158,30 @@ public class MachineHolder {
         public Builder (String name){
             this.name = name;
         }
+
+
+        public Builder modifySlot(int slot, SlotType slotType, int limit, SlotIORestriction restriction){
+            if (!slotConfig.containsKey(slotType)) return this;
+            slotConfig.get(slotType).put(slot, new SlotConfig(slotType, slot, restriction, limit));
+            return this;
+        }
+
         public Builder addItemSlots(int number) {
+            if (!slotConfig.containsKey(SlotType.ITEM)) slotConfig.put(SlotType.ITEM, new HashMap<Integer, SlotConfig>());
+            for (int idx = itemSlots; idx<(itemSlots+number); idx++){
+                slotConfig.get(SlotType.ITEM).put(idx, new SlotConfig(SlotType.ITEM, idx, SlotIORestriction.IN_OUT, 64));
+            }
             itemSlots += number;
             return this;
         }
 
         public Builder addFluidSlots(int number) {
+
+            if (!slotConfig.containsKey(SlotType.FLUID)) slotConfig.put(SlotType.FLUID, new HashMap<Integer, SlotConfig>());
+
+            for (int idx = fluidSlots; idx<(fluidSlots + number); idx++){
+                slotConfig.get(SlotType.FLUID).put(idx, new SlotConfig(SlotType.FLUID, idx, SlotIORestriction.IN_OUT, 16000));
+            }
             fluidSlots += number;
             return this;
         }
@@ -184,14 +219,16 @@ public class MachineHolder {
                     clientLogic,
                     menuSlot,
                     rightClickLogic,
-                    name);
+                    name,
+                    slotConfig.get(SlotType.ITEM),
+                    slotConfig.get(SlotType.FLUID)
+                    );
         }
 
-        public MachineHolder build(){
+        public MachineHolder build() {
             Config machineData = this.buildData();
             return new MachineHolder(name, machineData);
         }
-
 
     }
 }
