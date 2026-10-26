@@ -10,7 +10,7 @@
     {
       "type": "fluid",
       "input": "minecraft:water",
-      "count": 16000
+      "count": 8000
     }
   ],
   "outputs": [

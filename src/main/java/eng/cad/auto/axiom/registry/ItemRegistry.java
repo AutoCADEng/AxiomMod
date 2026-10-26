@@ -15,6 +15,9 @@ import java.util.function.Supplier;
 public class ItemRegistry {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, AxiomMod.MODID);
 
+    public static final RegistryObject<Item> TREATED_FABRIC = registerItem("treated_fabric", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TREATED_BARK = registerItem("treated_bark", () -> new Item(new Item.Properties()));
+
     public static RegistryObject<Item> registerAxiomShard(String name, int color) {
             String itemName = name + "_shard";
             return registerItem(itemName, () -> new AxiomShard(new Item.Properties(), color));

@@ -2,9 +2,9 @@ package eng.cad.auto.axiom.common.machine;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
+import eng.cad.auto.axiom.common.crafting.util.CraftingUtil;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidType;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import org.joml.Vector2i;
 
@@ -68,7 +67,7 @@ public class FermenterMachine {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
-                GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
+                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                         .addTank(blockEntity.machine.tanks.getFluidInTank(input_tank))
                         .addTank(blockEntity.machine.tanks.getFluidInTank(output_tank))
@@ -89,7 +88,7 @@ public class FermenterMachine {
                 }
 
                 if (blockEntity.machine.metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
-                    if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
+                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     resetProgress(blockEntity);
                     return;
                 }
@@ -100,14 +99,6 @@ public class FermenterMachine {
                 FluidStack tank = blockEntity.machine.tanks.getFluidInTank(slot);
                 if (!tank.isFluidEqual(fluid) && !tank.isEmpty()) return false;
                 return !(tank.getAmount() + fluid.getAmount() > blockEntity.machineConfig.fluidSlotConfig().get(slot).capacity());
-            }
-
-            @Override
-            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
-                for (CraftingIngredient ingredient:recipe.getCraftingIngredients()){
-                    recipe.performCraft(ingredient, entity, simulate);
-                    entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
-                }
             }
 
             @Override

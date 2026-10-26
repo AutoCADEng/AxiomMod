@@ -31,7 +31,7 @@ public class AxiomMod {
         MachineRegistry.init();
         ItemRegistry.ITEMS.register(modEventBus);
         MenuRegistry.MENUS.register(modEventBus);
-
+        TagRegistry.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
         //Client Event Hooks

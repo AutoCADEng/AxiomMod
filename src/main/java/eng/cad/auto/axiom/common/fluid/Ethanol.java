@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.MapColor;
 
 public class Ethanol {
+    public static final String name = "ethanol";
     public static int color = 0xCCF5DEB3;
     public static class FluidBehaviour implements IFluidBehaviour {
         @Override
@@ -18,5 +19,10 @@ public class Ethanol {
                 living.addEffect(new MobEffectInstance(MobEffects.CONFUSION,200,1));
             }
         }
+    }
+
+    public static class Dilute{
+        public static final String name = "dilute_ethanol";
+        public static int color = 0x55FAEDD4;
     }
 }

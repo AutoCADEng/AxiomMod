@@ -132,15 +132,6 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
         return true;
     }
 
-    public static GenericRecipe getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<GenericRecipe> type, Level level, GenericBlockEntity blockEntity ){
-        Optional<GenericRecipe> recipeOutput = level.getRecipeManager()
-                .getAllRecipesFor(type)
-                .stream()
-                .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level)).findFirst();
-
-        return recipeOutput.orElse(null);
-    }
-
     public NonNullList<CraftingIngredient> getCraftingIngredients() {
         return input;
     }
@@ -149,91 +140,6 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
         return output;
     }
 
-    public boolean validateCraft(GenericBlockEntity entity){
-            HashMap<Item, Integer> recipeItems = new HashMap<>();
-            HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
-
-            for (CraftingIngredient ingredient: getCraftingIngredients()){
-                if (ingredient.isItem()) {
-                    ItemStack itemStack = ingredient.getItem();
-
-                    if (recipeItems.containsKey(itemStack.getItem())){
-                        recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
-                    } else {
-                        recipeItems.put(itemStack.getItem(),  itemStack.getCount());
-                    }
-                }
-
-                if (ingredient.isFluid()) {
-                    FluidStack fluidStack = ingredient.getFluid();
-
-                    if (recipeFluids.containsKey(fluidStack.getFluid())){
-                        recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
-                    } else {
-                        recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
-                    }
-                }
-            }
-
-            for (int idx = 0; idx<entity.machine.inventory.getSlots(); idx++){
-                ItemStack stack = entity.machine.inventory.getStackInSlot(idx);
-                if(recipeItems.containsKey(stack.getItem())){
-                    recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
-                }
-            }
-
-            for (int idx = 0; idx<entity.machine.tanks.getTanks(); idx++){
-                FluidStack stack = entity.machine.tanks.getFluidInTank(idx);
-                if(recipeFluids.containsKey(stack.getFluid())){
-                    recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
-                }
-            }
-
-        return recipeItems.values().stream().allMatch(count -> count <= 0) && recipeFluids.values().stream().allMatch(count -> count <= 0);
-    }
-
-    public void performCraft(CraftingIngredient target, GenericBlockEntity blockEntity, boolean simulate) {
-        int required = 0;
-        if (target.isItem()) {
-            required = target.getItem().getCount();
-            for (int idx = 0; idx < blockEntity.machine.inventory.getSlots(); idx++) {
-                ItemStack itemStack = blockEntity.machine.inventory.getStackInSlot(idx);
-                if (itemStack.is(target.getItem().getItem())) {
-                    if (required <= 0) continue;
-
-                    int originalCount = itemStack.getCount();
-
-                    int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
-                    if (!simulate) {
-                        blockEntity.machine.inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY : new ItemStack(itemStack.getItem(), remainingItems));
-                    }
-                    required = originalCount - remainingItems;
-                }
-            }
-            if (required > 0)
-                AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} [item] {} left", this.getId(), required, target.getItem().toString());
-        }
-
-        if (target.isFluid()) {
-            required = target.getFluid().getAmount();
-            for (int idx = 0; idx < blockEntity.machine.tanks.getTanks(); idx++) {
-                FluidStack fluidStack = blockEntity.machine.tanks.getFluidInTank(idx);
-                if (fluidStack.isFluidEqual(target.getFluid())) {
-                    if (required <= 0) continue;
-
-                    int originalCount = fluidStack.getAmount();
-
-                    int remainingVolume = Math.max(originalCount - Math.min(blockEntity.machine.tanks.getTankCapacity(idx), required), 0);
-                    if (!simulate) {
-                        blockEntity.machine.tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY : new FluidStack(fluidStack.getFluid(), remainingVolume));
-                    }
-                    required = originalCount - remainingVolume;
-                }
-            }
-            if (required > 0)
-                AxiomMod.LOGGER.warn("Unbalanced crafting equation for recipe {} {} [fluid] {} left", this.getId(), required, target.getFluid().toString());
-        }
-    }
     public static class Type implements RecipeType<GenericRecipe> {
     }
 

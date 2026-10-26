@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface IMachineLogic {
     void serverTick(Level level, BlockPos pos, BlockState state);
-    void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate);
     void saveInventory(GenericBlockEntity blockEntity, CompoundTag tag);
     void loadInventory(GenericBlockEntity blockEntity, CompoundTag tag);
     void resetProgress(GenericBlockEntity blockEntity);

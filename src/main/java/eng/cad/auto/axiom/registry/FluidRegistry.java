@@ -2,9 +2,7 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 
-import eng.cad.auto.axiom.common.fluid.Deathwater;
-import eng.cad.auto.axiom.common.fluid.Ethanol;
-import eng.cad.auto.axiom.common.fluid.FluidHolder;
+import eng.cad.auto.axiom.common.fluid.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
@@ -21,9 +19,15 @@ public class FluidRegistry {
     public static final DeferredRegister<FluidType> FLUIDTYPES = DeferredRegister.create(ForgeRegistries.Keys.FLUID_TYPES, AxiomMod.MODID);
     public static final HashMap<String, RegistryObject<? extends Fluid>> FLUIDLIST = new HashMap<>();
 
-    public static final FluidHolder ETHANOL = new FluidHolder("ethanol", Ethanol.color, MapColor.COLOR_BLACK, new Ethanol.FluidBehaviour());
-    public static final FluidHolder DEATHWATER = new FluidHolder("deathwater", Deathwater.color, MapColor.COLOR_BLACK, new Deathwater.FluidBehaviour());
+    public static final FluidHolder DILUTE_ETHANOL = new FluidHolder(Ethanol.Dilute.name, Ethanol.Dilute.color, MapColor.COLOR_BLACK, null);
+    public static final FluidHolder ETHANOL = new FluidHolder(Ethanol.name, Ethanol.color, MapColor.COLOR_BLACK, new Ethanol.FluidBehaviour());
 
+    public static final FluidHolder DILUTE_NITRIC_ACID = new FluidHolder(NitricAcid.Dilute.name, NitricAcid.Dilute.color, MapColor.COLOR_BLACK, null);
+    public static final FluidHolder NITRIC_ACID = new FluidHolder(NitricAcid.name, NitricAcid.color, MapColor.COLOR_BLACK, null);
+    public static final FluidHolder NITAL = new FluidHolder(NitricAcid.Nital.name, NitricAcid.Nital.color, MapColor.COLOR_BLACK, null);
+
+    public static final FluidHolder DEATHWATER = new FluidHolder("deathwater", Deathwater.color, MapColor.COLOR_BLACK, new Deathwater.FluidBehaviour());
+    public static final FluidHolder BLAZEWATER = new FluidHolder("blazewater", Blazewater.color, MapColor.COLOR_BLACK, new Blazewater.FluidBehaviour());
     private void registerAxiomFluid(String name, int color){
         new FluidHolder(name, color, MapColor.COLOR_BLACK);
     }

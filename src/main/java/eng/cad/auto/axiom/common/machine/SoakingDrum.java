@@ -1,12 +1,14 @@
 package eng.cad.auto.axiom.common.machine;
 
 import eng.cad.auto.axiom.client.machine.core.IMachineClientLogic;
-import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
+import eng.cad.auto.axiom.common.crafting.util.CraftingUtil;
 import eng.cad.auto.axiom.common.items.CustomBucket;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
+import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
 import eng.cad.auto.axiom.common.machine.interfaces.IMachineLogic;
 import eng.cad.auto.axiom.common.machine.interfaces.IRightClickBehaviour;
 import eng.cad.auto.axiom.common.machine.ui.GenericUI;
@@ -26,7 +28,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import java.util.Objects;
@@ -39,8 +40,10 @@ public class SoakingDrum {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineHolder
                 .Builder(name)
                 .addItemSlots(1)
-                .addDataSlots(2)
+                .addDataSlots(1)
                 .addFluidSlots(1)
+                .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
+                .modifySlot(0,SlotType.FLUID,8000,SlotIORestriction.IN_OUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
                 .noGui(new Logic.RightClickLogic())
@@ -49,7 +52,6 @@ public class SoakingDrum {
     public static class Logic{
 
         public static final int progress = 0;
-        public static final int ready_to_harvest = 1;
         public static final int item_slot = 0;
         public static final int fluid_tank = 0;
         public static final int MAX_PROGRESS = 24000/60;
@@ -61,9 +63,8 @@ public class SoakingDrum {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), SoakingDrum.name))) return;
-                if (blockEntity.machine.metadata.get(ready_to_harvest) == 1) return;
 
-                GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
+                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                                 .addTank(blockEntity.machine.tanks.getFluidInTank(fluid_tank))
                                 .addSlot(blockEntity.machine.inventory.getStackInSlot(item_slot)),
@@ -76,25 +77,17 @@ public class SoakingDrum {
                     return;
                 }
 
-                // Not sure why this was different to the fermenter. Revert if broken!
                 if (blockEntity.machine.metadata.get(progress) >= MAX_PROGRESS) {
-                    if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
+                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    blockEntity.machine.metadata.set(ready_to_harvest, 1);
                     resetProgress(blockEntity);
                     return;
                 }
+
                 if (level.random.nextFloat() < 0.1F) level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
                 incrementProgress(blockEntity,1);
             }
 
-            @Override
-            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
-                for (CraftingIngredient ingredient:recipe.getCraftingIngredients()) {
-                    recipe.performCraft(ingredient, entity, simulate);
-                    entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
-                }
-            }
 
             @Override
             public void saveInventory(GenericBlockEntity entity, CompoundTag tag) {
@@ -137,7 +130,6 @@ public class SoakingDrum {
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericBlockEntity blockEntity) {
                 if (!level.isClientSide()) return;
-                if (blockEntity.machine.metadata.get(ready_to_harvest) == 1) return;
                 if (blockEntity.machine.metadata.get(progress) <= 0) return;
                 if (level.random.nextFloat() < 0.33F) {
 
@@ -194,11 +186,6 @@ public class SoakingDrum {
                         player.setItemInHand(interactionHand, extracted);
                     } else {
                         playerHand.grow(extracted.getCount());
-                    }
-
-                    if(blockEntity.machine.metadata.get(ready_to_harvest) == 1){
-                        blockEntity.machine.metadata.set(ready_to_harvest, 0);
-                        blockEntity.syncData();
                     }
                 }
                 return false;

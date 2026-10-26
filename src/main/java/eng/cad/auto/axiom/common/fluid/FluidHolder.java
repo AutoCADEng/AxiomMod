@@ -90,6 +90,7 @@ public class FluidHolder {
                 @Override
                 public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
                     super.entityInside(blockState, level, blockPos, entity);
+                    if (entityBehaviour == null) return;
                     entityBehaviour.onEntityInside(level, blockPos, entity);
                 }
             }

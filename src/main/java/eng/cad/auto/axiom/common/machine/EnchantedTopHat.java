@@ -1,9 +1,9 @@
 package eng.cad.auto.axiom.common.machine;
 
 import eng.cad.auto.axiom.client.machine.core.IMachineClientLogic;
-import eng.cad.auto.axiom.common.crafting.core.CraftingIngredient;
 import eng.cad.auto.axiom.common.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
+import eng.cad.auto.axiom.common.crafting.util.CraftingUtil;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
@@ -26,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 
 
 import java.util.Objects;
@@ -68,7 +67,7 @@ public class EnchantedTopHat {
                 if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), SoakingDrum.name))) return;
 
-                GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
+                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                                 .addSlot(blockEntity.machine.inventory.getStackInSlot(item_slot_in))
                                 .addSlot(blockEntity.machine.inventory.getStackInSlot(item_slot_out)),
@@ -81,9 +80,8 @@ public class EnchantedTopHat {
                     return;
                 }
 
-                // Not sure why this was different to the fermenter. Revert if broken!
                 if (blockEntity.machine.metadata.get(progress) >= MAX_PROGRESS) {
-                    if (activeRecipe.validateCraft(blockEntity)) craftRecipe(blockEntity, activeRecipe, false);
+                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     resetProgress(blockEntity);
                     return;
@@ -92,13 +90,6 @@ public class EnchantedTopHat {
                 incrementProgress(blockEntity,1);
             }
 
-            @Override
-            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulate) {
-                for (CraftingIngredient ingredient:recipe.getCraftingIngredients()) {
-                    recipe.performCraft(ingredient, entity, simulate);
-                    entity.machine.tanks.fill(recipe.getCraftingOutput().get(0).getFluid(), simulate ? IFluidHandler.FluidAction.SIMULATE : IFluidHandler.FluidAction.EXECUTE);
-                }
-            }
 
             @Override
             public void saveInventory(GenericBlockEntity entity, CompoundTag tag) {

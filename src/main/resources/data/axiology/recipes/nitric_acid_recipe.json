@@ -1,0 +1,18 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:alembic",
+  "inputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:dilute_nitric_acid",
+      "count": 500
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:ethanol",
+      "count": 250
+    }
+  ]
+}

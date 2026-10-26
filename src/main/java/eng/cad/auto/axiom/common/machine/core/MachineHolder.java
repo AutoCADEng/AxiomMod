@@ -104,11 +104,6 @@ public class MachineHolder {
             }
 
             @Override
-            public void craftRecipe(GenericBlockEntity entity, GenericRecipe recipe, boolean simulateFirst) {
-                AxiomMod.LOGGER.warn("No custom behaviour defined for craftRecipe");
-            }
-
-            @Override
             public void saveInventory(GenericBlockEntity blockEntity, CompoundTag tag) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for saveInventory, data will NOT PERSIST");
             }
