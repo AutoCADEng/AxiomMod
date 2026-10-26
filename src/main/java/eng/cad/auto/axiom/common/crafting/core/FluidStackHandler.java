@@ -62,8 +62,6 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
             {
                 CompoundTag fluidTag = new CompoundTag();
                 fluidTag.putInt("Slot", i);
-                fluidTag.putInt("Limit", stacks.get(i).config.capacity());
-                fluidTag.putString("Restrictions", stacks.get(i).config.restriction().name());
                 stacks.get(i).stack.writeToNBT(fluidTag);
                 nbtTagList.add(fluidTag);
             }
@@ -82,13 +80,10 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         {
             CompoundTag fluidSlot = tagList.getCompound(i);
             int slot = fluidSlot.getInt("Slot");
-            int capacity = fluidSlot.getInt("Limit");
-            SlotIORestriction restrictions = SlotIORestriction.valueOf(fluidSlot.getString("Restrictions"));
 
-            SlotConfig config = new SlotConfig(SlotType.FLUID, slot, restrictions, capacity);
             if (slot >= 0 && slot < stacks.size())
             {
-                stacks.set(slot, new FluidStackLimiter(FluidStack.loadFluidStackFromNBT(fluidSlot), config));
+                stacks.set(slot, new FluidStackLimiter(FluidStack.loadFluidStackFromNBT(fluidSlot), stacks.get(slot).config));
             }
         }
         onLoad();
