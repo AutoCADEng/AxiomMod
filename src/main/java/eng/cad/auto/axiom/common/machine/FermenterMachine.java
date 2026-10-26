@@ -39,12 +39,12 @@ public class FermenterMachine {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineHolder
                 .Builder(name)
                 .addItemSlots(2)
+                .addFluidSlots(2)
                 .modifySlot(0, SlotType.ITEM, 64, SlotIORestriction.INPUT)
                 .modifySlot(1, SlotType.ITEM, 64, SlotIORestriction.INPUT)
                 .modifySlot(0, SlotType.FLUID, 4000, SlotIORestriction.INPUT)
                 .modifySlot(1, SlotType.FLUID, 4000, SlotIORestriction.OUTPUT)
                 .addDataSlots(1)
-                .addFluidSlots(2)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
                 .addMenuSlots(new Logic.MenuInit())
@@ -54,8 +54,8 @@ public class FermenterMachine {
 
         static final int Max_Processing_Ticks = 24000/60;
 
-        static final int waterTank = 0;
-        static final int ethanolTank = 1;
+        static final int input_tank = 0;
+        static final int output_tank = 1;
 
         static final int inputSlot0 = 0;
         static final int inputSlot1 = 1;
@@ -70,8 +70,8 @@ public class FermenterMachine {
                 if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
                 GenericRecipe activeRecipe = GenericRecipe.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                        .addTank(blockEntity.machine.tanks.getFluidInTank(waterTank))
-                        .addTank(blockEntity.machine.tanks.getFluidInTank(ethanolTank))
+                        .addTank(blockEntity.machine.tanks.getFluidInTank(input_tank))
+                        .addTank(blockEntity.machine.tanks.getFluidInTank(output_tank))
                         .addSlot(blockEntity.machine.inventory.getStackInSlot(inputSlot0))
                         .addSlot(blockEntity.machine.inventory.getStackInSlot(inputSlot1)),
                         RecipeRegistry.FERMENTATION.get(),
@@ -83,7 +83,7 @@ public class FermenterMachine {
                     return;
                 }
 
-                if (!hasSpace(blockEntity, ethanolTank, activeRecipe.getCraftingOutput().get(0).getFluid())){
+                if (!hasSpace(blockEntity, output_tank, activeRecipe.getCraftingOutput().get(0).getFluid())){
                     resetProgress(blockEntity);
                     return;
                 }
@@ -171,16 +171,16 @@ public class FermenterMachine {
 
             private void doRenderFluids(GuiGraphics guiGraphics, GenericUI.Screen screen, int mouseX, int mouseY, float tick) {
 
-                float waterTankLevel = (float) screen.getMenu().tanks.getFluidInTank(waterTank).getAmount() / (float) screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(waterTank).capacity();
+                float waterTankLevel = (float) screen.getMenu().tanks.getFluidInTank(input_tank).getAmount() / (float) screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(input_tank).capacity();
                 if (waterTankLevel>0){
-                    FluidType waterType = screen.getMenu().tanks.getFluidInTank(waterTank).getFluid().getFluidType();
+                    FluidType waterType = screen.getMenu().tanks.getFluidInTank(input_tank).getFluid().getFluidType();
                     ResourceLocation waterTankResource = IClientFluidTypeExtensions.of(waterType).getStillTexture();
                     renderFluidTank(screen, guiGraphics, waterTankResource, water_tank_coords, tank_size, IClientFluidTypeExtensions.of(waterType).getTintColor(), waterTankLevel);
                 }
 
-                float ethanolTankLevel = (float) screen.getMenu().tanks.getFluidInTank(ethanolTank).getAmount() / (float)  screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(ethanolTank).capacity();
+                float ethanolTankLevel = (float) screen.getMenu().tanks.getFluidInTank(output_tank).getAmount() / (float)  screen.getMenu().blockEntity.machineConfig.fluidSlotConfig().get(output_tank).capacity();
                 if (ethanolTankLevel>0) {
-                    FluidType ethanolType = screen.getMenu().tanks.getFluidInTank(ethanolTank).getFluid().getFluidType();
+                    FluidType ethanolType = screen.getMenu().tanks.getFluidInTank(output_tank).getFluid().getFluidType();
                     ResourceLocation ethanolTankResource = IClientFluidTypeExtensions.of(ethanolType).getStillTexture();
                     renderFluidTank(screen, guiGraphics, ethanolTankResource,  ethanol_tank_coords, tank_size, IClientFluidTypeExtensions.of(ethanolType).getTintColor(), ethanolTankLevel);
                 }
