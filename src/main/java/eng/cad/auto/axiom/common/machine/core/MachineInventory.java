@@ -1,7 +1,7 @@
 package eng.cad.auto.axiom.common.machine.core;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.common.crafting.core.FluidStackHandler;
+import eng.cad.auto.axiom.common.fluid.FluidStackHandler;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotConfig;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.ItemStack;

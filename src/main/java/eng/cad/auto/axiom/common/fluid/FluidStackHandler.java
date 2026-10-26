@@ -1,6 +1,7 @@
-package eng.cad.auto.axiom.common.crafting.core;
+package eng.cad.auto.axiom.common.fluid;
 
 import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiom.common.crafting.core.IFluidHandlerModifiable;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotConfig;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axiom.common.machine.core.slot.SlotType;
@@ -8,14 +9,9 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
-import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
 
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
@@ -36,12 +32,6 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
             stacks.add(idx, new FluidStackLimiter(FluidStack.EMPTY, configs[idx]));
         }
 
-    }
-
-    private void setSize(int size)
-    {
-        // This should be okay because we overwrite it immediately?
-        stacks = NonNullList.withSize(size, new FluidStackLimiter(FluidStack.EMPTY, new SlotConfig(SlotType.FLUID,0,SlotIORestriction.IN_OUT,0)));
     }
 
     @Override
@@ -68,22 +58,22 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         }
         CompoundTag nbt = new CompoundTag();
         nbt.put("Fluids", nbtTagList);
-        nbt.putInt("Size", stacks.size());
         return nbt;
     }
 
     @Override
     public void deserializeNBT(CompoundTag nbt) {
-        setSize(nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : stacks.size());
+        for (int i = 0; i < stacks.size(); i++) {
+            stacks.set(i, new FluidStackLimiter(FluidStack.EMPTY, stacks.get(i).config));
+        }
+
         ListTag tagList = nbt.getList("Fluids", Tag.TAG_COMPOUND);
-        for (int i = 0; i < tagList.size(); i++)
-        {
+        for (int i = 0; i < tagList.size(); i++) {
             CompoundTag fluidSlot = tagList.getCompound(i);
             int slot = fluidSlot.getInt("Slot");
-
-            if (slot >= 0 && slot < stacks.size())
-            {
-                stacks.set(slot, new FluidStackLimiter(FluidStack.loadFluidStackFromNBT(fluidSlot), stacks.get(slot).config));
+            if (slot >= 0 && slot < stacks.size()) {
+                stacks.set(slot, new FluidStackLimiter(
+                        FluidStack.loadFluidStackFromNBT(fluidSlot), stacks.get(slot).config));
             }
         }
         onLoad();

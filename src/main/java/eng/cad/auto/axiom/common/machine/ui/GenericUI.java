@@ -1,7 +1,7 @@
 package eng.cad.auto.axiom.common.machine.ui;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.common.crafting.core.FluidStackHandler;
+import eng.cad.auto.axiom.common.fluid.FluidStackHandler;
 import eng.cad.auto.axiom.common.machine.core.GenericBlockEntity;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
 import eng.cad.auto.axiom.network.FluidNetwork;
