@@ -11,7 +11,7 @@
   "outputs": [
     {
       "type": "fluid",
-      "input": "axiology:ethanol",
+      "input": "axiology:nitric_acid",
       "count": 250
     }
   ]
