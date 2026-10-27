@@ -162,7 +162,7 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     @Override
     public @NotNull FluidStack drain(FluidStack resource, FluidAction action) {
         if (resource.isEmpty()) return FluidStack.EMPTY;
-        for (int idx = 0; idx < stacks.size(); idx++) {
+        for (int idx = stacks.size() - 1; idx >= 0; idx--) {
             FluidStack tank = stacks.get(idx).stack;
             if (tank.isEmpty() || !tank.isFluidEqual(resource)) continue;
             int drained = Math.min(resource.getAmount(), tank.getAmount());
@@ -183,7 +183,7 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     public @NotNull FluidStack drain(int maxDrain, FluidAction action) {
         if (maxDrain <= 0) return FluidStack.EMPTY;
 
-        for (int idx = 0; idx < stacks.size(); idx++) {
+        for (int idx = stacks.size() - 1; idx >= 0; idx--) {
             FluidStack tank = stacks.get(idx).stack;
             if (tank.isEmpty()) continue;
             int drained = Math.min(maxDrain, tank.getAmount());
