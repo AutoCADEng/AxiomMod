@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:soaking_drum",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "minecraft:fermented_spider_eye",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "minecraft:water",
+      "count": 8000
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:dilute_nitric_acid",
+      "count": 100
+    }
+  ]
+}
