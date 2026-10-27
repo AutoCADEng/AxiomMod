@@ -77,13 +77,13 @@ public class CustomCraftingContainer implements Container {
     public boolean containsIngredient(CraftingIngredient ingredient) {
         if (ingredient.isFluid()){
             for (FluidStack fluid:tanks){
-                if (!fluid.getFluid().isSame(ingredient.getFluid().getFluid())) return false;
+                if (!fluid.getFluid().isSame(ingredient.getFluid().getFluid())) continue;
                 return fluid.getAmount() >= ingredient.getFluid().getAmount();
             }
         }
         if (ingredient.isItem()){
             for (ItemStack item:items){
-                if (item.is(ingredient.getItem().getItem())) return true;
+                if (!item.is(ingredient.getItem().getItem())) continue;
                 return item.getCount() >= ingredient.getItem().getCount();
             }
         }
