@@ -2,6 +2,7 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.common.machine.Alembic;
+import eng.cad.auto.axiom.common.machine.ChemicalReactor;
 import eng.cad.auto.axiom.common.machine.FermenterMachine;
 import eng.cad.auto.axiom.common.machine.SoakingDrum;
 import eng.cad.auto.axiom.common.machine.core.MachineHolder;
@@ -27,6 +28,7 @@ public class MachineRegistry
         new FermenterMachine();
         new SoakingDrum();
         new Alembic();
+        new ChemicalReactor();
     }
 
 }

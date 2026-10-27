@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:chemical_reactor",
+  "inputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:nitric_acid",
+      "count": 250
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:ethanol",
+      "count": 250
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:nital",
+      "count": 500
+    }
+  ]
+}

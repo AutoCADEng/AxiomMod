@@ -23,4 +23,6 @@ public class RecipeRegistry {
             RecipeRegistry.RECIPE_TYPES.register("soaking_drum", GenericRecipe.Type::new);
     public static RegistryObject<RecipeType<GenericRecipe>> ALEMBIC =
             RecipeRegistry.RECIPE_TYPES.register("alembic", GenericRecipe.Type::new);
+    public static RegistryObject<RecipeType<GenericRecipe>> CHEMICAL_REACTOR =
+            RecipeRegistry.RECIPE_TYPES.register("chemical_reactor", GenericRecipe.Type::new);
 }
