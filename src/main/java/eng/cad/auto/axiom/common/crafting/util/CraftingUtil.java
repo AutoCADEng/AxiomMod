@@ -157,4 +157,8 @@ public class CraftingUtil {
 
         return recipeOutput.orElse(null);
     }
+
+    public static boolean hasSpace(GenericBlockEntity blockEntity, GenericRecipe recipe) {
+        return true;
+    }
 }

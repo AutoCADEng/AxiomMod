@@ -82,7 +82,7 @@ public class FermenterMachine {
                     return;
                 }
 
-                if (!hasSpace(blockEntity, output_tank, activeRecipe.getCraftingOutput().get(0).getFluid())){
+                if (!CraftingUtil.hasSpace(blockEntity, activeRecipe)) {
                     resetProgress(blockEntity);
                     return;
                 }
@@ -93,12 +93,6 @@ public class FermenterMachine {
                     return;
                 }
                 incrementProgress(blockEntity,1);
-            }
-
-            private boolean hasSpace(GenericBlockEntity blockEntity, int slot, FluidStack fluid) {
-                FluidStack tank = blockEntity.machine.tanks.getFluidInTank(slot);
-                if (!tank.isFluidEqual(fluid) && !tank.isEmpty()) return false;
-                return !(tank.getAmount() + fluid.getAmount() > blockEntity.machineConfig.fluidSlotConfig().get(slot).capacity());
             }
 
             @Override
