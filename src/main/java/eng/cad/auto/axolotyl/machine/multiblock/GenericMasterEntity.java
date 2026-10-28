@@ -8,29 +8,28 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GenericMasterEntity extends GenericMachineEntity {
     MultiblockStructure machineStructure;
-
+    NonNullList<BlockPos> followers = NonNullList.create();
     public GenericMasterEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineCore.Config machineConfig) {
         super(type, pos, state, machineConfig);
     }
 
     public boolean validateStructure(BlockPos controllerPos){
         if (level == null) return false;
-
         if (machineStructure == null) {
             var supplier = MultiblockRegistry.Structures.get(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, super.machineConfig.name() + "_multiblock"));
             if (supplier == null) return false;
             machineStructure = supplier.get();
         }
 
-        BlockState blockState = level.getBlockState(controllerPos);
+        followers.clear();
         Direction facing = level.getBlockState(controllerPos).getValue(GenericFollowerBlock.FACING);
-        BlockPos offset = controllerPos.subtract(machineStructure.rootPos);
         int height = machineStructure.shapeList.size();
         int rows = machineStructure.shapeList.get(0).length;
         int cols = machineStructure.shapeList.get(0)[0].length();
@@ -50,7 +49,16 @@ public class GenericMasterEntity extends GenericMachineEntity {
                     BlockPos rotatedPos = relativePos.rotate(rotation);
                     BlockPos worldPos = controllerPos.offset(rotatedPos);
 
-                    AxiomMod.LOGGER.info("Block at pos {} is {}", worldPos.toString(), level.getBlockState(worldPos).toString());
+                    Block blockAtPos = level.getBlockState(worldPos).getBlock();
+
+                    char buildKey = machineStructure.shapeList.get(layer)[row].charAt(col);
+                    if (!machineStructure.blockMap.get(buildKey).contains(blockAtPos)){
+                        followers.clear();
+                        return false;
+                    }
+                    if (blockAtPos instanceof GenericFollowerBlock followerBlock){
+                        followers.add(worldPos); // Seems safer than storing block entities that might become invalid
+                    }
                 }
             }
         }

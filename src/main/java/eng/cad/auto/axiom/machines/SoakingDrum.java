@@ -46,7 +46,8 @@ public class SoakingDrum {
                 .modifySlot(0,SlotType.FLUID,8000,SlotIORestriction.IN_OUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
-                .noGui(new Logic.RightClickLogic())
+                .noGui()
+                .rightClickLogic(new FermenterMachine.Logic.RightClickLogic())
                 .build());
     }
     public static class Logic{

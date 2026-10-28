@@ -45,7 +45,8 @@ public class Alembic {
                 .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.IN_OUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
-                .noGui(new Logic.RightClickLogic())
+                .noGui()
+                .rightClickLogic(new Logic.RightClickLogic())
                 .build());
     }
     public static class Logic{

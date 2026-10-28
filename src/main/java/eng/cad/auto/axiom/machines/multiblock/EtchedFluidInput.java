@@ -36,7 +36,8 @@ public class EtchedFluidInput {
                 .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.INPUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
-                .noGui(new Logic.RightClickLogic())
+                .rightClickLogic(new Logic.RightClickLogic())
+                .noGui()
                 .isMultiblockFollower()
                 .build());
     }

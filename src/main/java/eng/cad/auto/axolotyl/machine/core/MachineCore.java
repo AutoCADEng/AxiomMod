@@ -1,6 +1,7 @@
 package eng.cad.auto.axolotyl.machine.core;
 
 import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiom.machines.ChemicalReactor;
 import eng.cad.auto.axiom.registry.ItemRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotConfig;
@@ -245,8 +246,7 @@ public class MachineCore {
             this.menuSlot = menuSlot;
             return this;
         }
-        public Builder noGui(IRightClickBehaviour rightClickLogic){
-            this.rightClickLogic = rightClickLogic;
+        public Builder noGui(){
             noGui = true;
             return this;
         }
@@ -281,6 +281,12 @@ public class MachineCore {
             machineType = MACHINETYPE.FOLLOWER;
             return this;
         }
+
+        public Builder rightClickLogic(IRightClickBehaviour rightClickLogic) {
+            this.rightClickLogic = rightClickLogic;
+            return this;
+        }
+
         public enum MACHINETYPE {
             MACHINE, CONTROLLER, FOLLOWER;
         }

@@ -1,5 +1,6 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
+import eng.cad.auto.axiom.machines.FermenterMachine;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.item.CustomBucket;
@@ -36,7 +37,8 @@ public class EtchedFluidOutput {
                 .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.INPUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
-                .noGui(new Logic.RightClickLogic())
+                .rightClickLogic(new Logic.RightClickLogic())
+                .noGui()
                 .isMultiblockFollower()
                 .build());
     }

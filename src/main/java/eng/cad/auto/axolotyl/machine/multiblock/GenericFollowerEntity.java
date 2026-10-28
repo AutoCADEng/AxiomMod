@@ -10,4 +10,5 @@ public class GenericFollowerEntity extends GenericMachineEntity {
     public GenericFollowerEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineCore.Config machineConfig) {
         super(type, pos, state, machineConfig);
     }
+
 }

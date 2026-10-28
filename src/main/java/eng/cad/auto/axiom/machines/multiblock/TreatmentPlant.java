@@ -3,7 +3,11 @@ package eng.cad.auto.axiom.machines.multiblock;
 
 import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.registry.MachineRegistry;
+import eng.cad.auto.axiom.registry.RecipeRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
+import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.axolotyl.crafting.core.GenericRecipe;
+import eng.cad.auto.axolotyl.crafting.util.CraftingUtil;
 import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import eng.cad.auto.axolotyl.machine.core.interfaces.IMachineLogic;
@@ -17,6 +21,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import java.util.Objects;
+
 public class TreatmentPlant {
     MachineCore INSTANCE;
     public static final String name = "treatment_plant";
@@ -28,7 +34,7 @@ public class TreatmentPlant {
                 .modifySlot(0, SlotType.FLUID, 4000, SlotIORestriction.INPUT)
                 .modifySlot(1, SlotType.FLUID, 4000, SlotIORestriction.INPUT)
                 .modifySlot(2, SlotType.FLUID, 4000, SlotIORestriction.OUTPUT)
-                .addDataSlots(1)
+                .addDataSlots(2)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
                 .isMultiblockController()
@@ -37,16 +43,32 @@ public class TreatmentPlant {
     static class Logic {
 
         static final int Max_Processing_Ticks = 24000/60;
-
-
+        static final int isValid = 0;
+        static final int progress = 1;
         static class Server implements IMachineLogic {
+            int counter = 0;
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericMasterEntity blockEntity)) return;
-                AxiomMod.LOGGER.info("==== START OF STRUCTURE CHECK ====");
-                blockEntity.validateStructure(pos);
-                AxiomMod.LOGGER.info("==== END OF STRUCTURE CHECK ====");
+                counter++;
+
+                if (counter >= 10){
+                    blockEntity.getMachine().metadata.set(isValid, blockEntity.validateStructure(pos)?1:0); // lazy implementation for now, we will look into events when I got more time.
+                }
+
+                if (blockEntity.getMachine().metadata.get(isValid) == 0){
+                    resetProgress(blockEntity);
+                    return;
+                }
+
+                if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
+                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                        new CustomCraftingContainer(blockEntity), // TODO dynamically add follower tanks/inventories
+                        RecipeRegistry.CHEMICAL_REACTOR.get(),
+                        level,
+                        blockEntity);
+                incrementProgress(blockEntity, 1);
             }
 
             @Override
@@ -58,6 +80,9 @@ public class TreatmentPlant {
                 if (blockEntity.getMachine().tanks != null) {
                     tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
                 }
+
+                tag.putInt("isValid", blockEntity.getMachine().metadata.get(isValid));
+                tag.putInt("progress", blockEntity.getMachine().metadata.get(progress));
             }
 
             @Override
@@ -69,17 +94,20 @@ public class TreatmentPlant {
                 if (blockEntity.getMachine().tanks != null && tag.contains("Tanks")) {
                     blockEntity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
+
+                blockEntity.getMachine().metadata.set(isValid, tag.getInt("isValid"));
+                blockEntity.getMachine().metadata.set(progress, tag.getInt("progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
                 if (!(blockEntity instanceof GenericMasterEntity machine)) return;
-
+                machine.getMachine().metadata.set(progress, 0);
             }
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int value) {
                 if (!(blockEntity instanceof GenericMasterEntity machine)) return;
-
+                machine.getMachine().metadata.set(progress, machine.getMachine().metadata.get(progress) + value);
             }
 
         }

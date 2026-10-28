@@ -8,10 +8,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.Nullable;
 
 public class GenericFollowerBlock extends GenericMachineBlock {
 
@@ -23,5 +26,10 @@ public class GenericFollowerBlock extends GenericMachineBlock {
     public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
         if (!(level.getBlockEntity(blockPos) instanceof GenericFollowerEntity genericBlockEntity)) return InteractionResult.FAIL;
         return genericBlockEntity.machineConfig.rightClickLogic().useMachine(blockState, level, blockPos, player, interactionHand, result);
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState blockState, BlockEntityType<T> blockEntityType) {
+        return null;
     }
 }

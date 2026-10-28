@@ -5,7 +5,9 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.crafting.core.GenericRecipe;
 import eng.cad.auto.axolotyl.crafting.util.CraftingUtil;
+import eng.cad.auto.axolotyl.item.CustomBucket;
 import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
+import eng.cad.auto.axolotyl.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotType;
 import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
@@ -21,14 +23,22 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidType;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.SlotItemHandler;
 import org.joml.Vector2i;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class FermenterMachine {
     MachineCore INSTANCE;
@@ -45,6 +55,7 @@ public class FermenterMachine {
                 .addDataSlots(1)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
+                .rightClickLogic(new Logic.RightClickLogic())
                 .addMenuSlots(new Logic.MenuInit())
                 .build());
     }
@@ -229,6 +240,38 @@ public class FermenterMachine {
             public void loadMenuSlots(GenericUI.Menu ui) {
                 ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.getMachine().inventory,0, 34,22));
                 ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.getMachine().inventory,1, 34,40));
+            }
+        }
+        static class RightClickLogic implements IRightClickBehaviour {
+
+            @Override
+            public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
+                if (!(level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine)) return InteractionResult.PASS;
+                if (!machine.machineConfig.name().equals(SoakingDrum.name)) return InteractionResult.PASS;
+                boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
+                return success? InteractionResult.SUCCESS : InteractionResult.PASS;
+            }
+
+            private boolean onRightClick(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
+                if (player.isShiftKeyDown()) return false;
+                if (interactionHand == InteractionHand.OFF_HAND) return false;
+                if (bucketInHand(blockEntity, blockState, level, blockPos, player, interactionHand, result)) return true;
+                ItemStack playerHand = player.getItemInHand(interactionHand);
+                return false;
+            }
+
+            private boolean bucketInHand(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
+                ItemStack playerHand = player.getItemInHand(interactionHand);
+                Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+                if (bucketHandler.isPresent()) {
+                    if (bucketHandler.get().getFluidInTank(0).isEmpty()) {
+                        CustomBucket.fluidToItem(blockEntity, player, interactionHand);
+                    } else {
+                        CustomBucket.fluidFromItem(blockEntity, player, interactionHand);
+                    }
+                    return true;
+                }
+                return false;
             }
         }
     }
