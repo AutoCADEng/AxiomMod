@@ -1,4 +1,4 @@
-package eng.cad.auto.axolotyl.crafting.core;
+package eng.cad.auto.axolotyl.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;

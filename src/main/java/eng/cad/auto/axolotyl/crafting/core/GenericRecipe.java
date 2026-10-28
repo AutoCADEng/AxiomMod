@@ -157,7 +157,7 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
 
     public static class Type implements RecipeType<GenericRecipe> {
     }
-    
+
     public static class Serializer implements RecipeSerializer<GenericRecipe>{
 
         public static final Serializer INSTANCE =  new Serializer();

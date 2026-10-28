@@ -1,7 +1,6 @@
 package eng.cad.auto.axolotyl.fluid;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axolotyl.crafting.core.IFluidHandlerModifiable;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
@@ -12,6 +11,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
+
+//TODO DOCUMENT THIS
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
     protected NonNullList<FluidStackLimiter> stacks = NonNullList.create();
 
