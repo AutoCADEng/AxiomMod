@@ -25,10 +25,6 @@ def main():
     for axiomName in core_axioms:
         addAxiom(axiomName)
 
-        addAxiom("de"+axiomName)
-        addAxiom("potenti"+axiomName)
-        addAxiom("depotenti"+axiomName)
-
 def addAxiom(axiomName):
     with open(f"{resource_dir}{mod_id}/blockstates/{axiomName}.json","w") as f:
 
