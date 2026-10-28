@@ -1,0 +1,21 @@
+{
+  "root": [1, -1, 2],
+  "shape": [
+    ["hhh",
+      "hhh",
+      "hhh"],
+    ["mmm",
+      "m-m",
+      "m!m"],
+    ["bbb",
+      "bbb",
+      "bbb"]
+  ],
+  "key": {
+    "!": ["axiology:treatment_plant"],
+    "h": ["axiology:etched_fluid_input", "axiology:etched_fluid_output", "minecraft:stone"],
+    "m": ["axiology:etched_iron_block"],
+    "-": ["minecraft:air"],
+    "b": ["minecraft:chiseled_deepslate"]
+  }
+}

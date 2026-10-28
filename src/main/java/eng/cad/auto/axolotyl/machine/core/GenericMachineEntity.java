@@ -31,15 +31,15 @@ import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GenericBlockEntity extends BlockEntity implements MenuProvider {
-    public final MachineInventory machine;
+public class GenericMachineEntity extends BlockEntity implements MenuProvider {
+    private final MachineInventory machine;
     private LazyOptional<IItemHandler> itemCapability;
     private LazyOptional<IFluidHandler> fluidCapability;
-    public MachineHolder.Config machineConfig;
+    public MachineCore.Config machineConfig;
     private int[] lastSyncedData;
     private long lastDataSyncTime;
 
-    public GenericBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineHolder.Config machineConfig){
+    public GenericMachineEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineCore.Config machineConfig){
         super(type, pos, state);
         this.machineConfig = machineConfig;
         machine = new MachineInventory(machineConfig, this);
@@ -50,10 +50,14 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
         AxiomMod.LOGGER.warn("FAILED TO OVERWRITE TICK METHOD FOR BLOCK ENTITY {}", level.getBlockEntity(blockPos).getType().toString());
     }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity){
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity){
         blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
         if (blockEntity.machineConfig.noGui()) blockEntity.syncData();
     }
+    public MachineInventory getMachine(){
+        return machine;
+    }
+
 
     @Override
     public Component getDisplayName() {
@@ -207,7 +211,7 @@ public class GenericBlockEntity extends BlockEntity implements MenuProvider {
         syncToClients();
     }
 
-    public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, GenericBlockEntity blockEntity) {
+    public static void clientTick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity) {
         blockEntity.machineConfig.clientLogic().clientTick(level, blockPos, blockState, blockEntity);
     }
 }
