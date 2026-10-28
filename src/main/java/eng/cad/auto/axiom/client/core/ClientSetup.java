@@ -11,7 +11,7 @@ import eng.cad.auto.axiom.registry.MachineRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -80,6 +80,13 @@ public class ClientSetup {
             //Axiom Buckets
             for (FluidHolder axiomFluid: AxiomRegistry.AXIOM_FLUIDS){
                 event.accept(axiomFluid.BUCKET);
+            }
+        }
+
+        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_SHARD.get()){
+            //Axiom Shards
+            for (RegistryObject<Item> shard: AxiomRegistry.AXIOM_CRYSTALS){
+                event.accept(shard);
             }
         }
     }

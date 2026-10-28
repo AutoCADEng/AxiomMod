@@ -42,7 +42,7 @@ public class MachineHolder {
     private MachineHolder(String name, Config config) {
         AxiomMod.LOGGER.info("Registering new machine of "+name);
         this.config = config;
-        block = BlockRegistry.registerBlock(
+        block = BlockRegistry.registerMachineBlock(
                 name,
                 () -> new GenericMachineBlock(
                         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),

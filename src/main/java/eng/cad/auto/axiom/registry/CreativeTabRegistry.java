@@ -23,7 +23,7 @@ public class CreativeTabRegistry {
                     ()-> FluidRegistry.BLAZEWATER.BUCKET.get().getDefaultInstance());
 
     public static final RegistryObject<CreativeModeTab> AXIOLOGY_SHARD =
-            registerTab("axiology", Component.translatable("axiology.tabs.axiology_shard"),
+            registerTab("axiology_shard", Component.translatable("axiology.tabs.axiology_shard"),
                     ()-> AxiomRegistry.AXIOM_CRYSTALS.get(0).get().getDefaultInstance());
 
     public static RegistryObject<CreativeModeTab> registerTab(String name, Component ingame_name, Supplier<ItemStack> icon){
