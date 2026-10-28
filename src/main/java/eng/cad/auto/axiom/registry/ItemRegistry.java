@@ -1,8 +1,7 @@
 package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.common.items.AxiomShard;
-import eng.cad.auto.axiom.common.items.CustomBucket;
+import eng.cad.auto.axiom.items.AxiomShard;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -17,6 +16,12 @@ public class ItemRegistry {
 
     public static final RegistryObject<Item> TREATED_FABRIC = registerItem("treated_fabric", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TREATED_BARK = registerItem("treated_bark", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> ETCHED_IRON_INGOT = registerItem("etched_iron_ingot", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ETCHED_IRON_NUGGET = registerItem("etched_iron_nugget", () -> new Item(new Item.Properties()));
+
+    public static final RegistryObject<Item> FLUXED_INGOT = registerItem("fluxed_ingot", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> BLAZING_INGOT = registerItem("blazing_ingot", () -> new Item(new Item.Properties()));
 
     public static RegistryObject<Item> registerAxiomShard(String name, int color) {
             String itemName = name + "_shard";

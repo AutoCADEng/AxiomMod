@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:soaking_drum",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "minecraft:rotten_flesh",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:nitric_acid",
+      "count": 8000
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:blazewater",
+      "count": 1000
+    }
+  ]
+}

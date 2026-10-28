@@ -2,7 +2,8 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 
-import eng.cad.auto.axiom.common.fluid.*;
+import eng.cad.auto.axolotyl.fluid.FluidHolder;
+import eng.cad.auto.axiom.fluids.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.MapColor;
@@ -28,6 +29,8 @@ public class FluidRegistry {
 
     public static final FluidHolder DEATHWATER = new FluidHolder("deathwater", Deathwater.color, MapColor.COLOR_BLACK, new Deathwater.FluidBehaviour());
     public static final FluidHolder BLAZEWATER = new FluidHolder("blazewater", Blazewater.color, MapColor.COLOR_BLACK, new Blazewater.FluidBehaviour());
+    public static final FluidHolder FLUXFLUID = new FluidHolder("fluxfluid", Fluxfluid.color, MapColor.COLOR_BLACK, new Fluxfluid.FluidBehaviour());
+
     private void registerAxiomFluid(String name, int color){
         new FluidHolder(name, color, MapColor.COLOR_BLACK);
     }

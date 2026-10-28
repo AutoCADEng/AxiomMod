@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "axiology:item/etched_iron_ingot"
+  }
+}

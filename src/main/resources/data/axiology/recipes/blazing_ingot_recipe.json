@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:soaking_drum",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "axiology:etched_iron_ingot",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:blazewater",
+      "count": 100
+    }
+  ],
+  "outputs": [
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    }
+  ]
+}

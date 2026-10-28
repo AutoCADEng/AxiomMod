@@ -2,8 +2,7 @@ package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
 
-import eng.cad.auto.axiom.common.crafting.core.GenericRecipe;
-import io.netty.util.Attribute;
+import eng.cad.auto.axolotyl.crafting.core.GenericRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.DeferredRegister;

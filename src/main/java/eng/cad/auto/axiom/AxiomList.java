@@ -1,7 +1,5 @@
 package eng.cad.auto.axiom;
 
-import eng.cad.auto.axiom.common.Axiom;
-import eng.cad.auto.axiom.common.AxiomType;
 import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
 
 import java.util.ArrayList;

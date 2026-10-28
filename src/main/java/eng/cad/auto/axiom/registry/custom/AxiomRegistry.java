@@ -1,8 +1,8 @@
 package eng.cad.auto.axiom.registry.custom;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.common.Axiom;
-import eng.cad.auto.axiom.common.fluid.FluidHolder;
+import eng.cad.auto.axiom.Axiom;
+import eng.cad.auto.axolotyl.fluid.FluidHolder;
 import eng.cad.auto.axiom.registry.ItemRegistry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

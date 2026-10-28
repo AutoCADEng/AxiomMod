@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:soaking_drum",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "minecraft:ender_pearl",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "minecraft:water",
+      "count": 8000
+    }
+  ],
+  "outputs": [
+    {
+      "type": "fluid",
+      "input": "axiology:fluxfluid",
+      "count": 250
+    }
+  ]
+}
