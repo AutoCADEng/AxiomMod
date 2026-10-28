@@ -10,13 +10,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 public class MachineInventory{
-    public final MachineHolder.Config config;
+    public final MachineCore.Config config;
     public final ItemStackHandler inventory;
     public final FluidStackHandler tanks;
     public final SimpleContainerData metadata;
     public final BlockEntity blockEntity;
 
-    public MachineInventory(MachineHolder.Config config, GenericBlockEntity blockEntity){
+    public MachineInventory(MachineCore.Config config, GenericMachineEntity blockEntity){
         this.config = config;
         this.blockEntity = blockEntity;
         inventory = config.itemSlots() > 0 ? new ItemStackHandler(config.itemSlots()){

@@ -1,7 +1,7 @@
 package eng.cad.auto.axolotyl.item;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axolotyl.machine.core.GenericBlockEntity;
+import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -42,11 +42,11 @@ public class CustomBucket extends BucketItem {
 
     //Move to a dedicated fluid helper class at some point?
 
-    public static boolean fluidToItem(GenericBlockEntity blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidToItem(GenericMachineEntity blockEntity, Player player, InteractionHand interactionHand) {
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         FluidActionResult result = FluidUtil.tryFillContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.machine.tanks,
+                blockEntity.getMachine().tanks,
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,
@@ -60,12 +60,12 @@ public class CustomBucket extends BucketItem {
         return result.isSuccess();
     }
 
-    public static boolean fluidFromItem(GenericBlockEntity blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidFromItem(GenericMachineEntity blockEntity, Player player, InteractionHand interactionHand) {
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
 
         FluidActionResult result = FluidUtil.tryEmptyContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.machine.tanks,
+                blockEntity.getMachine().tanks,
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,

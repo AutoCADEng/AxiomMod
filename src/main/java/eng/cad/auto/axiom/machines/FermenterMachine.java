@@ -5,13 +5,13 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.crafting.core.GenericRecipe;
 import eng.cad.auto.axolotyl.crafting.util.CraftingUtil;
-import eng.cad.auto.axolotyl.machine.core.GenericBlockEntity;
+import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotType;
 import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.machine.core.interfaces.IMachineLogic;
-import eng.cad.auto.axolotyl.machine.core.MachineHolder;
+import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import eng.cad.auto.axolotyl.machine.core.interfaces.IMenuSlotLogic;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.RecipeRegistry;
@@ -31,10 +31,10 @@ import org.joml.Vector2i;
 import java.util.Objects;
 
 public class FermenterMachine {
-    MachineHolder INSTANCE;
+    MachineCore INSTANCE;
     public static final String name = "fermenter";
     public FermenterMachine() {
-        this.INSTANCE = MachineRegistry.registerMachine(new MachineHolder
+        this.INSTANCE = MachineRegistry.registerMachine(new MachineCore
                 .Builder(name)
                 .addItemSlots(2)
                 .addFluidSlots(2)
@@ -64,14 +64,14 @@ public class FermenterMachine {
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
                 if(level.isClientSide()) return;
-                if (!(level.getBlockEntity(pos) instanceof GenericBlockEntity blockEntity)) return;
+                if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
                 GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                        .addTank(blockEntity.machine.tanks.getFluidInTank(input_tank))
-                        .addTank(blockEntity.machine.tanks.getFluidInTank(output_tank))
-                        .addSlot(blockEntity.machine.inventory.getStackInSlot(inputSlot0))
-                        .addSlot(blockEntity.machine.inventory.getStackInSlot(inputSlot1)),
+                        .addTank(blockEntity.getMachine().tanks.getFluidInTank(input_tank))
+                        .addTank(blockEntity.getMachine().tanks.getFluidInTank(output_tank))
+                        .addSlot(blockEntity.getMachine().inventory.getStackInSlot(inputSlot0))
+                        .addSlot(blockEntity.getMachine().inventory.getStackInSlot(inputSlot1)),
                         RecipeRegistry.FERMENTATION.get(),
                         level,
                         blockEntity);
@@ -86,7 +86,7 @@ public class FermenterMachine {
                     return;
                 }
 
-                if (blockEntity.machine.metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
+                if (blockEntity.getMachine().metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
                     if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     resetProgress(blockEntity);
                     return;
@@ -95,34 +95,34 @@ public class FermenterMachine {
             }
 
             @Override
-            public void saveInventory(GenericBlockEntity entity, CompoundTag tag) {
-                if (entity.machine.inventory != null) {
-                    tag.put("Inventory", entity.machine.inventory.serializeNBT());
+            public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
+                if (entity.getMachine().inventory != null) {
+                    tag.put("Inventory", entity.getMachine().inventory.serializeNBT());
                 }
-                if (entity.machine.tanks != null) {
-                    tag.put("Tanks", entity.machine.tanks.serializeNBT());
+                if (entity.getMachine().tanks != null) {
+                    tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
                 }
-                tag.putInt("Progress", entity.machine.metadata.get(progressBar_Data));
+                tag.putInt("Progress", entity.getMachine().metadata.get(progressBar_Data));
             }
 
             @Override
-            public void loadInventory(GenericBlockEntity entity, CompoundTag tag) {
-                if (entity.machine.inventory != null && tag.contains("Inventory")) {
-                    entity.machine.inventory.deserializeNBT(tag.getCompound("Inventory"));
+            public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
+                if (entity.getMachine().inventory != null && tag.contains("Inventory")) {
+                    entity.getMachine().inventory.deserializeNBT(tag.getCompound("Inventory"));
                 }
-                if (entity.machine.tanks != null && tag.contains("Tanks")) {
-                    entity.machine.tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (entity.getMachine().tanks != null && tag.contains("Tanks")) {
+                    entity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
-                if (tag.contains("Progress")) entity.machine.metadata.set(progressBar_Data, tag.getInt("Progress"));
+                if (tag.contains("Progress")) entity.getMachine().metadata.set(progressBar_Data, tag.getInt("Progress"));
             }
 
             @Override
-            public void resetProgress(GenericBlockEntity blockEntity) {
-                blockEntity.machine.metadata.set(progressBar_Data, 0);
+            public void resetProgress(GenericMachineEntity blockEntity) {
+                blockEntity.getMachine().metadata.set(progressBar_Data, 0);
             }
             @Override
-            public void incrementProgress(GenericBlockEntity blockEntity, int value) {
-                blockEntity.machine.metadata.set(progressBar_Data, Math.min(Max_Processing_Ticks, blockEntity.machine.metadata.get(progressBar_Data) + value));
+            public void incrementProgress(GenericMachineEntity blockEntity, int value) {
+                blockEntity.getMachine().metadata.set(progressBar_Data, Math.min(Max_Processing_Ticks, blockEntity.getMachine().metadata.get(progressBar_Data) + value));
             }
 
         }
@@ -149,7 +149,7 @@ public class FermenterMachine {
             }
 
             @Override
-            public void clientTick(Level level, BlockPos pos, BlockState state, GenericBlockEntity blockEntity) {
+            public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
                 //Do nothing yet
             }
 
@@ -227,8 +227,8 @@ public class FermenterMachine {
 
             @Override
             public void loadMenuSlots(GenericUI.Menu ui) {
-                ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.machine.inventory,0, 34,22));
-                ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.machine.inventory,1, 34,40));
+                ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.getMachine().inventory,0, 34,22));
+                ui.addMachineSlot(new SlotItemHandler( ui.blockEntity.getMachine().inventory,1, 34,40));
             }
         }
     }

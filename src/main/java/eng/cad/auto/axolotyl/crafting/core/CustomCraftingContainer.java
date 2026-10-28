@@ -1,6 +1,6 @@
 package eng.cad.auto.axolotyl.crafting.core;
 
-import eng.cad.auto.axolotyl.machine.core.GenericBlockEntity;
+import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -16,9 +16,9 @@ import net.minecraftforge.fluids.FluidStack;
 public class CustomCraftingContainer implements Container {
     NonNullList<FluidStack> tanks = NonNullList.create();
     NonNullList<ItemStack> items = NonNullList.create();
-    GenericBlockEntity blockEntity;
+    GenericMachineEntity blockEntity;
 
-    public CustomCraftingContainer(GenericBlockEntity blockEntity){
+    public CustomCraftingContainer(GenericMachineEntity blockEntity){
         this.blockEntity = blockEntity;
     }
 

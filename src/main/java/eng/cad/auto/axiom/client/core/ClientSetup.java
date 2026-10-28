@@ -1,17 +1,15 @@
 package eng.cad.auto.axiom.client.core;
 
+import eng.cad.auto.axiom.fluids.*;
 import eng.cad.auto.axiom.registry.CreativeTabRegistry;
 import eng.cad.auto.axiom.registry.ItemRegistry;
-import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
-import eng.cad.auto.axolotyl.fluid.FluidHolder;
-import eng.cad.auto.axolotyl.machine.core.MachineHolder;
+import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
 import eng.cad.auto.axiom.registry.FluidRegistry;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -26,7 +24,7 @@ public class ClientSetup {
 
     private static void clientSetup(final FMLClientSetupEvent event) {
 
-        for (MachineHolder machine: MachineRegistry.MACHINELIST.values()) {
+        for (MachineCore machine: MachineRegistry.MACHINELIST.values()) {
             if (machine.config.noGui()) continue;
             event.enqueueWork(() ->
                     MenuScreens.<GenericUI.Menu, GenericUI.Screen>register(
@@ -59,35 +57,35 @@ public class ClientSetup {
             event.accept(ItemRegistry.ETCHED_IRON_NUGGET);
 
             //Machine Blocks
-            for (MachineHolder machine: MachineRegistry.MACHINELIST.values()){
+            for (MachineCore machine: MachineRegistry.MACHINELIST.values()){
                 event.accept(machine.blockItem);
             }
         }
 
         if (event.getTab() == CreativeTabRegistry.AXIOLOGY_BUCKETS.get()){
             //Buckets
-            event.accept(FluidRegistry.BLAZEWATER.BUCKET);
-            event.accept(FluidRegistry.DEATHWATER.BUCKET);
-            event.accept(FluidRegistry.FLUXFLUID.BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(Blazewater.name).BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(Fluxfluid.name).BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(Deathwater.name).BUCKET);
 
-            event.accept(FluidRegistry.ETHANOL.BUCKET);
-            event.accept(FluidRegistry.DILUTE_ETHANOL.BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(Ethanol.name).BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(Ethanol.Dilute.name).BUCKET);
 
-            event.accept(FluidRegistry.NITRIC_ACID.BUCKET);
-            event.accept(FluidRegistry.DILUTE_NITRIC_ACID.BUCKET);
-            event.accept(FluidRegistry.NITAL.BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(NitricAcid.name).BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(NitricAcid.Dilute.name).BUCKET);
+            event.accept(FluidRegistry.Fluid_Holders.get(NitricAcid.Nital.name).BUCKET);
 
-            //Axiom Buckets
-            for (FluidHolder axiomFluid: AxiomRegistry.AXIOM_FLUIDS){
-                event.accept(axiomFluid.BUCKET);
-            }
+//            //Axiom Buckets
+//            for (FluidHolder axiomFluid: AxiomRegistry.AXIOM_FLUIDS){
+//                event.accept(axiomFluid.BUCKET);
+//            }
         }
 
-        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_SHARD.get()){
-            //Axiom Shards
-            for (RegistryObject<Item> shard: AxiomRegistry.AXIOM_CRYSTALS){
-                event.accept(shard);
-            }
-        }
+//        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_SHARD.get()){
+//            //Axiom Shards
+//            for (RegistryObject<Item> shard: AxiomRegistry.AXIOM_CRYSTALS){
+//                event.accept(shard);
+//            }
+//        }
     }
 }

@@ -2,8 +2,8 @@ package eng.cad.auto.axolotyl.machine.core.ui;
 
 import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axolotyl.fluid.FluidStackHandler;
-import eng.cad.auto.axolotyl.machine.core.GenericBlockEntity;
-import eng.cad.auto.axolotyl.machine.core.MachineHolder;
+import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
+import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import eng.cad.auto.axolotyl.network.FluidNetwork;
 import eng.cad.auto.axolotyl.network.FluidSyncPacket;
 import eng.cad.auto.axiom.registry.MachineRegistry;
@@ -28,25 +28,25 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class GenericUI {
     public RegistryObject<MenuType<Menu>> menu;
-    public GenericUI(MachineHolder.Config config, RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity) {
+    public GenericUI(MachineCore.Config config, RegistryObject<BlockEntityType<? extends GenericMachineEntity>> blockEntity) {
         menu = MenuRegistry.registerMenu(config.name(), Menu::new);
     }
 
     public class Menu extends AbstractContainerMenu {
-        public final GenericBlockEntity blockEntity;
+        public final GenericMachineEntity blockEntity;
         public final Level level;
         public final ContainerData data;
         public final FluidStackHandler tanks;
 
         public Menu(int containerID, Inventory inventory, FriendlyByteBuf byteBuffer) {
-            this(containerID, inventory, (GenericBlockEntity) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
+            this(containerID, inventory, (GenericMachineEntity) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
         }
 
-        public Menu(int containerID, Inventory inventory, GenericBlockEntity blockEntity) {
+        public Menu(int containerID, Inventory inventory, GenericMachineEntity blockEntity) {
             super(menu.get(), containerID);
             this.level = inventory.player.level();
             this.blockEntity = blockEntity;
-            this.tanks = blockEntity.machine.tanks;
+            this.tanks = blockEntity.getMachine().tanks;
 
             if (inventory.player instanceof ServerPlayer player
                     && this.tanks != null) {
@@ -61,7 +61,7 @@ public class GenericUI {
                     );
                 }
             }
-            this.data = blockEntity.machine.metadata;
+            this.data = blockEntity.getMachine().metadata;
             addDataSlots(data);
             checkContainerSize(inventory, blockEntity.machineConfig.itemSlots());
 

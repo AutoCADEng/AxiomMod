@@ -1,6 +1,6 @@
 package eng.cad.auto.axolotyl.network;
 
-import eng.cad.auto.axolotyl.machine.core.GenericBlockEntity;
+import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -58,10 +58,10 @@ public class FluidSyncPacket {
                             if (level == null) return;
 
                             BlockEntity blockEntity = level.getBlockEntity(pos);
-                            if (!(blockEntity instanceof GenericBlockEntity genericBlockEntity)) return;
+                            if (!(blockEntity instanceof GenericMachineEntity genericBlockEntity)) return;
                             if (genericBlockEntity.machineConfig.fluidSlots() <= 0) return;
-                            if (genericBlockEntity.machine.tanks == null) return;
-                            if (slot < 0 || slot >= genericBlockEntity.machine.tanks.getTanks()) return;
+                            if (genericBlockEntity.getMachine().tanks == null) return;
+                            if (slot < 0 || slot >= genericBlockEntity.getMachine().tanks.getTanks()) return;
 
                             FluidStack stack = FluidStack.EMPTY;
 
@@ -72,7 +72,7 @@ public class FluidSyncPacket {
                                 }
                             }
 
-                            genericBlockEntity.machine.tanks.setStackInSlot(slot, stack);
+                            genericBlockEntity.getMachine().tanks.setStackInSlot(slot, stack);
                         }
                 )
         );

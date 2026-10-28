@@ -1,7 +1,7 @@
 package eng.cad.auto.axiom.registry;
 
 import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.registry.custom.AxiomRegistry;
+import eng.cad.auto.axiom.fluids.Blazewater;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
@@ -20,11 +20,11 @@ public class CreativeTabRegistry {
 
     public static final RegistryObject<CreativeModeTab> AXIOLOGY_BUCKETS =
             registerTab("axiology_bucket", Component.translatable("axiology.tabs.axiology_bucket"),
-                    ()-> FluidRegistry.BLAZEWATER.BUCKET.get().getDefaultInstance());
+                    ()-> FluidRegistry.Fluid_Holders.get(Blazewater.name).BUCKET.get().getDefaultInstance());
 
-    public static final RegistryObject<CreativeModeTab> AXIOLOGY_SHARD =
-            registerTab("axiology_shard", Component.translatable("axiology.tabs.axiology_shard"),
-                    ()-> AxiomRegistry.AXIOM_CRYSTALS.get(0).get().getDefaultInstance());
+//    public static final RegistryObject<CreativeModeTab> AXIOLOGY_SHARD =
+//            registerTab("axiology_shard", Component.translatable("axiology.tabs.axiology_shard"),
+//                    ()-> AxiomRegistry.AXIOM_CRYSTALS.get(0).get().getDefaultInstance());
 
     public static RegistryObject<CreativeModeTab> registerTab(String name, Component ingame_name, Supplier<ItemStack> icon){
         return CREATIVE_TABS.register(name, () -> CreativeModeTab.builder()

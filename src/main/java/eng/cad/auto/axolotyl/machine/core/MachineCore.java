@@ -12,6 +12,10 @@ import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
 import eng.cad.auto.axolotyl.machine.core.interfaces.IMenuSlotLogic;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.BlockRegistry;
+import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerBlock;
+import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
+import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterBlock;
+import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -32,43 +36,76 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 
-public class MachineHolder {
-    public RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity;
+public class MachineCore {
+    public RegistryObject<BlockEntityType<? extends GenericMachineEntity>> blockEntity;
     public RegistryObject<Item> blockItem;
     public RegistryObject<Block> block;
     public final Config config;
     public GenericUI ui;
 
-    private MachineHolder(String name, Config config) {
+    protected MachineCore(String name, Config config) {
         AxiomMod.LOGGER.info("Registering new machine of "+name);
         this.config = config;
+
         block = BlockRegistry.registerMachineBlock(
                 name,
-                () -> new GenericMachineBlock(
+                switch(config.machineType){
+                case MACHINE -> () -> new GenericMachineBlock(
+                                BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
+                                blockEntity,
+                                config);
+                case CONTROLLER -> () -> new GenericMasterBlock(
                         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
                         blockEntity,
-                        config
-                )
+                        config);
+                case FOLLOWER -> () -> new GenericFollowerBlock(
+                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
+                        blockEntity,
+                        config);
+                }
         );
 
         blockItem = ItemRegistry.registerBlockItem(name, block);
 
-        blockEntity =
-                MachineRegistry.MACHINES.register(name, () ->
+        blockEntity = MachineRegistry.MACHINES.register(name, switch(config.machineType){
+                    case MACHINE -> () ->
                         BlockEntityType.Builder.of(
-                                (blockPos, blockState) ->
-                                        new GenericBlockEntity(
-                                                blockEntity.get(),
-                                                blockPos,
-                                                blockState,
-                                                config),
-                                block.get()
-                        ).build(null)
+                        (blockPos, blockState) ->
+                            new GenericMachineEntity(
+                                blockEntity.get(),
+                                blockPos,
+                                blockState,
+                                config),
+                        block.get()
+                        ).build(null);
+                            case CONTROLLER -> () ->
+                                    BlockEntityType.Builder.of(
+                                            (blockPos, blockState) ->
+                                                    new GenericMasterEntity(
+                                                            blockEntity.get(),
+                                                            blockPos,
+                                                            blockState,
+                                                            config),
+                                            block.get()
+                                    ).build(null);
+                            case FOLLOWER -> () ->
+                                    BlockEntityType.Builder.of(
+                                            (blockPos, blockState) ->
+                                                    new GenericFollowerEntity(
+                                                            blockEntity.get(),
+                                                            blockPos,
+                                                            blockState,
+                                                            config),
+                                            block.get()
+                                    ).build(null);
+                        }
                 );
         if (!config.noGui) {
             ui = new GenericUI(config, blockEntity);
         }
+
     }
+
 
     //This is getting comically long :(
     public record Config(boolean noGui,
@@ -81,17 +118,23 @@ public class MachineHolder {
                          IRightClickBehaviour rightClickLogic,
                          String name,
                          HashMap<Integer, SlotConfig> itemSlotConfig,
-                         HashMap<Integer, SlotConfig> fluidSlotConfig) {
+                         HashMap<Integer, SlotConfig> fluidSlotConfig,
+                         Builder.MACHINETYPE machineType) {
     }
 
     public static class Builder {
-        // this is a builder, it runs once per machine so it probably doesn't matter that I hate this data structure :<
+        // This only runs once per machine so it probably actually doesn't matter that I hate this data structure :<
+        // Feel free to replace it with something pretty!
         public HashMap<SlotType, HashMap<Integer, SlotConfig>> slotConfig = new HashMap<>();
+
         int itemSlots = 0;
         int fluidSlots = 0;
         int dataSlots = 0;
+
         boolean noGui = false;
-        String name;
+        public String name;
+
+        MACHINETYPE machineType = MACHINETYPE.MACHINE;
 
         IMenuSlotLogic menuSlot = new IMenuSlotLogic() {
             @Override
@@ -107,22 +150,22 @@ public class MachineHolder {
             }
 
             @Override
-            public void saveInventory(GenericBlockEntity blockEntity, CompoundTag tag) {
+            public void saveInventory(GenericMachineEntity blockEntity, CompoundTag tag) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for saveInventory, data will NOT PERSIST");
             }
 
             @Override
-            public void loadInventory(GenericBlockEntity blockEntity, CompoundTag tag) {
+            public void loadInventory(GenericMachineEntity blockEntity, CompoundTag tag) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for loadInventory, data will NOT PERSIST");
             }
 
             @Override
-            public void resetProgress(GenericBlockEntity blockEntity) {
+            public void resetProgress(GenericMachineEntity blockEntity) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for resetProgress");
             }
 
             @Override
-            public void incrementProgress(GenericBlockEntity blockEntity, int count) {
+            public void incrementProgress(GenericMachineEntity blockEntity, int count) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for incrementProgress");
             }
         };
@@ -134,7 +177,7 @@ public class MachineHolder {
             }
 
             @Override
-            public void clientTick(Level level, BlockPos pos, BlockState state, GenericBlockEntity blockEntity) {
+            public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for clientTick");
             }
         };
@@ -144,7 +187,7 @@ public class MachineHolder {
             public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
                 if (level.isClientSide()) return InteractionResult.SUCCESS;
                 if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
-                if (level.getBlockEntity(blockPos) instanceof GenericBlockEntity machine){
+                if (level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine){
                     if (!machine.machineConfig.name().equals(name)) return InteractionResult.CONSUME;
                     if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;
                     NetworkHooks.openScreen(serverPlayer, machine, blockPos);
@@ -219,14 +262,27 @@ public class MachineHolder {
                     rightClickLogic,
                     name,
                     slotConfig.get(SlotType.ITEM),
-                    slotConfig.get(SlotType.FLUID)
+                    slotConfig.get(SlotType.FLUID),
+                    machineType
                     );
         }
 
-        public MachineHolder build() {
+        public MachineCore build() {
             Config machineData = this.buildData();
-            return new MachineHolder(name, machineData);
+            return new MachineCore(name, machineData);
         }
 
+        public Builder isMultiblockController() {
+            machineType = MACHINETYPE.CONTROLLER;
+            return this;
+        }
+
+        public Builder isMultiblockFollower() {
+            machineType = MACHINETYPE.FOLLOWER;
+            return this;
+        }
+        public enum MACHINETYPE {
+            MACHINE, CONTROLLER, FOLLOWER;
+        }
     }
 }
