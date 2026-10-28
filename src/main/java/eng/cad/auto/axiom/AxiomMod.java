@@ -30,6 +30,7 @@ public class AxiomMod {
         MachineRegistry.MACHINES.register(modEventBus);
         MachineRegistry.init();
         ItemRegistry.ITEMS.register(modEventBus);
+        CreativeTabRegistry.CREATIVE_TABS.register(modEventBus);
         MenuRegistry.MENUS.register(modEventBus);
         TagRegistry.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
