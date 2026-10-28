@@ -41,6 +41,13 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
         return true;
     }
 
+    /**
+     * Assembles an ItemStack of the first item in the recipe.
+     * @param container The custom crafting container being assembled upon
+     * @param registryAccess An unused parameter forced upon us by Recipe
+     * @return First item in recipe or ItemStack.EMPTY if there are none.
+     */
+
     @Override
     public ItemStack assemble(CustomCraftingContainer container, RegistryAccess registryAccess) {
         return output.stream()
@@ -55,7 +62,10 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
     public boolean canCraftInDimensions(int p_43999_, int p_44000_) {
         return true;
     }
-
+    /**
+     * @param p_267052_ An unused parameter forced upon us by Recipe
+     * @return First item in recipe or ItemStack.EMPTY if there are none.
+     */
     @Override @ParametersAreNonnullByDefault
     public ItemStack getResultItem(RegistryAccess p_267052_) {
         return output.stream()
@@ -81,7 +91,13 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
         return recipeType;
     }
 
-    public boolean contains(CraftingIngredient target, Level level) {
+    /**
+     * The recipesContain function checks whether an ingredient is used inside any registered recipe for a specific machine/recipetype
+     * @param target The CraftingIngredient being evaluated.
+     * @param level The actively loaded world
+     * @return True if the recipe contains the ingredient
+     */
+    public boolean recipesContain(CraftingIngredient target, Level level) {
         if (target.isEmpty()) return false;
 
         return level.getRecipeManager()
@@ -105,21 +121,27 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
                 });
     }
 
+    /**
+     * The recipesContain function checks whether an ingredient is used inside any registered recipe for a specific machine/recipetype
+     * @param machineInventory The inventory of a machine as a CustomCraftingContainer
+     * @param level The actively loaded world
+     * @return True if the recipe contains the ingredient (fluid/item) and the machineInventory contains >= the amount specified by the recipe.
+     */
     public boolean matchesTypeAndQuantity(CustomCraftingContainer machineInventory, Level level) {
         if (!matches(machineInventory, level)) return false;
         for (CraftingIngredient ingredient:input){
             if (ingredient.isEmpty() || machineInventory.isEmpty()) return false;
             if (ingredient.isItem()) {
-                if(!(machineInventory.items.stream().anyMatch(itemstack -> {
+                if(machineInventory.items.stream().noneMatch(itemstack -> {
                     if (!itemstack.is(ingredient.getItem().getItem())) return false;
                     return itemstack.getCount() >= ingredient.getItem().getCount();
-                }))) return false;
+                })) return false;
             }
             if (ingredient.isFluid()) {
-                if(!(machineInventory.tanks.stream().anyMatch(fluidstack -> {
+                if(machineInventory.tanks.stream().noneMatch(fluidstack -> {
                     if (!fluidstack.getFluid().isSame(ingredient.getFluid().getFluid())) return false;
                     return fluidstack.getAmount() >= ingredient.getFluid().getAmount();
-                }))) return false;
+                })) return false;
             }
         }
         return true;
@@ -135,12 +157,14 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
 
     public static class Type implements RecipeType<GenericRecipe> {
     }
-
-    // Look into making this generic
+    
     public static class Serializer implements RecipeSerializer<GenericRecipe>{
 
         public static final Serializer INSTANCE =  new Serializer();
 
+        // The recipe_type is critical to assigning recipes to specific machines,
+        // as minecraft's regular type system is incompatible with the way I decided to implement recipes.
+        // I am sure there is a way to get around it, and mesh nicely with type, but I will save that for another day.
         @Override
         public GenericRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             String recipeTypeString = jsonObject.get("recipe_type").getAsString();
