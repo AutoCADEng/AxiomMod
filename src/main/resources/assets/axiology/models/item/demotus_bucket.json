@@ -1,7 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "axiology:item/generic_bucket",
-    "layer1": "axiology:item/generic_bucket_mask"
-  }
-}

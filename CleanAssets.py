@@ -25,9 +25,6 @@ core_axioms = {
 def main():
     for axiomName in core_axioms:
         removeAxiom(axiomName)
-        removeAxiom("de"+axiomName)
-        removeAxiom("potenti"+axiomName)
-        removeAxiom("depotenti"+axiomName)
 
 def removeAxiom(axiomName):
     file_paths = [
