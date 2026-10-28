@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class Blazewater {
     public static int color = 0xEEFF7500;
+    public static String name = "blazewater";
 
     public static class FluidBehaviour implements IFluidBehaviour {
         @Override

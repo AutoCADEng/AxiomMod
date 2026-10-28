@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class Fluxfluid {
     public static int color = 0xEE5D36FF;
+    public static String name = "fluxfluid";
 
     public static class FluidBehaviour implements IFluidBehaviour {
         @Override

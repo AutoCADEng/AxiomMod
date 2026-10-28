@@ -8,6 +8,7 @@ import net.minecraft.world.level.Level;
 
 public class Deathwater {
     public static int color = 0xFF330033;
+    public static String name = "deathwater";
 
     public static class FluidBehaviour implements IFluidBehaviour {
         @Override
