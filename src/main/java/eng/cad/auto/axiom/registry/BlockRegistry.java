@@ -21,4 +21,15 @@ public class BlockRegistry {
         return blockObject;
     }
 
+    /**
+     * Does not automatically register machine item so that we can do it in MachineHolder instead
+     * @param name
+     * @param block
+     * @return
+     * @param <T>
+     */
+    public static <T extends Block> RegistryObject<T> registerMachineBlock(String name, Supplier<T> block){
+        RegistryObject<T> blockObject = BLOCKS.register(name, block);
+        return blockObject;
+    }
 }

@@ -1,6 +1,7 @@
 package eng.cad.auto.axolotyl.machine.core;
 
 import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiom.registry.ItemRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotConfig;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
@@ -18,6 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 
 public class MachineHolder {
     public RegistryObject<BlockEntityType<GenericBlockEntity>> blockEntity;
+    public RegistryObject<Item> blockItem;
     public RegistryObject<Block> block;
     public final Config config;
     public GenericUI ui;
@@ -47,6 +50,8 @@ public class MachineHolder {
                         config
                 )
         );
+
+        blockItem = ItemRegistry.registerBlockItem(name, block);
 
         blockEntity =
                 MachineRegistry.MACHINES.register(name, () ->
