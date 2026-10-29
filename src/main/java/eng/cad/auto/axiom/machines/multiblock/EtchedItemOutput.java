@@ -16,6 +16,8 @@ import eng.cad.auto.axolotyl.machine.multiblock.IFollowerLogic;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -109,18 +111,16 @@ public class EtchedItemOutput {
                 if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
                 if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
-                return bucketInHand(machine, blockState, level, blockPos, player, interactionHand, result);
-            }
-
-            private boolean bucketInHand(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
                 ItemStack playerHand = player.getItemInHand(interactionHand);
-                Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
-                if (bucketHandler.isPresent()) {
-                    if (bucketHandler.get().getFluidInTank(0).isEmpty()) {
-                        CustomBucket.fluidToItem(machine, player, interactionHand);
-                    } else {
-                        CustomBucket.fluidFromItem(machine, player, interactionHand);
+                ItemStack machineItem = blockEntity.get().inventory.getStackInSlot(0);
+                if (machineItem.isEmpty()) {
+                    if (playerHand.isEmpty()) return false;
+                    ItemStack toInsert = playerHand.copy();
+                    toInsert.setCount(1);
+                    ItemStack remainder = blockEntity.get().inventory.insertItem(0, toInsert, false);
+                    if (remainder.getCount() < toInsert.getCount()) {
+                        level.playSound(null, blockPos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
+                        playerHand.shrink(1);
                     }
                     return true;
                 }
