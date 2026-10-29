@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:pyrolyzer",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "minecraft:oak_log",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:blazewater",
+      "count": 25
+    }
+  ],
+  "outputs": [
+    {
+      "type": "item",
+      "input": "minecraft:charcoal",
+      "count": 2
+    }
+  ]
+}
