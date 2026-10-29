@@ -10,7 +10,7 @@
     {
       "type": "fluid",
       "input": "axiology:blazewater",
-      "count": 25
+      "count": 20
     }
   ],
   "outputs": [
@@ -18,6 +18,11 @@
       "type": "item",
       "input": "minecraft:charcoal",
       "count": 2
+    },
+    {
+      "type": "fluid",
+      "input": "minecraft:lava",
+      "count": 5
     }
   ]
 }

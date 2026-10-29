@@ -12,7 +12,7 @@
       "bbb"]
   ],
   "key": {
-    "!": ["axiology:treatment_plant"],
+    "!": ["axiology:pyrolyzer"],
     "h": ["axiology:etched_fluid_input", "axiology:etched_fluid_output", "axiology:etched_item_input", "axiology:etched_item_output", "minecraft:stone"],
     "m": ["axiology:etched_iron_block"],
     "-": ["minecraft:air"],
