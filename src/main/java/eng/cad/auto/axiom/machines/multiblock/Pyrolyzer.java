@@ -50,6 +50,7 @@ public class Pyrolyzer {
                 counter++;
 
                 if (counter >= 10){
+                    counter = 0;
                     blockEntity.get().metadata.set(isValid, blockEntity.validateStructure(pos)?1:0); // lazy implementation for now, we will look into events when I got more time.
                 }
 
@@ -62,17 +63,23 @@ public class Pyrolyzer {
 
                 CustomCraftingContainer inventories = new CustomCraftingContainer(blockEntity);
                 ArrayList<GenericFollowerEntity> followerEntities = new ArrayList<>();
+
                 for(GenericFollowerEntity follower:blockEntity.getFollowers())
                 {
                     followerEntities.add(follower);
                     inventories = inventories.merge(follower.getCraftingContainer(follower));
                 }
+
                 GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         inventories,
                         RecipeRegistry.PYROLYZER.get(),
                         level,
                         blockEntity);
 
+                if (activeRecipe == null){
+                    resetProgress(blockEntity);
+                    return;
+                }
                 if (!CraftingUtil.hasSpace(blockEntity, followerEntities, activeRecipe)) {
                     resetProgress(blockEntity);
                     return;
