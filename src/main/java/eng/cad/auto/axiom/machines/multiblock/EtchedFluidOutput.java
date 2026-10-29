@@ -35,7 +35,7 @@ public class EtchedFluidOutput {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore
                 .Builder(name)
                 .addFluidSlots(1)
-                .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.INPUT)
+                .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.OUTPUT)
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
                 .rightClickLogic(new Logic.RightClickLogic())
