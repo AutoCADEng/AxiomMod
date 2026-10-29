@@ -59,6 +59,7 @@ public class CraftingUtil {
         if (target.isItem()) {
             required = target.getItem().getCount();
             for (GenericMachineEntity machine : machines) {
+                if (machine.get().inventory == null) continue;
                 for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
                     if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT)
                         continue;
@@ -81,6 +82,7 @@ public class CraftingUtil {
         if (target.isFluid()) {
             required = target.getFluid().getAmount();
             for (GenericMachineEntity machine: machines) {
+                if (machine.get().tanks == null) continue;
                 for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
                     if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT)
                         continue;
@@ -111,6 +113,7 @@ public class CraftingUtil {
         if (target.isItem()) {
             required = target.getItem().getCount();
             for (GenericMachineEntity machine : machines) {
+                if (machine.get().inventory == null) continue;
                 for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
                     if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT)
                         continue;
@@ -130,6 +133,7 @@ public class CraftingUtil {
         if (target.isFluid()) {
             required = target.getFluid().getAmount();
             for (GenericMachineEntity machine: machines) {
+                if (machine.get().tanks == null) continue;
                 for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
                     if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT)
                         continue;
