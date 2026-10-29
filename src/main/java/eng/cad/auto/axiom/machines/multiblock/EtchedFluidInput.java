@@ -1,6 +1,7 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
+import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.item.CustomBucket;
 import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import eng.cad.auto.axolotyl.machine.core.MachineCore;
@@ -11,6 +12,7 @@ import eng.cad.auto.axolotyl.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
+import eng.cad.auto.axolotyl.machine.multiblock.IFollowerLogic;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -38,11 +40,16 @@ public class EtchedFluidInput {
                 .addClientLogic(new Logic.Client())
                 .rightClickLogic(new Logic.RightClickLogic())
                 .noGui()
-                .isMultiblockFollower()
+                .isMultiblockFollower(new Logic.Follower())
                 .build());
     }
     public static class Logic{
-
+        public static class Follower implements IFollowerLogic{
+            @Override
+            public CustomCraftingContainer getCraftingContainer(GenericFollowerEntity entity) {
+                return new CustomCraftingContainer(entity).addTank(entity.get().tanks.getFluidInTank(0));
+            }
+        }
         public static class Server implements IMachineLogic {
 
             @Override
@@ -52,20 +59,19 @@ public class EtchedFluidInput {
 
             }
 
-
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
                 if (!(entity instanceof GenericFollowerEntity blockEntity)) return;
-                if (blockEntity.getMachine().tanks != null) {
-                    tag.put("Tanks", blockEntity.getMachine().tanks.serializeNBT());
+                if (blockEntity.get().tanks != null) {
+                    tag.put("Tanks", blockEntity.get().tanks.serializeNBT());
                 }
             }
 
             @Override
             public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
                 if (!(entity instanceof GenericFollowerEntity blockEntity)) return;
-                if (blockEntity.getMachine().tanks != null && tag.contains("Tanks")) {
-                    blockEntity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (blockEntity.get().tanks != null && tag.contains("Tanks")) {
+                    blockEntity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
 
             }

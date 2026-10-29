@@ -46,7 +46,7 @@ public class GenericUI {
             super(menu.get(), containerID);
             this.level = inventory.player.level();
             this.blockEntity = blockEntity;
-            this.tanks = blockEntity.getMachine().tanks;
+            this.tanks = blockEntity.get().tanks;
 
             if (inventory.player instanceof ServerPlayer player
                     && this.tanks != null) {
@@ -61,7 +61,7 @@ public class GenericUI {
                     );
                 }
             }
-            this.data = blockEntity.getMachine().metadata;
+            this.data = blockEntity.get().metadata;
             addDataSlots(data);
             checkContainerSize(inventory, blockEntity.machineConfig.itemSlots());
 

@@ -67,8 +67,8 @@ public class SoakingDrum {
 
                 GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                                .addTank(blockEntity.getMachine().tanks.getFluidInTank(fluid_tank))
-                                .addSlot(blockEntity.getMachine().inventory.getStackInSlot(item_slot)),
+                                .addTank(blockEntity.get().tanks.getFluidInTank(fluid_tank))
+                                .addSlot(blockEntity.get().inventory.getStackInSlot(item_slot)),
                         RecipeRegistry.SOAKING_DRUM.get(),
                         level,
                         blockEntity);
@@ -78,7 +78,7 @@ public class SoakingDrum {
                     return;
                 }
 
-                if (blockEntity.getMachine().metadata.get(progress) >= MAX_PROGRESS) {
+                if (blockEntity.get().metadata.get(progress) >= MAX_PROGRESS) {
                     if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     resetProgress(blockEntity);
@@ -92,34 +92,34 @@ public class SoakingDrum {
 
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().inventory != null) {
-                    tag.put("Inventory", entity.getMachine().inventory.serializeNBT());
+                if (entity.get().inventory != null) {
+                    tag.put("Inventory", entity.get().inventory.serializeNBT());
                 }
-                if (entity.getMachine().tanks != null) {
-                    tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
+                if (entity.get().tanks != null) {
+                    tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
-                tag.putInt("Progress", entity.getMachine().metadata.get(progress));
+                tag.putInt("Progress", entity.get().metadata.get(progress));
             }
 
             @Override
             public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().inventory != null && tag.contains("Inventory")) {
-                    entity.getMachine().inventory.deserializeNBT(tag.getCompound("Inventory"));
+                if (entity.get().inventory != null && tag.contains("Inventory")) {
+                    entity.get().inventory.deserializeNBT(tag.getCompound("Inventory"));
                 }
-                if (entity.getMachine().tanks != null && tag.contains("Tanks")) {
-                    entity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (entity.get().tanks != null && tag.contains("Tanks")) {
+                    entity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
-                if (tag.contains("Progress")) entity.getMachine().metadata.set(progress, tag.getInt("Progress"));
+                if (tag.contains("Progress")) entity.get().metadata.set(progress, tag.getInt("Progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
-                blockEntity.getMachine().metadata.set(progress, 0);
+                blockEntity.get().metadata.set(progress, 0);
             }
 
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int count) {
-                blockEntity.getMachine().metadata.set(progress, blockEntity.getMachine().metadata.get(progress)>= MAX_PROGRESS? MAX_PROGRESS : blockEntity.getMachine().metadata.get(progress) + count);
+                blockEntity.get().metadata.set(progress, blockEntity.get().metadata.get(progress)>= MAX_PROGRESS? MAX_PROGRESS : blockEntity.get().metadata.get(progress) + count);
             }
         }
         public static class Client implements IMachineClientLogic {
@@ -131,7 +131,7 @@ public class SoakingDrum {
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
                 if (!level.isClientSide()) return;
-                if (blockEntity.getMachine().metadata.get(progress) <= 0) return;
+                if (blockEntity.get().metadata.get(progress) <= 0) return;
                 if (level.random.nextFloat() < 0.33F) {
 
                     double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
@@ -161,12 +161,12 @@ public class SoakingDrum {
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
                 if (bucketInHand(blockEntity, blockState, level, blockPos, player, interactionHand, result)) return true;
                 ItemStack playerHand = player.getItemInHand(interactionHand);
-                ItemStack machineItem = blockEntity.getMachine().inventory.getStackInSlot(item_slot);
+                ItemStack machineItem = blockEntity.get().inventory.getStackInSlot(item_slot);
                 if (machineItem.isEmpty()) {
                     if (playerHand.isEmpty()) return false;
                     ItemStack toInsert = playerHand.copy();
                     toInsert.setCount(1);
-                    ItemStack remainder = blockEntity.getMachine().inventory.insertItem(item_slot, toInsert, false);
+                    ItemStack remainder = blockEntity.get().inventory.insertItem(item_slot, toInsert, false);
                     if (remainder.getCount() < toInsert.getCount()) {
                         level.playSound(null, blockPos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                         playerHand.shrink(1);
@@ -179,9 +179,9 @@ public class SoakingDrum {
                     int currentHandCount = playerHand.isEmpty() ? 0 : playerHand.getCount();
                     int maxTransferable = maxHandLimit - currentHandCount;
                     if (maxTransferable <= 0) return false;
-                    ItemStack simulatedExtract = blockEntity.getMachine().inventory.extractItem(item_slot, maxTransferable, true);
+                    ItemStack simulatedExtract = blockEntity.get().inventory.extractItem(item_slot, maxTransferable, true);
                     if (simulatedExtract.isEmpty()) return false;
-                    ItemStack extracted = blockEntity.getMachine().inventory.extractItem(item_slot, simulatedExtract.getCount(), false);
+                    ItemStack extracted = blockEntity.get().inventory.extractItem(item_slot, simulatedExtract.getCount(), false);
                     level.playSound(null, blockPos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
                     if (playerHand.isEmpty()) {
                         player.setItemInHand(interactionHand, extracted);

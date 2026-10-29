@@ -1,5 +1,6 @@
 package eng.cad.auto.axolotyl.machine.multiblock;
 
+import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import net.minecraft.core.BlockPos;
@@ -11,4 +12,7 @@ public class GenericFollowerEntity extends GenericMachineEntity {
         super(type, pos, state, machineConfig);
     }
 
+    public CustomCraftingContainer getCraftingContainer(GenericFollowerEntity entity){
+        return this.machineConfig.followerLogic().getCraftingContainer(entity);
+    }
 }

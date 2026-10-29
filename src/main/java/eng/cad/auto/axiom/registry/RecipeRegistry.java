@@ -24,4 +24,6 @@ public class RecipeRegistry {
             RecipeRegistry.RECIPE_TYPES.register("alembic", GenericRecipe.Type::new);
     public static RegistryObject<RecipeType<GenericRecipe>> CHEMICAL_REACTOR =
             RecipeRegistry.RECIPE_TYPES.register("chemical_reactor", GenericRecipe.Type::new);
+    public static RegistryObject<RecipeType<GenericRecipe>> PYROLYZER =
+            RecipeRegistry.RECIPE_TYPES.register("pyrolyzer", GenericRecipe.Type::new);
 }

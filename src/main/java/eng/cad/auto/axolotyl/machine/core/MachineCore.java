@@ -4,6 +4,7 @@ import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.machines.ChemicalReactor;
 import eng.cad.auto.axiom.registry.ItemRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
+import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotConfig;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotType;
@@ -13,10 +14,7 @@ import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
 import eng.cad.auto.axolotyl.machine.core.interfaces.IMenuSlotLogic;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.BlockRegistry;
-import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerBlock;
-import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
-import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterBlock;
-import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterEntity;
+import eng.cad.auto.axolotyl.machine.multiblock.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -48,9 +46,7 @@ public class MachineCore {
         AxiomMod.LOGGER.info("Registering new machine of "+name);
         this.config = config;
 
-        block = BlockRegistry.registerMachineBlock(
-                name,
-                switch(config.machineType){
+        block = BlockRegistry.registerMachineBlock(name, switch(config.machineType){
                 case MACHINE -> () -> new GenericMachineBlock(
                                 BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
                                 blockEntity,
@@ -63,8 +59,7 @@ public class MachineCore {
                         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
                         blockEntity,
                         config);
-                }
-        );
+                });
 
         blockItem = ItemRegistry.registerBlockItem(name, block);
 
@@ -99,8 +94,7 @@ public class MachineCore {
                                                             config),
                                             block.get()
                                     ).build(null);
-                        }
-                );
+                        });
         if (!config.noGui) {
             ui = new GenericUI(config, blockEntity);
         }
@@ -116,6 +110,7 @@ public class MachineCore {
                          IMachineLogic serverLogic,
                          IMachineClientLogic clientLogic,
                          IMenuSlotLogic menuSlots,
+                         IFollowerLogic followerLogic,
                          IRightClickBehaviour rightClickLogic,
                          String name,
                          HashMap<Integer, SlotConfig> itemSlotConfig,
@@ -180,6 +175,15 @@ public class MachineCore {
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for clientTick");
+            }
+        };
+
+        IFollowerLogic followerLogic = new IFollowerLogic(){
+
+            @Override
+            public CustomCraftingContainer getCraftingContainer(GenericFollowerEntity entity) {
+                AxiomMod.LOGGER.warn("No custom behaviour defined for getCraftingContainer");
+                return null;
             }
         };
 
@@ -259,6 +263,7 @@ public class MachineCore {
                     serverLogic,
                     clientLogic,
                     menuSlot,
+                    followerLogic,
                     rightClickLogic,
                     name,
                     slotConfig.get(SlotType.ITEM),
@@ -277,7 +282,8 @@ public class MachineCore {
             return this;
         }
 
-        public Builder isMultiblockFollower() {
+        public Builder isMultiblockFollower(IFollowerLogic logic) {
+            followerLogic = logic;
             machineType = MACHINETYPE.FOLLOWER;
             return this;
         }

@@ -60,8 +60,8 @@ public class FluidSyncPacket {
                             BlockEntity blockEntity = level.getBlockEntity(pos);
                             if (!(blockEntity instanceof GenericMachineEntity genericBlockEntity)) return;
                             if (genericBlockEntity.machineConfig.fluidSlots() <= 0) return;
-                            if (genericBlockEntity.getMachine().tanks == null) return;
-                            if (slot < 0 || slot >= genericBlockEntity.getMachine().tanks.getTanks()) return;
+                            if (genericBlockEntity.get().tanks == null) return;
+                            if (slot < 0 || slot >= genericBlockEntity.get().tanks.getTanks()) return;
 
                             FluidStack stack = FluidStack.EMPTY;
 
@@ -72,7 +72,7 @@ public class FluidSyncPacket {
                                 }
                             }
 
-                            genericBlockEntity.getMachine().tanks.setStackInSlot(slot, stack);
+                            genericBlockEntity.get().tanks.setStackInSlot(slot, stack);
                         }
                 )
         );

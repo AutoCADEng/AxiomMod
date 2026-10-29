@@ -46,7 +46,7 @@ public class CustomBucket extends BucketItem {
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         FluidActionResult result = FluidUtil.tryFillContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.getMachine().tanks,
+                blockEntity.get().tanks,
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,
@@ -65,7 +65,7 @@ public class CustomBucket extends BucketItem {
 
         FluidActionResult result = FluidUtil.tryEmptyContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.getMachine().tanks,
+                blockEntity.get().tanks,
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,

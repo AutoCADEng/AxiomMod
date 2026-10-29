@@ -22,8 +22,6 @@ import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -75,9 +73,9 @@ public class ChemicalReactor {
                 if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
                 GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                                .addTank(blockEntity.getMachine().tanks.getFluidInTank(input_tank))
-                                .addTank(blockEntity.getMachine().tanks.getFluidInTank(input_tank_2))
-                                .addTank(blockEntity.getMachine().tanks.getFluidInTank(output_tank)),
+                                .addTank(blockEntity.get().tanks.getFluidInTank(input_tank))
+                                .addTank(blockEntity.get().tanks.getFluidInTank(input_tank_2))
+                                .addTank(blockEntity.get().tanks.getFluidInTank(output_tank)),
                         RecipeRegistry.CHEMICAL_REACTOR.get(),
                         level,
                         blockEntity);
@@ -92,7 +90,7 @@ public class ChemicalReactor {
                     return;
                 }
 
-                if (blockEntity.getMachine().metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
+                if (blockEntity.get().metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
                     if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     resetProgress(blockEntity);
                     return;
@@ -103,33 +101,33 @@ public class ChemicalReactor {
 
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().inventory != null) {
-                    tag.put("Inventory", entity.getMachine().inventory.serializeNBT());
+                if (entity.get().inventory != null) {
+                    tag.put("Inventory", entity.get().inventory.serializeNBT());
                 }
-                if (entity.getMachine().tanks != null) {
-                    tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
+                if (entity.get().tanks != null) {
+                    tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
-                tag.putInt("Progress", entity.getMachine().metadata.get(progressBar_Data));
+                tag.putInt("Progress", entity.get().metadata.get(progressBar_Data));
             }
 
             @Override
             public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().inventory != null && tag.contains("Inventory")) {
-                    entity.getMachine().inventory.deserializeNBT(tag.getCompound("Inventory"));
+                if (entity.get().inventory != null && tag.contains("Inventory")) {
+                    entity.get().inventory.deserializeNBT(tag.getCompound("Inventory"));
                 }
-                if (entity.getMachine().tanks != null && tag.contains("Tanks")) {
-                    entity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (entity.get().tanks != null && tag.contains("Tanks")) {
+                    entity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
-                if (tag.contains("Progress")) entity.getMachine().metadata.set(progressBar_Data, tag.getInt("Progress"));
+                if (tag.contains("Progress")) entity.get().metadata.set(progressBar_Data, tag.getInt("Progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
-                blockEntity.getMachine().metadata.set(progressBar_Data, 0);
+                blockEntity.get().metadata.set(progressBar_Data, 0);
             }
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int value) {
-                blockEntity.getMachine().metadata.set(progressBar_Data, Math.min(Max_Processing_Ticks, blockEntity.getMachine().metadata.get(progressBar_Data) + value));
+                blockEntity.get().metadata.set(progressBar_Data, Math.min(Max_Processing_Ticks, blockEntity.get().metadata.get(progressBar_Data) + value));
             }
 
         }

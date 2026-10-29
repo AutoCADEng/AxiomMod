@@ -5,9 +5,7 @@ import eng.cad.auto.axiom.machines.Alembic;
 import eng.cad.auto.axiom.machines.ChemicalReactor;
 import eng.cad.auto.axiom.machines.FermenterMachine;
 import eng.cad.auto.axiom.machines.SoakingDrum;
-import eng.cad.auto.axiom.machines.multiblock.EtchedFluidInput;
-import eng.cad.auto.axiom.machines.multiblock.EtchedFluidOutput;
-import eng.cad.auto.axiom.machines.multiblock.TreatmentPlant;
+import eng.cad.auto.axiom.machines.multiblock.*;
 import eng.cad.auto.axolotyl.machine.core.MachineCore;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -33,7 +31,8 @@ public class MachineRegistry
         new ChemicalReactor();
         new EtchedFluidInput();
         new EtchedFluidOutput();
-        new TreatmentPlant();
+        new EtchedItemInput();
+        new EtchedItemOutput();
+        new Pyrolyzer();
     }
-
 }

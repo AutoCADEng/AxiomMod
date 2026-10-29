@@ -1,7 +1,6 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
 
-import eng.cad.auto.axiom.AxiomMod;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axiom.registry.RecipeRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
@@ -54,10 +53,10 @@ public class TreatmentPlant {
                 counter++;
 
                 if (counter >= 10){
-                    blockEntity.getMachine().metadata.set(isValid, blockEntity.validateStructure(pos)?1:0); // lazy implementation for now, we will look into events when I got more time.
+                    blockEntity.get().metadata.set(isValid, blockEntity.validateStructure(pos)?1:0); // lazy implementation for now, we will look into events when I got more time.
                 }
 
-                if (blockEntity.getMachine().metadata.get(isValid) == 0){
+                if (blockEntity.get().metadata.get(isValid) == 0){
                     resetProgress(blockEntity);
                     return;
                 }
@@ -74,40 +73,40 @@ public class TreatmentPlant {
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
                 if (!(entity instanceof GenericMasterEntity blockEntity)) return;
-                if (blockEntity.getMachine().inventory != null) {
-                    tag.put("Inventory", entity.getMachine().inventory.serializeNBT());
+                if (blockEntity.get().inventory != null) {
+                    tag.put("Inventory", entity.get().inventory.serializeNBT());
                 }
-                if (blockEntity.getMachine().tanks != null) {
-                    tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
+                if (blockEntity.get().tanks != null) {
+                    tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
 
-                tag.putInt("isValid", blockEntity.getMachine().metadata.get(isValid));
-                tag.putInt("progress", blockEntity.getMachine().metadata.get(progress));
+                tag.putInt("isValid", blockEntity.get().metadata.get(isValid));
+                tag.putInt("progress", blockEntity.get().metadata.get(progress));
             }
 
             @Override
             public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
                 if (!(entity instanceof GenericMasterEntity blockEntity)) return;
-                if (blockEntity.getMachine().inventory != null && tag.contains("Inventory")) {
-                    blockEntity.getMachine().inventory.deserializeNBT(tag.getCompound("Inventory"));
+                if (blockEntity.get().inventory != null && tag.contains("Inventory")) {
+                    blockEntity.get().inventory.deserializeNBT(tag.getCompound("Inventory"));
                 }
-                if (blockEntity.getMachine().tanks != null && tag.contains("Tanks")) {
-                    blockEntity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (blockEntity.get().tanks != null && tag.contains("Tanks")) {
+                    blockEntity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
 
-                blockEntity.getMachine().metadata.set(isValid, tag.getInt("isValid"));
-                blockEntity.getMachine().metadata.set(progress, tag.getInt("progress"));
+                blockEntity.get().metadata.set(isValid, tag.getInt("isValid"));
+                blockEntity.get().metadata.set(progress, tag.getInt("progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
                 if (!(blockEntity instanceof GenericMasterEntity machine)) return;
-                machine.getMachine().metadata.set(progress, 0);
+                machine.get().metadata.set(progress, 0);
             }
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int value) {
                 if (!(blockEntity instanceof GenericMasterEntity machine)) return;
-                machine.getMachine().metadata.set(progress, machine.getMachine().metadata.get(progress) + value);
+                machine.get().metadata.set(progress, machine.get().metadata.get(progress) + value);
             }
 
         }

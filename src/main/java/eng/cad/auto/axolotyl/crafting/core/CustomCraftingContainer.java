@@ -128,4 +128,14 @@ public class CustomCraftingContainer implements Container {
         this.items.add(stack);
         return this;
     }
+
+    public CustomCraftingContainer merge(CustomCraftingContainer craftingContainer) {
+        for(ItemStack stack:craftingContainer.items){
+            addSlot(stack);
+        }
+        for(FluidStack tank:craftingContainer.tanks){
+            addTank(tank);
+        }
+        return this;
+    }
 }

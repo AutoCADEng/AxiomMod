@@ -21,11 +21,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
 import org.jetbrains.annotations.NotNull;
@@ -46,18 +44,14 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
         refreshCapabilities();
     }
 
-    public void tick(Level level, BlockPos blockPos, BlockState blockState) {
-        AxiomMod.LOGGER.warn("FAILED TO OVERWRITE TICK METHOD FOR BLOCK ENTITY {}", level.getBlockEntity(blockPos).getType().toString());
-    }
-
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity){
         blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
         if (blockEntity.machineConfig.noGui()) blockEntity.syncData();
     }
-    public MachineInventory getMachine(){
+
+    public MachineInventory get(){
         return machine;
     }
-
 
     @Override
     public Component getDisplayName() {
@@ -85,37 +79,11 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
     @Override
     public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> capability, @Nullable Direction side) {
         if ((machineConfig.itemSlots()>0) && (capability == ForgeCapabilities.ITEM_HANDLER)) {
-            AxiomMod.LOGGER.info(
-                    "Pipe item capability request: side={}, inventory={}, valid={}",
-                    side,
-                    machine.inventory != null,
-                    itemCapability.isPresent()
-            );
-            AxiomMod.LOGGER.info(
-                    "Slots={}, slot0={}, extractable={}",
-                    machine.inventory.getSlots(),
-                    machine.inventory.getStackInSlot(0),
-                    machine.inventory.extractItem(0, 1, true)
-            );
             return itemCapability.cast();
         }
-
         if ((machineConfig.fluidSlots()>0) && (capability == ForgeCapabilities.FLUID_HANDLER)) {
-            AxiomMod.LOGGER.info(
-                    "Pipe fluid capability request: side={}, inventory={}, valid={}",
-                    side,
-                    machine.tanks != null,
-                    itemCapability.isPresent()
-            );
-            AxiomMod.LOGGER.info(
-                    "Slots={}, slot0={}, extractable={}",
-                    machine.tanks.getTanks(),
-                    machine.tanks.getFluidInTank(0),
-                    machine.tanks.fill(new FluidStack(Fluids.WATER, 1000), IFluidHandler.FluidAction.SIMULATE)
-            );
             return fluidCapability.cast();
         }
-
         return super.getCapability(capability, side);
     }
 

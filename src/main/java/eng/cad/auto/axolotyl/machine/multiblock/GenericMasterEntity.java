@@ -65,7 +65,14 @@ public class GenericMasterEntity extends GenericMachineEntity {
         return true;
     }
 
-    public NonNullList<GenericFollowerBlock> findFollowers(){
-        return NonNullList.create();
+    public NonNullList<GenericFollowerEntity> getFollowers() {
+        NonNullList<GenericFollowerEntity> followerEntities = NonNullList.create();
+        if (level == null) return followerEntities;
+        for (BlockPos followerPos:followers){
+            if ((level.getBlockEntity(followerPos) instanceof GenericFollowerEntity followerEntity)){
+                followerEntities.add(followerEntity);
+            }
+        }
+        return followerEntities;
     }
 }

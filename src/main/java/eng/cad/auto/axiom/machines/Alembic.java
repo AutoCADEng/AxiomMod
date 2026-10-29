@@ -65,24 +65,24 @@ public class Alembic {
                 if (!(Objects.equals(blockEntity.machineConfig.name(), Alembic.name))) return;
 
                 if (level.getBlockState(pos.below()).is(TagRegistry.HOT_BLOCKS) || level.getFluidState(pos.below()).is(TagRegistry.HOT_FLUIDS)) {
-                    blockEntity.getMachine().metadata.set(heated, 1);
+                    blockEntity.get().metadata.set(heated, 1);
                 }else{
-                    blockEntity.getMachine().metadata.set(heated, 0);
+                    blockEntity.get().metadata.set(heated, 0);
                 }
 
                 GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                                .addTank(blockEntity.getMachine().tanks.getFluidInTank(fluid_tank)),
+                                .addTank(blockEntity.get().tanks.getFluidInTank(fluid_tank)),
                         RecipeRegistry.ALEMBIC.get(),
                         level,
                         blockEntity);
 
-                if (activeRecipe == null || blockEntity.getMachine().metadata.get(heated) == 0){
+                if (activeRecipe == null || blockEntity.get().metadata.get(heated) == 0){
                     resetProgress(blockEntity);
                     return;
                 }
 
-                if (blockEntity.getMachine().metadata.get(progress) >= MAX_PROGRESS) {
+                if (blockEntity.get().metadata.get(progress) >= MAX_PROGRESS) {
                     if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     resetProgress(blockEntity);
@@ -96,30 +96,30 @@ public class Alembic {
 
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().tanks != null) {
-                    tag.put("Tanks", entity.getMachine().tanks.serializeNBT());
+                if (entity.get().tanks != null) {
+                    tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
-                tag.putInt("Progress", entity.getMachine().metadata.get(progress));
-                tag.putInt("Heated", entity.getMachine().metadata.get(heated));
+                tag.putInt("Progress", entity.get().metadata.get(progress));
+                tag.putInt("Heated", entity.get().metadata.get(heated));
             }
 
             @Override
             public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
-                if (entity.getMachine().tanks != null && tag.contains("Tanks")) {
-                    entity.getMachine().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                if (entity.get().tanks != null && tag.contains("Tanks")) {
+                    entity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
-                if (tag.contains("Progress")) entity.getMachine().metadata.set(progress, tag.getInt("Progress"));
-                if (tag.contains("Heated")) entity.getMachine().metadata.set(heated, tag.getInt("Heated"));
+                if (tag.contains("Progress")) entity.get().metadata.set(progress, tag.getInt("Progress"));
+                if (tag.contains("Heated")) entity.get().metadata.set(heated, tag.getInt("Heated"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
-                blockEntity.getMachine().metadata.set(progress, 0);
+                blockEntity.get().metadata.set(progress, 0);
             }
 
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int count) {
-                blockEntity.getMachine().metadata.set(progress, blockEntity.getMachine().metadata.get(progress)>= MAX_PROGRESS? MAX_PROGRESS : blockEntity.getMachine().metadata.get(progress) + count);
+                blockEntity.get().metadata.set(progress, blockEntity.get().metadata.get(progress)>= MAX_PROGRESS? MAX_PROGRESS : blockEntity.get().metadata.get(progress) + count);
             }
         }
         public static class Client implements IMachineClientLogic {
@@ -131,7 +131,7 @@ public class Alembic {
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
                 if (!level.isClientSide()) return;
-                if (blockEntity.getMachine().metadata.get(progress) <= 0) return;
+                if (blockEntity.get().metadata.get(progress) <= 0) return;
                 if (level.random.nextFloat() < 0.33F) {
 
                     double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
