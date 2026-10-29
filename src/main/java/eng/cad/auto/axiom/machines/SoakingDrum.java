@@ -188,6 +188,7 @@ public class SoakingDrum {
                     } else {
                         playerHand.grow(extracted.getCount());
                     }
+                    return true;
                 }
                 return false;
             }
