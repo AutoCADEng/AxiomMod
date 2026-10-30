@@ -7,6 +7,7 @@ import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
 import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterEntity;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -46,7 +47,7 @@ public class CraftingUtil {
         return true;
     }
 
-    private static void produce(CraftingIngredient target, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, GenericRecipe recipe) {
+    private static void produce(CraftingIngredient recipeOutput, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, GenericRecipe recipe) {
         int required = 0;
 
         ArrayList<GenericMachineEntity> machines = new ArrayList<>();
@@ -55,22 +56,21 @@ public class CraftingUtil {
             machines.addAll(followers);
         }
 
-
-        if (target.isItem()) {
-            required = target.getItem().getCount();
+        if (recipeOutput.is(CraftingIngredient.Kind.ITEM)) {
+            required = recipeOutput.getItem().getCount();
             for (GenericMachineEntity machine : machines) {
                 if (machine.get().inventory == null) continue;
                 for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
                     if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT)
                         continue;
                     ItemStack itemStack = machine.get().inventory.getStackInSlot(idx);
-                    if (itemStack.is(target.getItem().getItem()) || itemStack.isEmpty()) {
+                    if (itemStack.is(recipeOutput.getItem().getItem()) || itemStack.isEmpty()) {
                         if (required <= 0) break;
                         int originalCount = itemStack.getCount();
-                        int space = Math.min(machine.get().inventory.getSlotLimit(idx), target.getItem().getMaxStackSize()) - originalCount;
+                        int space = Math.min(machine.get().inventory.getSlotLimit(idx), recipeOutput.getItem().getMaxStackSize()) - originalCount;
                         int producedItems = Math.min(required, space);
                         if (producedItems <= 0) continue;
-                        ItemStack produced = target.getItem().copy();
+                        ItemStack produced = recipeOutput.getItem().copy();
                         produced.setCount(originalCount + producedItems);
                         machine.get().inventory.setStackInSlot(idx, produced);
                         required -= producedItems;
@@ -79,21 +79,21 @@ public class CraftingUtil {
             }
         }
 
-        if (target.isFluid()) {
-            required = target.getFluid().getAmount();
+        if (recipeOutput.is(CraftingIngredient.Kind.FLUID)) {
+            required = recipeOutput.getFluid().getAmount();
             for (GenericMachineEntity machine: machines) {
                 if (machine.get().tanks == null) continue;
                 for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
                     if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT)
                         continue;
                     FluidStack fluidStack = machine.get().tanks.getFluidInTank(idx);
-                    if (fluidStack.isFluidEqual(target.getFluid()) || fluidStack.isEmpty()) {
+                    if (fluidStack.isFluidEqual(recipeOutput.getFluid()) || fluidStack.isEmpty()) {
                         if (required <= 0) break;
                         int originalCount = fluidStack.getAmount();
                         int space = machine.get().tanks.getTankCapacity(idx) - originalCount;
                         int producedFluid = Math.min(required, space);
                         if (producedFluid <= 0) continue;
-                        FluidStack produced = target.getFluid().copy();
+                        FluidStack produced = recipeOutput.getFluid().copy();
                         produced.setAmount(originalCount + producedFluid);
                         machine.get().tanks.setStackInSlot(idx, produced);
                         required -= producedFluid;
@@ -107,44 +107,80 @@ public class CraftingUtil {
         int required = 0;
         ArrayList<GenericMachineEntity> machines = new ArrayList<>();
         machines.add(blockEntity);
+
         if (followers != null){
             machines.addAll(followers);
         }
-        if (target.isItem()) {
-            required = target.getItem().getCount();
-            for (GenericMachineEntity machine : machines) {
-                if (machine.get().inventory == null) continue;
-                for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
-                    if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT)
-                        continue;
-                    ItemStack itemStack = machine.get().inventory.getStackInSlot(idx);
-                    if (itemStack.is(target.getItem().getItem())) {
-                        if (required <= 0) break;
-                        int originalCount = itemStack.getCount();
-                        int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
-                        machine.get().inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY : new ItemStack(itemStack.getItem(), remainingItems));
-                        int taken = originalCount - remainingItems;
-                        required -= taken;
+        switch (target.getType()){
+            case ITEM -> {
+                required = target.getItem().getCount();
+                for (GenericMachineEntity machine : machines) {
+                    if (machine.get().inventory == null) continue;
+                    for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
+                        if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
+                        ItemStack itemStack = machine.get().inventory.getStackInSlot(idx);
+                        if (itemStack.is(target.getItem().getItem())) {
+                            if (required <= 0) break;
+                            int originalCount = itemStack.getCount();
+                            int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
+                            machine.get().inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY : new ItemStack(itemStack.getItem(), remainingItems));
+                            int taken = originalCount - remainingItems;
+                            required -= taken;
+                        }
                     }
                 }
             }
-        }
-
-        if (target.isFluid()) {
-            required = target.getFluid().getAmount();
-            for (GenericMachineEntity machine: machines) {
-                if (machine.get().tanks == null) continue;
-                for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
-                    if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT)
-                        continue;
-                    FluidStack fluidStack = machine.get().tanks.getFluidInTank(idx);
-                    if (fluidStack.isFluidEqual(target.getFluid())) {
-                        if (required <= 0) break;
-                        int originalCount = fluidStack.getAmount();
-                        int remainingVolume = Math.max(originalCount - Math.min(machine.get().tanks.getTankCapacity(idx), required), 0);
-                        machine.get().tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY : new FluidStack(fluidStack.getFluid(), remainingVolume));
-                        int taken = originalCount - remainingVolume;
-                        required -= taken;
+            case ITEM_TAG -> {
+                required = target.getTag().count();
+                for (GenericMachineEntity machine : machines) {
+                    if (machine.get().inventory == null) continue;
+                    for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
+                        if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
+                        ItemStack itemStack = machine.get().inventory.getStackInSlot(idx);
+                        if (itemStack.is(target.getItemTag())){
+                            if (required <= 0) break;
+                            int originalCount = itemStack.getCount();
+                            int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
+                            machine.get().inventory.setStackInSlot(idx, remainingItems == 0 ? ItemStack.EMPTY : new ItemStack(itemStack.getItem(), remainingItems));
+                            int taken = originalCount - remainingItems;
+                            required -= taken;
+                        }
+                    }
+                }
+            }
+            case FLUID -> {
+                required = target.getFluid().getAmount();
+                for (GenericMachineEntity machine: machines) {
+                    if (machine.get().tanks == null) continue;
+                    for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
+                        if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
+                        FluidStack fluidStack = machine.get().tanks.getFluidInTank(idx);
+                        if (fluidStack.isFluidEqual(target.getFluid())) {
+                            if (required <= 0) break;
+                            int originalCount = fluidStack.getAmount();
+                            int remainingVolume = Math.max(originalCount - Math.min(machine.get().tanks.getTankCapacity(idx), required), 0);
+                            machine.get().tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY : new FluidStack(fluidStack.getFluid(), remainingVolume));
+                            int taken = originalCount - remainingVolume;
+                            required -= taken;
+                        }
+                    }
+                }
+            }
+            case FLUID_TAG -> {
+                required = target.getFluid().getAmount();
+                for (GenericMachineEntity machine: machines) {
+                    if (machine.get().tanks == null) continue;
+                    for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
+                        if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
+                        FluidStack fluidStack = machine.get().tanks.getFluidInTank(idx);
+                        if (fluidStack.getFluid().defaultFluidState().is(target.getFluidTag())) {
+                            if (required <= 0) break;
+                            int originalCount = fluidStack.getAmount();
+                            int remainingVolume = Math.max(originalCount - Math.min(machine.get().tanks.getTankCapacity(idx), required), 0);
+                            machine.get().tanks.setStackInSlot(idx, remainingVolume == 0 ? FluidStack.EMPTY : new FluidStack(fluidStack.getFluid(), remainingVolume));
+                            int taken = originalCount - remainingVolume;
+                            required -= taken;
+                        }
                     }
                 }
             }
@@ -157,41 +193,68 @@ public class CraftingUtil {
     public static boolean validate(GenericMachineEntity blockEntity, ArrayList<GenericFollowerEntity> followers, GenericRecipe recipe){
         HashMap<Item, Integer> recipeItems = new HashMap<>();
         HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
-
+        HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
+        HashMap<TagKey<Fluid>, Integer> recipeFluidTags = new HashMap<>();
         ArrayList<GenericMachineEntity> machines = new ArrayList<>();
         machines.add(blockEntity);
         if (followers != null){
             machines.addAll(followers);
         }
-
         for (CraftingIngredient ingredient: recipe.getCraftingIngredients()){
-            if (ingredient.isItem()) {
-                ItemStack itemStack = ingredient.getItem();
-
-                if (recipeItems.containsKey(itemStack.getItem())){
-                    recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
-                } else {
-                    recipeItems.put(itemStack.getItem(),  itemStack.getCount());
+            switch (ingredient.getType()){
+                case ITEM -> {
+                    ItemStack itemStack = ingredient.getItem();
+                    if (recipeItems.containsKey(itemStack.getItem())){
+                        recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
+                    } else {
+                        recipeItems.put(itemStack.getItem(), itemStack.getCount());
+                    }
                 }
-            }
 
-            if (ingredient.isFluid()) {
-                FluidStack fluidStack = ingredient.getFluid();
+                case FLUID -> {
+                    FluidStack fluidStack = ingredient.getFluid();
+                    if (recipeFluids.containsKey(fluidStack.getFluid())){
+                        recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
+                    } else {
+                        recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+                    }
+                }
 
-                if (recipeFluids.containsKey(fluidStack.getFluid())){
-                    recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
-                } else {
-                    recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+                case ITEM_TAG -> {
+                    var tag = ingredient.getItemTag();
+                    if (recipeItemTags.containsKey(tag)){
+                        recipeItemTags.put(tag, recipeItemTags.get(tag) + ingredient.getTag().count());
+                    } else {
+                        recipeItemTags.put(tag, ingredient.getTag().count());
+                    }
+                }
+
+                case FLUID_TAG -> {
+                    var tag = ingredient.getFluidTag();
+                    if (recipeFluidTags.containsKey(tag)){
+                        recipeFluidTags.put(tag, recipeFluidTags.get(tag) + ingredient.getTag().count());
+                    } else {
+                        recipeFluidTags.put(tag, ingredient.getTag().count());
+                    }
                 }
             }
         }
+
         for (GenericMachineEntity machine: machines) {
             if (machine.get().inventory != null) {
                 for (int idx = 0; idx < machine.get().inventory.getSlots(); idx++) {
                     if (machine.get().config.itemSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
                     ItemStack stack = machine.get().inventory.getStackInSlot(idx);
+                    boolean skipTag = false;
                     if (recipeItems.containsKey(stack.getItem())) {
                         recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
+                        skipTag = true;
+                    }
+                    if (!skipTag){
+                        var firstTag = stack.getTags().filter(tag -> recipeItemTags.containsKey(tag)).findFirst();
+                        if (firstTag.isEmpty()) continue;
+                        var tag = firstTag.get();
+                        recipeItemTags.put(tag, recipeItemTags.get(tag) - stack.getCount());
                     }
                 }
             }
@@ -200,8 +263,16 @@ public class CraftingUtil {
                 for (int idx = 0; idx < machine.get().tanks.getTanks(); idx++) {
                     if (machine.get().config.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.OUTPUT) continue;
                     FluidStack stack = machine.get().tanks.getFluidInTank(idx);
+                    boolean skipTag = false;
                     if (recipeFluids.containsKey(stack.getFluid())) {
                         recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
+                        skipTag = true;
+                    }
+                    if (!skipTag){
+                        var firstTag = stack.getFluid().defaultFluidState().getTags().filter(tag -> recipeFluidTags.containsKey(tag)).findFirst();
+                        if (firstTag.isEmpty()) continue;
+                        var tag = firstTag.get();
+                        recipeFluidTags.put(tag, recipeFluidTags.get(tag) - stack.getAmount());
                     }
                 }
             }
@@ -251,44 +322,46 @@ public class CraftingUtil {
             int required = 0;
 
             for (GenericMachineEntity machine: machines) {
-                if (target.isItem()) {
-                    if (machine == machines.get(0)) required = target.getItem().getCount();
-                    ItemStack[] items = recipeItems.get(machine);
+                switch (target.getType()){
+                    case ITEM -> {
+                        if (machine == machines.get(0)) required = target.getItem().getCount();
+                        ItemStack[] items = recipeItems.get(machine);
 
-                    for (int idx = 0; idx < items.length; idx++) {
-                        if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT) continue;
-                        ItemStack itemStack = items[idx];
-                        if (itemStack.is(target.getItem().getItem()) || itemStack.isEmpty()) {
-                            if (required <= 0) break;
-                            int originalCount = itemStack.getCount();
-                            int space = Math.min(machine.get().inventory.getSlotLimit(idx), target.getItem().getMaxStackSize()) - originalCount;
-                            int producedItems = Math.min(required, space);
-                            if (producedItems <= 0) continue;
-                            ItemStack produced = target.getItem().copy();
-                            produced.setCount(originalCount + producedItems);
-                            items[idx] = produced;
-                            required -= producedItems;
+                        for (int idx = 0; idx < items.length; idx++) {
+                            if (machine.machineConfig.itemSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT) continue;
+                            ItemStack itemStack = items[idx];
+                            if (itemStack.is(target.getItem().getItem()) || itemStack.isEmpty()) {
+                                if (required <= 0) break;
+                                int originalCount = itemStack.getCount();
+                                int space = Math.min(machine.get().inventory.getSlotLimit(idx), target.getItem().getMaxStackSize()) - originalCount;
+                                int producedItems = Math.min(required, space);
+                                if (producedItems <= 0) continue;
+                                ItemStack produced = target.getItem().copy();
+                                produced.setCount(originalCount + producedItems);
+                                items[idx] = produced;
+                                required -= producedItems;
+                            }
                         }
                     }
-                }
 
-                if (target.isFluid()) {
-                    if (machine == machines.get(0)) required = target.getFluid().getAmount();
-                    FluidStack[] fluids = recipeFluids.get(machine);
+                    case FLUID -> {
+                        if (machine == machines.get(0)) required = target.getFluid().getAmount();
+                        FluidStack[] fluids = recipeFluids.get(machine);
 
-                    for (int idx = 0; idx < fluids.length; idx++) {
-                        if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT) continue;
-                        FluidStack fluidStack = fluids[idx];
-                        if (fluidStack.isFluidEqual(target.getFluid()) || fluidStack.isEmpty()) {
-                            if (required <= 0) break;
-                            int originalCount = fluidStack.getAmount();
-                            int space = machine.get().tanks.getTankCapacity(idx) - originalCount;
-                            int producedFluid = Math.min(required, space);
-                            if (producedFluid <= 0) continue;
-                            FluidStack produced = target.getFluid().copy();
-                            produced.setAmount(originalCount + producedFluid);
-                            fluids[idx] = produced;
-                            required -= producedFluid;
+                        for (int idx = 0; idx < fluids.length; idx++) {
+                            if (machine.machineConfig.fluidSlotConfig().get(idx).restriction() == SlotIORestriction.INPUT) continue;
+                            FluidStack fluidStack = fluids[idx];
+                            if (fluidStack.isFluidEqual(target.getFluid()) || fluidStack.isEmpty()) {
+                                if (required <= 0) break;
+                                int originalCount = fluidStack.getAmount();
+                                int space = machine.get().tanks.getTankCapacity(idx) - originalCount;
+                                int producedFluid = Math.min(required, space);
+                                if (producedFluid <= 0) continue;
+                                FluidStack produced = target.getFluid().copy();
+                                produced.setAmount(originalCount + producedFluid);
+                                fluids[idx] = produced;
+                                required -= producedFluid;
+                            }
                         }
                     }
                 }

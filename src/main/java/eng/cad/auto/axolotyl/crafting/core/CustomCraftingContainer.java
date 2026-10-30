@@ -95,16 +95,30 @@ public class CustomCraftingContainer implements Container {
      * @return true if the ingredient is present and the amount stored in the tank is >= the amount the ingredient holds
      */
     public boolean containsIngredient(CraftingIngredient ingredient) {
-        if (ingredient.isFluid()){
-            for (FluidStack fluid:tanks){
-                if (!fluid.getFluid().isSame(ingredient.getFluid().getFluid())) continue;
-                return fluid.getAmount() >= ingredient.getFluid().getAmount();
+        switch(ingredient.getType()){
+            case FLUID -> {
+                for (FluidStack fluid:tanks){
+                    if (!fluid.getFluid().isSame(ingredient.getFluid().getFluid())) continue;
+                    return fluid.getAmount() >= ingredient.getFluid().getAmount();
+                }
             }
-        }
-        if (ingredient.isItem()){
-            for (ItemStack item:items){
-                if (!item.is(ingredient.getItem().getItem())) continue;
-                return item.getCount() >= ingredient.getItem().getCount();
+            case ITEM -> {
+                for (ItemStack item:items){
+                    if (!item.is(ingredient.getItem().getItem())) continue;
+                    return item.getCount() >= ingredient.getItem().getCount();
+                }
+            }
+            case FLUID_TAG -> {
+                for (FluidStack fluid:tanks){
+                    if (!fluid.getFluid().defaultFluidState().is(ingredient.getFluidTag())) continue;
+                    return fluid.getAmount() >= ingredient.getTag().count();
+                }
+            }
+            case ITEM_TAG -> {
+                for (ItemStack item:items){
+                    if (!item.is(ingredient.getItemTag())) continue;
+                    return item.getCount() >= ingredient.getTag().count();
+                }
             }
         }
         return false;

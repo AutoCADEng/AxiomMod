@@ -7,7 +7,10 @@ import eng.cad.auto.axiom.AxiomMod;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -23,18 +26,36 @@ import java.util.Objects;
  */
 // Warning: Do not convert into a record, or it will become possible to have both an Item and a Fluid active at the same time.
 public class CraftingIngredient{
+    public enum Kind { EMPTY, ITEM, FLUID, FLUID_TAG, ITEM_TAG}
+    public record SmartTag(TagKey<?> tag, int count){};
     private final FluidStack fluid;
     private final ItemStack item;
-    public static final CraftingIngredient EMPTY = new CraftingIngredient(ItemStack.EMPTY);
+    private SmartTag tag = new SmartTag(null, 0);
+    public static final CraftingIngredient EMPTY = new CraftingIngredient();
+    Kind type = Kind.EMPTY;
 
+    private CraftingIngredient(){
+        type = Kind.EMPTY;
+        fluid = FluidStack.EMPTY;
+        item = ItemStack.EMPTY;
+    }
     public CraftingIngredient(FluidStack fluid) {
         this.item = ItemStack.EMPTY;
         this.fluid = fluid;
+        type = Kind.FLUID;
     }
 
     public CraftingIngredient(ItemStack item) {
         this.item = item;
         this.fluid = FluidStack.EMPTY;
+        this.type = Kind.ITEM;
+    }
+
+    public CraftingIngredient(SmartTag tag, Kind kind) {
+        this.item = ItemStack.EMPTY;
+        this.fluid = FluidStack.EMPTY;
+        this.type = kind;
+        this.tag = tag;
     }
 
     /**
@@ -49,18 +70,27 @@ public class CraftingIngredient{
 
         CraftingIngredient ingredient;
         if (Objects.equals(type, "fluid")) {
-            FluidStack fluid = new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(name))), count);
-            ingredient = new CraftingIngredient(fluid);
-        }else if(Objects.equals(type, "item")){
-            ItemStack item = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(name))), count);
-            ingredient = new CraftingIngredient(item);
-        }else{
-            AxiomMod.LOGGER.error("JSON ERROR: {} is not a valid CraftingIngredient type (item, fluid)", type);
-            return CraftingIngredient.EMPTY;
+            if (name.startsWith("#")) {
+                TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryParse(name.substring(1)));
+                ingredient = new CraftingIngredient(new SmartTag(fluidTag,  count), Kind.FLUID_TAG);
+            } else {
+                FluidStack fluid = new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(name))), count);
+                ingredient = new CraftingIngredient(fluid);
+            }
+        } else if (Objects.equals(type, "item")) {
+                if (name.startsWith("#")) {
+                    TagKey<Item> itemTag = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), ResourceLocation.tryParse(name.substring(1)));
+                    ingredient = new CraftingIngredient(new SmartTag(itemTag, count), Kind.ITEM_TAG);
+                } else {
+                    ItemStack item = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(name))), count);
+                    ingredient = new CraftingIngredient(item);
+                }
+            } else {
+                AxiomMod.LOGGER.error("JSON ERROR: {} is not a valid CraftingIngredient type (item, fluid)", type);
+                return CraftingIngredient.EMPTY;
+            }
+            return ingredient;
         }
-        return ingredient;
-    }
-
     /**
      * The arrayFromJson method is intended to parse entire lists of ingredients from an axiom GenericRecipe,
      * using the fromJson method to parse the individual items.
@@ -86,12 +116,24 @@ public class CraftingIngredient{
      */
     public static boolean checkIngredient(CraftingIngredient target, CraftingIngredient recipe) {
         if (!isSameKind(target, recipe)) return false;
-        if (target.isItem()){
-            if (!target.getItem().is(recipe.getItem().getItem())) return false;
-            return target.getItem().getCount() >= recipe.getItem().getCount();
-        }else{
-            if (!target.getFluid().getFluid().isSame(recipe.getFluid().getFluid())) return false;
-            return target.getFluid().getAmount() >= recipe.getFluid().getAmount();
+        switch(recipe.type) {
+            case ITEM -> {
+                return target.getItem().getCount() >= recipe.getItem().getCount();
+            }
+            case FLUID -> {
+                return target.getFluid().getAmount() >= recipe.getFluid().getAmount();
+            }
+            case ITEM_TAG -> {
+                if(!target.is(Kind.ITEM)) return false;
+                return target.getItem().getCount() >= recipe.tag.count;
+            }
+            case FLUID_TAG -> {
+                if(!target.is(Kind.FLUID)) return false;
+                return target.getFluid().getAmount() >= recipe.tag.count;
+            }
+            default -> {
+                return false;
+            }
         }
     }
 
@@ -99,33 +141,53 @@ public class CraftingIngredient{
      * The isSameKind method compares two CraftingIngredients by identity.
      * @param target The ingredient from the machine inventory
      * @param recipe The ingredient from the recipe
-     * @return True if target and recipe are the same item/fluid
+     * @return True if target and recipe are compatible types
      */
     public static boolean isSameKind(CraftingIngredient target, CraftingIngredient recipe){
-        //if (recipe.isEmpty() && target.isEmpty()) return true; omitting this saves some lines later, even if it is technically true.
-        if (recipe.isEmpty()) return false;
-        if (target.isEmpty()) return false;
-        return (!target.isFluid() || !recipe.isItem()) && (!target.isItem() || !recipe.isFluid());
+        if (recipe.isEmpty() || target.isEmpty()) return false;
+        switch(recipe.type){
+            case ITEM, ITEM_TAG ->{
+                return target.is(Kind.ITEM);
+            }
+            case FLUID, FLUID_TAG ->{
+                return target.is(Kind.FLUID);
+            }
+            default -> {
+                return false;
+            }
+        }
     }
 
-    public boolean isFluid() {
-        return !fluid.isEmpty();
-    }
-
-    public boolean isItem() {
-        return !item.isEmpty();
+    public boolean is(Kind kind) {
+        return type.equals(kind);
     }
 
     public boolean isEmpty() {
-        return item.isEmpty() && fluid.isEmpty();
+        return is(Kind.EMPTY);
     }
 
+    public SmartTag getTag(){
+        return tag;
+    }
+
+    @SuppressWarnings("unchecked")
+    public TagKey<Item> getItemTag() {
+        return (TagKey<Item>) tag.tag();
+    }
+
+    @SuppressWarnings("unchecked")
+    public TagKey<Fluid> getFluidTag() {
+        return (TagKey<Fluid>) tag.tag();
+    }
+    public Kind getType(){
+        return type;
+    }
     public ItemStack getItem() {
-        return item;
+        return item == null?ItemStack.EMPTY : item;
     }
 
     public FluidStack getFluid() {
-        return fluid;
+        return fluid == null?FluidStack.EMPTY : fluid;
     }
 
     /**
@@ -134,14 +196,15 @@ public class CraftingIngredient{
      */
     public void toNetwork(FriendlyByteBuf byteBuffer) {
         if (isEmpty()) return;
-
-        byteBuffer.writeBoolean(isFluid());
-        if (isFluid()){
-            byteBuffer.writeFluidStack(fluid);
-        }else{
-            byteBuffer.writeItem(item);
+        byteBuffer.writeEnum(type);
+        switch (type) {
+            case ITEM -> { byteBuffer.writeItem(item); }
+            case FLUID -> { byteBuffer.writeFluidStack(fluid); }
+            case ITEM_TAG, FLUID_TAG -> {
+                byteBuffer.writeResourceLocation(tag.tag.location());
+                byteBuffer.writeInt(tag.count);
+            }
         }
-
     }
 
     /**
@@ -150,11 +213,29 @@ public class CraftingIngredient{
      * @return A CraftingIngredient of ItemStack or FluidStack from the network
      */
     public static CraftingIngredient fromNetwork(FriendlyByteBuf byteBuffer) {
-        boolean isFluid = byteBuffer.readBoolean();
-        if (isFluid) {
-            return new CraftingIngredient(byteBuffer.readFluidStack());
-        }else{
-            return new CraftingIngredient(byteBuffer.readItem());
+        Kind kind = byteBuffer.readEnum(Kind.class);
+        switch (kind) {
+            case ITEM -> {
+                return new CraftingIngredient(byteBuffer.readItem());
+            }
+            case FLUID -> {
+                return new CraftingIngredient(byteBuffer.readFluidStack());
+            }
+            case ITEM_TAG -> {
+                ResourceLocation loc = byteBuffer.readResourceLocation();
+                int count = byteBuffer.readInt();
+                TagKey<Item> itemTag = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), loc);
+                return new CraftingIngredient(new SmartTag(itemTag, count), Kind.ITEM_TAG);
+            }
+            case FLUID_TAG -> {
+                ResourceLocation loc = byteBuffer.readResourceLocation();
+                int count = byteBuffer.readInt();
+                TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), loc);
+                return new CraftingIngredient(new SmartTag(fluidTag, count), Kind.FLUID_TAG);
+            }
+            default -> {
+                return CraftingIngredient.EMPTY;
+            }
         }
     }
 }

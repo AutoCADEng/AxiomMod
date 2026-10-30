@@ -6,10 +6,13 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,7 +54,7 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
     @Override
     public ItemStack assemble(CustomCraftingContainer container, RegistryAccess registryAccess) {
         return output.stream()
-                .filter(CraftingIngredient::isItem)
+                .filter(ingredient -> ingredient.is(CraftingIngredient.Kind.ITEM))
                 .map(CraftingIngredient::getItem)
                 .findFirst()
                 .map(ItemStack::copy)
@@ -69,7 +72,7 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
     @Override @ParametersAreNonnullByDefault
     public ItemStack getResultItem(RegistryAccess p_267052_) {
         return output.stream()
-            .filter(CraftingIngredient::isItem)
+            .filter(ingredient -> ingredient.is(CraftingIngredient.Kind.ITEM))
             .map(CraftingIngredient::getItem)
             .findFirst()
             .map(ItemStack::copy)
@@ -107,12 +110,12 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
                 .anyMatch(output -> {
                     if (output.isEmpty()) return false;
 
-                    if (target.isItem() && output.isItem()) {
+                    if (target.is(CraftingIngredient.Kind.ITEM) && output.is(CraftingIngredient.Kind.ITEM)) {
                         return output.getItem().getItem()
                                 .equals(target.getItem().getItem());
                     }
 
-                    if (target.isFluid() && output.isFluid()) {
+                    if (target.is(CraftingIngredient.Kind.FLUID) && output.is(CraftingIngredient.Kind.FLUID)) {
                         return output.getFluid()
                                 .containsFluid(target.getFluid());
                     }
@@ -131,17 +134,36 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
         if (!matches(machineInventory, level)) return false;
         for (CraftingIngredient ingredient:input){
             if (ingredient.isEmpty() || machineInventory.isEmpty()) return false;
-            if (ingredient.isItem()) {
-                if(machineInventory.items.stream().noneMatch(itemstack -> {
-                    if (!itemstack.is(ingredient.getItem().getItem())) return false;
-                    return itemstack.getCount() >= ingredient.getItem().getCount();
-                })) return false;
-            }
-            if (ingredient.isFluid()) {
-                if(machineInventory.tanks.stream().noneMatch(fluidstack -> {
-                    if (!fluidstack.getFluid().isSame(ingredient.getFluid().getFluid())) return false;
-                    return fluidstack.getAmount() >= ingredient.getFluid().getAmount();
-                })) return false;
+            switch (ingredient.getType()){
+                case ITEM -> {
+                    if(machineInventory.items.stream().noneMatch(itemstack -> {
+                        if (!itemstack.is(ingredient.getItem().getItem())) return false;
+                        return itemstack.getCount() >= ingredient.getItem().getCount();
+                        })
+                    ) return false;
+                }
+                case FLUID -> {
+                    if(machineInventory.tanks.stream().noneMatch(fluidstack -> {
+                        if (!fluidstack.getFluid().isSame(ingredient.getFluid().getFluid())) return false;
+                        return fluidstack.getAmount() >= ingredient.getFluid().getAmount();
+                    })
+                    ) return false;
+                }
+                case ITEM_TAG -> {
+                    if(machineInventory.items.stream().noneMatch(itemstack -> {
+                        if (!itemstack.is(ingredient.getItemTag())) return false;
+                        return itemstack.getCount() >= ingredient.getTag().count();
+                    })) return false;
+                }
+                case FLUID_TAG -> {
+                    if(machineInventory.tanks.stream().noneMatch(fluidstack -> {
+                        if (!fluidstack.getFluid().defaultFluidState().is(ingredient.getFluidTag())) return false;
+                        return fluidstack.getAmount() >= ingredient.getTag().count();
+                    })) return false;
+                }
+                case EMPTY -> {
+                    return false;
+                }
             }
         }
         return true;
