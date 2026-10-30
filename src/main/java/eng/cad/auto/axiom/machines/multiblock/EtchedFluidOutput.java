@@ -1,5 +1,6 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
+import eng.cad.auto.axiom.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
@@ -110,22 +111,7 @@ public class EtchedFluidOutput {
                 if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
                 if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
-                return bucketInHand(machine, blockState, level, blockPos, player, interactionHand, result);
-            }
-
-            private boolean bucketInHand(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
-                ItemStack playerHand = player.getItemInHand(interactionHand);
-                Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
-                if (bucketHandler.isPresent()) {
-                    if (bucketHandler.get().getFluidInTank(0).isEmpty()) {
-                        CustomBucket.fluidToItem(machine, player, interactionHand);
-                    } else {
-                        CustomBucket.fluidFromItem(machine, player, interactionHand);
-                    }
-                    return true;
-                }
-                return false;
+                return CommonRightClickBehaviour.extractFluid(0, machine, blockState, level, blockPos, player, interactionHand, result);
             }
         }
     }

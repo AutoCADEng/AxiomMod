@@ -2,6 +2,7 @@ package eng.cad.auto.axiom.machines;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import eng.cad.auto.axiom.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axolotyl.crafting.core.GenericRecipe;
 import eng.cad.auto.axolotyl.crafting.util.CraftingUtil;
@@ -247,24 +248,9 @@ public class ChemicalReactor {
             private boolean onRightClick(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
                 if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
-                if (bucketInHand(blockEntity, blockState, level, blockPos, player, interactionHand, result)) return true;
-                ItemStack playerHand = player.getItemInHand(interactionHand);
-                return false;
+                return CommonRightClickBehaviour.bucketInHand(0, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
 
-            private boolean bucketInHand(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                ItemStack playerHand = player.getItemInHand(interactionHand);
-                Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
-                if (bucketHandler.isPresent()) {
-                    if (bucketHandler.get().getFluidInTank(0).isEmpty()) {
-                        CustomBucket.fluidToItem(blockEntity, player, interactionHand);
-                    } else {
-                        CustomBucket.fluidFromItem(blockEntity, player, interactionHand);
-                    }
-                    return true;
-                }
-                return false;
-            }
         }
     }
 }

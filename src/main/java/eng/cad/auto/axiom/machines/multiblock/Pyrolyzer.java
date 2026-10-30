@@ -17,7 +17,10 @@ import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
 import eng.cad.auto.axolotyl.machine.multiblock.GenericMasterEntity;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -88,8 +91,10 @@ public class Pyrolyzer {
                 if (blockEntity.get().metadata.get(progress) >= Max_Processing_Ticks) {
                     if (CraftingUtil.validate(blockEntity, followerEntities, activeRecipe)) CraftingUtil.craft(blockEntity, followerEntities, activeRecipe);
                     resetProgress(blockEntity);
+                    level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     return;
                 }
+                if (level.random.nextFloat() < 0.025F) level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 incrementProgress(blockEntity, 1);
             }
 
@@ -142,7 +147,20 @@ public class Pyrolyzer {
 
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
-                //Do nothing yet
+                if (!level.isClientSide()) return;
+                if (blockEntity.get().metadata.get(progress) <= 0) return;
+                if (level.random.nextFloat() < 0.33F) {
+
+                    double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
+                    double y = pos.above().getY() + 1.0D;
+                    double z = pos.getZ() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
+
+                    double xSpeed = 0.0D;
+                    double ySpeed = 0.05D;
+                    double zSpeed = 0.0D;
+
+                    level.addParticle(ParticleTypes.SMOKE, x, y, z, xSpeed, ySpeed, zSpeed);
+                }
             }
         }
     }

@@ -1,5 +1,6 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
+import eng.cad.auto.axiom.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
@@ -111,20 +112,7 @@ public class EtchedItemOutput {
                 if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
                 if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
-                ItemStack playerHand = player.getItemInHand(interactionHand);
-                ItemStack machineItem = blockEntity.get().inventory.getStackInSlot(0);
-                if (machineItem.isEmpty()) {
-                    if (playerHand.isEmpty()) return false;
-                    ItemStack toInsert = playerHand.copy();
-                    toInsert.setCount(1);
-                    ItemStack remainder = blockEntity.get().inventory.insertItem(0, toInsert, false);
-                    if (remainder.getCount() < toInsert.getCount()) {
-                        level.playSound(null, blockPos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        playerHand.shrink(1);
-                    }
-                    return true;
-                }
-                return false;
+                return CommonRightClickBehaviour.extractItem(0, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
         }
     }

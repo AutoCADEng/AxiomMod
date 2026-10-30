@@ -1,5 +1,6 @@
 package eng.cad.auto.axiom.machines.multiblock;
 
+import eng.cad.auto.axiom.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiom.registry.MachineRegistry;
 import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
@@ -111,40 +112,8 @@ public class EtchedItemInput {
                 if (!(blockEntity instanceof GenericFollowerEntity machine)) return false;
                 if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
-                ItemStack playerHand = player.getItemInHand(interactionHand);
-                ItemStack machineItem = blockEntity.get().inventory.getStackInSlot(0);
-
-                if (machineItem.isEmpty()) {
-                    if (playerHand.isEmpty()) return false;
-                    ItemStack toInsert = playerHand.copy();
-                    toInsert.setCount(1);
-                    ItemStack remainder = blockEntity.get().inventory.insertItem(0, toInsert, false);
-                    if (remainder.getCount() < toInsert.getCount()) {
-                        level.playSound(null, blockPos, SoundEvents.COMPOSTER_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
-                        playerHand.shrink(1);
-                    }
-                    return true;
-                }
-
-                if (playerHand.isEmpty() || playerHand.is(machineItem.getItem())) {
-                    int maxHandLimit = playerHand.isEmpty() ? machineItem.getMaxStackSize() : playerHand.getMaxStackSize();
-                    int currentHandCount = playerHand.isEmpty() ? 0 : playerHand.getCount();
-                    int maxTransferable = maxHandLimit - currentHandCount;
-                    if (maxTransferable <= 0) return false;
-                    ItemStack simulatedExtract = blockEntity.get().inventory.extractItem(0, maxTransferable, true);
-                    if (simulatedExtract.isEmpty()) return false;
-                    ItemStack extracted = blockEntity.get().inventory.extractItem(0, simulatedExtract.getCount(), false);
-                    level.playSound(null, blockPos, SoundEvents.COMPOSTER_FILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-                    if (playerHand.isEmpty()) {
-                        player.setItemInHand(interactionHand, extracted);
-                    } else {
-                        playerHand.grow(extracted.getCount());
-                    }
-                    return true;
-                }
-                return false;
+                return CommonRightClickBehaviour.itemInHand(0, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
-
         }
     }
 }
