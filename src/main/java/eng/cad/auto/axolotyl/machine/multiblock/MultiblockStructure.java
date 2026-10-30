@@ -37,7 +37,7 @@ public class MultiblockStructure {
 
             for (JsonElement element: values.asList()){
                 String resourceKeyLookup = element.getAsString();
-                ResourceLocation resource = ResourceLocation.parse(resourceKeyLookup);
+                ResourceLocation resource = ResourceLocation.tryParse(resourceKeyLookup);
                 if (ForgeRegistries.BLOCKS.containsKey(resource)) {
                     Block block = ForgeRegistries.BLOCKS.getValue(resource);
                     validBlocks.add(block);

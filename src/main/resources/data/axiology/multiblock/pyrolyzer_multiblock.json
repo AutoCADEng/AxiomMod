@@ -1,21 +1,22 @@
 {
   "root": [1, -1, 2],
   "shape": [
-    ["hhh",
-      "hhh",
-      "hhh"],
+    ["hah",
+      "h-h",
+      "hah"],
     ["mmm",
       "m-m",
       "m!m"],
-    ["bbb",
+    ["bab",
       "bbb",
-      "bbb"]
+      "bab"]
   ],
   "key": {
     "!": ["axiology:pyrolyzer"],
-    "h": ["axiology:etched_fluid_input", "axiology:etched_fluid_output", "axiology:etched_item_input", "axiology:etched_item_output", "minecraft:stone"],
+    "h": ["minecraft:stone"],
     "m": ["axiology:etched_iron_block"],
     "-": ["minecraft:air"],
-    "b": ["minecraft:chiseled_deepslate"]
+    "b": ["minecraft:chiseled_deepslate"],
+    "a": ["axiology:etched_fluid_input", "axiology:etched_fluid_output", "axiology:etched_item_input", "axiology:etched_item_output"]
   }
 }

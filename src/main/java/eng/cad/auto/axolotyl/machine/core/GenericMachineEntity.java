@@ -46,7 +46,7 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity){
         blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
-        if (blockEntity.machineConfig.noGui()) blockEntity.syncData();
+        blockEntity.syncData();
     }
 
     public MachineInventory get(){

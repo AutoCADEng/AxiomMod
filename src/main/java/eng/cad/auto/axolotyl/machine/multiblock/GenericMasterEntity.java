@@ -52,7 +52,7 @@ public class GenericMasterEntity extends GenericMachineEntity {
                     Block blockAtPos = level.getBlockState(worldPos).getBlock();
 
                     char buildKey = machineStructure.shapeList.get(layer)[row].charAt(col);
-                    if (!machineStructure.blockMap.get(buildKey).contains(blockAtPos)){
+                    if (!machineStructure.blockMap.get(buildKey).contains(blockAtPos) && (!machineStructure.blockMap.get(buildKey).get(0).defaultBlockState().isAir())){
                         followers.clear();
                         return false;
                     }
