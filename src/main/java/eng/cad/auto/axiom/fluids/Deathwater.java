@@ -1,6 +1,6 @@
 package eng.cad.auto.axiom.fluids;
 
-import eng.cad.auto.axolotyl.fluid.IFluidBehaviour;
+import eng.cad.auto.engine.fluid.IFluidBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

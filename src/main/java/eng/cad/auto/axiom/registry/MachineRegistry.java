@@ -6,7 +6,7 @@ import eng.cad.auto.axiom.machines.ChemicalReactor;
 import eng.cad.auto.axiom.machines.FermenterMachine;
 import eng.cad.auto.axiom.machines.SoakingDrum;
 import eng.cad.auto.axiom.machines.multiblock.*;
-import eng.cad.auto.axolotyl.machine.core.MachineCore;
+import eng.cad.auto.engine.machine.core.MachineCore;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;

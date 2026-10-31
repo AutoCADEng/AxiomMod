@@ -1,7 +1,7 @@
 package eng.cad.auto.axiom.machines.util;
 
-import eng.cad.auto.axolotyl.item.CustomBucket;
-import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
+import eng.cad.auto.engine.item.CustomBucket;
+import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;

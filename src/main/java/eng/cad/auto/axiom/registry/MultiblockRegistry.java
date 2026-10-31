@@ -1,6 +1,6 @@
 package eng.cad.auto.axiom.registry;
 
-import eng.cad.auto.axolotyl.machine.multiblock.MultiblockStructure;
+import eng.cad.auto.engine.machine.multiblock.MultiblockStructure;
 import net.minecraft.resources.ResourceLocation;
 import java.util.HashMap;
 import java.util.function.Supplier;

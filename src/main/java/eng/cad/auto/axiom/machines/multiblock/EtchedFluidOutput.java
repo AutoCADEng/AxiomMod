@@ -2,32 +2,26 @@ package eng.cad.auto.axiom.machines.multiblock;
 
 import eng.cad.auto.axiom.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiom.registry.MachineRegistry;
-import eng.cad.auto.axolotyl.client.machine.core.IMachineClientLogic;
-import eng.cad.auto.axolotyl.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axolotyl.item.CustomBucket;
-import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
-import eng.cad.auto.axolotyl.machine.core.MachineCore;
-import eng.cad.auto.axolotyl.machine.core.interfaces.IMachineLogic;
-import eng.cad.auto.axolotyl.machine.core.interfaces.IRightClickBehaviour;
-import eng.cad.auto.axolotyl.machine.core.slot.SlotIORestriction;
-import eng.cad.auto.axolotyl.machine.core.slot.SlotType;
-import eng.cad.auto.axolotyl.machine.core.ui.GenericUI;
-import eng.cad.auto.axolotyl.machine.multiblock.GenericFollowerEntity;
-import eng.cad.auto.axolotyl.machine.multiblock.IFollowerLogic;
+import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
+import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.engine.machine.core.GenericMachineEntity;
+import eng.cad.auto.engine.machine.core.MachineCore;
+import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
+import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
+import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
+import eng.cad.auto.engine.machine.core.slot.SlotType;
+import eng.cad.auto.engine.machine.core.ui.GenericUI;
+import eng.cad.auto.engine.machine.multiblock.GenericFollowerEntity;
+import eng.cad.auto.engine.machine.multiblock.IFollowerLogic;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-
-import java.util.Optional;
 
 public class EtchedFluidOutput {
     MachineCore INSTANCE;
