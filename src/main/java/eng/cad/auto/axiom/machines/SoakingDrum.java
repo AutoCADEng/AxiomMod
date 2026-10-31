@@ -48,7 +48,7 @@ public class SoakingDrum {
                 .addServerLogic(new Logic.Server())
                 .addClientLogic(new Logic.Client())
                 .noGui()
-                .rightClickLogic(new FermenterMachine.Logic.RightClickLogic())
+                .rightClickLogic(new Logic.RightClickLogic())
                 .build());
     }
     public static class Logic{
