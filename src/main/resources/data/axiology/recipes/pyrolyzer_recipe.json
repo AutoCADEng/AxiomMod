@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["BIB", "IHI", "BIB"],
+  "key": {
+    "B": {
+      "item" : "axiology:blazing_ingot"
+    },
+    "H" : {
+      "item": "minecraft:comparator"
+    },
+    "S" : {
+      "item":"axiology:soaking_drum"
+    },
+    "I" : {
+      "item": "axiology:etched_iron_block"
+    }
+  },
+  "result": {
+    "item": "axiology:pyrolyzer"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredient" : [
+    {
+      "item": "axiology:etched_item_input"
+    }
+  ],
+  "result": {
+    "item":"axiology:etched_item_output"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["BHB", "LAL", "BLB"],
+  "key": {
+    "B": {
+      "item" : "minecraft:bucket"
+    },
+    "L" : {
+      "tag" : "minecraft:logs"
+    },
+    "H" : {
+      "item": "minecraft:hopper"
+    },
+    "A" : {
+      "item": "axiology:blazing_ingot"
+    }
+  },
+  "result": {
+    "item": "axiology:etched_fluid_input"
+  }
+}

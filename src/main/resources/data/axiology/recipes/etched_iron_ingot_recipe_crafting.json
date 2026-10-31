@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredient" : [
+    {
+      "item": "axiology:etched_iron_block"
+    }
+  ],
+  "result": {
+    "item": "axiology:etched_iron_ingot",
+    "count": 9
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["ISI", "IHI", "ISI"],
+  "key": {
+    "I": {
+      "item" : "minecraft:iron_ingot"
+    },
+    "H" : {
+      "item": "minecraft:hopper"
+    },
+    "S" : {
+      "item":"axiology:soaking_drum"
+    }
+  },
+  "result": {
+    "item": "axiology:chemical_reactor"
+  }
+}

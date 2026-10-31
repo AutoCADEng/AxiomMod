@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [" G ", "GBG", "III"],
+  "key": {
+    "I": {
+      "item" : "minecraft:nether_brick_slab"
+    },
+    "B" : {
+      "item": "minecraft:brewing_stand"
+    },
+    "G" : {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "axiology:alembic"
+  }
+}

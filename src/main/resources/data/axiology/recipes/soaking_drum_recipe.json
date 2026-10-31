@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["IHI", "GCG", "IBI"],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "C": {
+      "item": "minecraft:cauldron"
+    },
+    "H" : {
+      "item": "minecraft:hopper"
+    },
+    "G" : {
+      "tag": "forge:glass"
+    },
+    "B" : {
+      "tag": "forge:chests"
+    }
+  },
+  "result": {
+    "item": "axiology:soaking_drum"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["IHI", "ICI", "III"],
+  "key": {
+    "I": {
+      "tag" : "minecraft:logs"
+    },
+    "H" : {
+      "item": "minecraft:hopper"
+    },
+    "C" : {
+      "item": "minecraft:composter"
+    }
+  },
+  "result": {
+    "item": "axiology:fermenter"
+  }
+}
