@@ -3,9 +3,11 @@ package eng.cad.auto.axiom.machines.util;
 import eng.cad.auto.axolotyl.item.CustomBucket;
 import eng.cad.auto.axolotyl.machine.core.GenericMachineEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -13,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.network.NetworkHooks;
 
 import java.util.Optional;
 
@@ -96,5 +99,16 @@ public class CommonRightClickBehaviour {
             return true;
         }
         return false;
+    }
+
+    public static InteractionResult openGui(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result){
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
+        if (level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine){
+            if (!machine.machineConfig.name().equals(blockEntity.machineConfig.name())) return InteractionResult.CONSUME;
+            if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;
+            NetworkHooks.openScreen(serverPlayer, machine, blockPos);
+        }
+        return InteractionResult.CONSUME;
     }
 }

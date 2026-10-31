@@ -154,7 +154,7 @@ public class Alembic {
                 if (!(level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine)) return InteractionResult.PASS;
                 if (!machine.machineConfig.name().equals(Alembic.name)) return InteractionResult.PASS;
                 boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
-                return success? InteractionResult.SUCCESS : InteractionResult.PASS;
+                return success? InteractionResult.SUCCESS : CommonRightClickBehaviour.openGui(machine, blockState, level, blockPos, player,interactionHand,result);
             }
 
             private boolean onRightClick(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
@@ -162,8 +162,6 @@ public class Alembic {
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
                 return CommonRightClickBehaviour.bucketInHand(0, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
-
-
         }
     }
 }

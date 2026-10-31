@@ -242,7 +242,7 @@ public class ChemicalReactor {
                 if (!(level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine)) return InteractionResult.PASS;
                 if (!machine.machineConfig.name().equals(SoakingDrum.name)) return InteractionResult.PASS;
                 boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
-                return success? InteractionResult.SUCCESS : InteractionResult.PASS;
+                return success? InteractionResult.SUCCESS : CommonRightClickBehaviour.openGui(machine, blockState, level, blockPos, player,interactionHand,result);
             }
 
             private boolean onRightClick(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
