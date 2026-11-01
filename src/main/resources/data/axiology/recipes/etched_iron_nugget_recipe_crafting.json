@@ -1,8 +1,8 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredient" : [
+  "ingredients": [
     {
-      "item": "etched_iron_ingot"
+      "item": "axiology:etched_iron_ingot"
     }
   ],
   "result": {

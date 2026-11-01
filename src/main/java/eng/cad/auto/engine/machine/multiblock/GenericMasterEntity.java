@@ -1,7 +1,7 @@
 package eng.cad.auto.engine.machine.multiblock;
 
-import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.registry.MultiblockRegistry;
+import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.registry.MultiblockRegistry;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import net.minecraft.core.BlockPos;

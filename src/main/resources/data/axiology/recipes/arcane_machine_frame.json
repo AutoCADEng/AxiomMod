@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": ["CDC","BEB","CDC"],
+  "key": {
+    "B": {
+      "item" : "axiology:mundane_machine_frame"
+    },
+    "C" : {
+      "item" : "axiology:treated_fabric"
+    },
+    "D" : {
+      "item" : "axiology:treated_bark"
+    },
+    "E" : {
+      "item": "axiology:arcane_core"
+    }
+  },
+  "result": {
+    "item": "axiology:arcane_machine_frame"
+  }
+}

@@ -6,13 +6,13 @@
       "tag": "forge:chests"
     },
     "L" : {
-      "tag" : "minecraft:logs"
+      "item" : "axiology:blazing_ingot"
     },
     "H" : {
       "item": "minecraft:hopper"
     },
     "A" : {
-      "item": "axiology:blazing_ingot"
+      "item": "axiology:mundane_machine_frame"
     }
   },
   "result": {

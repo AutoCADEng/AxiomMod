@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [" G ", "GBG", "III"],
+  "pattern": [" G ", "GBG", "IMI"],
   "key": {
     "I": {
       "item" : "minecraft:nether_brick_slab"
@@ -10,6 +10,9 @@
     },
     "G" : {
       "item": "minecraft:glass_bottle"
+    },
+    "M" : {
+      "item": "axiology:mundane_machine_frame"
     }
   },
   "result": {

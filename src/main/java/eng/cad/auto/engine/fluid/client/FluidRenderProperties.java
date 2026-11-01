@@ -1,6 +1,6 @@
 package eng.cad.auto.engine.fluid.client;
 
-import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiology.AxiomMod;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 

@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "axiology:block/etched_item_output"
+    },
+    "facing=east": {
+      "model": "axiology:block/etched_item_output",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "axiology:block/etched_item_output",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "axiology:block/etched_item_output",
+      "y": 270
     }
   }
 }

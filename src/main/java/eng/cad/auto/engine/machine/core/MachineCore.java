@@ -1,7 +1,7 @@
 package eng.cad.auto.engine.machine.core;
 
-import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.registry.ItemRegistry;
+import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.registry.ItemRegistry;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.engine.machine.core.slot.SlotConfig;
@@ -11,8 +11,8 @@ import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.ui.GenericUI;
 import eng.cad.auto.engine.machine.core.interfaces.IMenuSlotLogic;
-import eng.cad.auto.axiom.registry.MachineRegistry;
-import eng.cad.auto.axiom.registry.BlockRegistry;
+import eng.cad.auto.axiology.registry.MachineRegistry;
+import eng.cad.auto.axiology.registry.BlockRegistry;
 import eng.cad.auto.engine.machine.multiblock.*;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;

@@ -1,13 +1,13 @@
 package eng.cad.auto.engine.machine.core.ui;
 
-import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.engine.fluid.FluidStackHandler;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
-import eng.cad.auto.engine.network.FluidNetwork;
+import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.FluidSyncPacket;
-import eng.cad.auto.axiom.registry.MachineRegistry;
-import eng.cad.auto.axiom.registry.MenuRegistry;
+import eng.cad.auto.axiology.registry.MachineRegistry;
+import eng.cad.auto.axiology.registry.MenuRegistry;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.FriendlyByteBuf;
@@ -51,7 +51,7 @@ public class GenericUI {
             if (inventory.player instanceof ServerPlayer player
                     && this.tanks != null) {
                 for (int idx = 0; idx < this.tanks.getTanks(); idx++) {
-                    FluidNetwork.sendToClient(
+                    AxiologyNetwork.sendToClient(
                             player,
                             new FluidSyncPacket(
                                     blockEntity.getBlockPos(),

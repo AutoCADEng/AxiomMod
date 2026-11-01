@@ -1,6 +1,6 @@
 package eng.cad.auto.engine.client.colors;
 
-import eng.cad.auto.axiom.registry.FluidRegistry;
+import eng.cad.auto.axiology.registry.FluidRegistry;
 import eng.cad.auto.engine.item.CustomBucket;
 import eng.cad.auto.engine.fluid.FluidHolder;
 import net.minecraft.world.level.ItemLike;

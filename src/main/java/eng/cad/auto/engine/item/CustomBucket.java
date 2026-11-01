@@ -1,6 +1,6 @@
 package eng.cad.auto.engine.item;
 
-import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;

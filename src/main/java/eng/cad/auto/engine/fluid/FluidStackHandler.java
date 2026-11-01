@@ -1,6 +1,6 @@
 package eng.cad.auto.engine.fluid;
 
-import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.engine.machine.core.slot.SlotConfig;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;

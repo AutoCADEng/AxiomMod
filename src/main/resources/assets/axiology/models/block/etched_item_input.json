@@ -56,9 +56,9 @@
         16.01
       ],
       "faces": {
-        "north": {
-          "texture": "#overlay",
-          "cullface": "north"
+        "south": {
+          "texture": "#hatch",
+          "cullface": "south"
         }
       }
     }

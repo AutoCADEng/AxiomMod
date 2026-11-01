@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["IHI", "ICI", "III"],
+  "pattern": ["IHI", "ICI", "IMI"],
   "key": {
     "I": {
       "tag" : "minecraft:logs"
@@ -10,6 +10,9 @@
     },
     "C" : {
       "item": "minecraft:composter"
+    },
+    "M" : {
+      "item": "axiology:mundane_machine_frame"
     }
   },
   "result": {

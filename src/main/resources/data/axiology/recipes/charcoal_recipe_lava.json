@@ -1,0 +1,28 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:pyrolyzer",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "#minecraft:logs",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "minecraft:lava",
+      "count": 10
+    }
+  ],
+  "outputs": [
+    {
+      "type": "item",
+      "input": "minecraft:charcoal",
+      "count": 2
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:creosote",
+      "count": 1
+    }
+  ]
+}

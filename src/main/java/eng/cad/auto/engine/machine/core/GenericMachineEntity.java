@@ -1,9 +1,9 @@
 package eng.cad.auto.engine.machine.core;
 
-import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.engine.network.FluidNetwork;
+import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.FluidSyncPacket;
-import eng.cad.auto.axiom.registry.MachineRegistry;
+import eng.cad.auto.axiology.registry.MachineRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -141,7 +141,7 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
         if (level.isClientSide) return;
         if (machine.tanks == null) return;
 
-        FluidNetwork.sendToClientWithChunk(
+        AxiologyNetwork.sendToClientWithChunk(
                 level,
                 worldPosition,
                 new FluidSyncPacket(

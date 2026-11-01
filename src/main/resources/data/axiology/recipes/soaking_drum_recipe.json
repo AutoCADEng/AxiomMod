@@ -15,7 +15,7 @@
       "tag": "forge:glass"
     },
     "B" : {
-      "tag": "forge:chests"
+      "item": "axiology:mundane_machine_frame"
     }
   },
   "result": {

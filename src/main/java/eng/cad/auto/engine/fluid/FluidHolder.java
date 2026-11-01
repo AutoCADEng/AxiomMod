@@ -1,8 +1,9 @@
 package eng.cad.auto.engine.fluid;
 
+import eng.cad.auto.axiology.fluids.AbstractFluidBehaviour;
 import eng.cad.auto.engine.item.CustomBucket;
-import eng.cad.auto.axiom.registry.FluidRegistry;
-import eng.cad.auto.axiom.registry.ItemRegistry;
+import eng.cad.auto.axiology.registry.FluidRegistry;
+import eng.cad.auto.axiology.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.Entity;
@@ -30,16 +31,17 @@ public class FluidHolder {
     public RegistryObject<CustomBucket> BUCKET;
     public int color;
     public MapColor mapColor;
-    private final IFluidBehaviour entityBehaviour;
+    public final AbstractFluidBehaviour behaviour;
+    public static final AbstractFluidBehaviour GENERIC_FLUID_BEHAVIOUR = new AbstractFluidBehaviour(){};
 
     public FluidHolder(String name, int color, MapColor mapColor){
-        this(name,color,mapColor, (a,b,c) -> {});
+        this(name, color, mapColor, GENERIC_FLUID_BEHAVIOUR);
     }
 
-    public FluidHolder(String name, int color, MapColor mapColor, IFluidBehaviour entitiyBehaviour){
+    public FluidHolder(String name, int color, MapColor mapColor, AbstractFluidBehaviour behaviour){
         this.color = color;
         this.mapColor = mapColor;
-        this.entityBehaviour = entitiyBehaviour;
+        this.behaviour = behaviour;
         this.BUCKET = registerBucket(name);
         this.SOURCE = registerSource(name);
         this.FLOWING = registerFlowing(name);
@@ -90,8 +92,8 @@ public class FluidHolder {
                 @Override
                 public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
                     super.entityInside(blockState, level, blockPos, entity);
-                    if (entityBehaviour == null) return;
-                    entityBehaviour.onEntityInside(level, blockPos, entity);
+                    if (behaviour == null) return;
+                    behaviour.onEntityInside(level, blockPos, entity);
                 }
             }
         );

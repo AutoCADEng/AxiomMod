@@ -1,6 +1,6 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["BIB", "IHI", "BIB"],
+  "pattern": ["BIB", "SHS", "BIB"],
   "key": {
     "B": {
       "item" : "axiology:blazing_ingot"

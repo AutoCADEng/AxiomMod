@@ -1,8 +1,8 @@
 package eng.cad.auto.engine.machine.multiblock;
 
 import com.google.gson.*;
-import eng.cad.auto.axiom.AxiomMod;
-import eng.cad.auto.axiom.registry.MultiblockRegistry;
+import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.registry.MultiblockRegistry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;

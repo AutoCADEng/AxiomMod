@@ -1,0 +1,23 @@
+{
+  "type": "axiology:generic",
+  "recipe_type": "axiology:soaking_drum",
+  "inputs": [
+    {
+      "type": "tag",
+      "input": "#minecraft:wools",
+      "count": 1
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:creosote",
+      "count": 25
+    }
+  ],
+  "outputs": [
+    {
+      "type": "item",
+      "input": "axiology:treated_fabric",
+      "count": 1
+    }
+  ]
+}
