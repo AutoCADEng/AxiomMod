@@ -74,7 +74,7 @@ public abstract class AbstractBeamEffect {
         this.speed = var;
         return this;
     }
-    public abstract AbstractBeamEffect getNew(Vector3f castFrom, Vector3f castTo, Level level);
+    public abstract AbstractBeamEffect createBeam(Vector3f castFrom, Vector3f castTo, Level level);
 }
 
 

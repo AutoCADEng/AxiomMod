@@ -9,14 +9,14 @@ import org.joml.Vector3f;
 public class InfusionBeamEffect extends AbstractBeamEffect{
 
     @Override
-    public AbstractBeamEffect getNew(Vector3f castFrom, Vector3f castTo, Level level) {
+    public AbstractBeamEffect createBeam(Vector3f castFrom, Vector3f castTo, Level level) {
         return new InfusionBeamEffect()
             .addPos(castFrom)
             .addPos(new Vec3(castFrom).add(0,1,0))
             .addPos(new Vec3(castTo).add(0,1,0))
             .addPos(castTo).width(0.1f)
             .setTint(0xAAFFAAFF)
-            .width(0.1f)
+            .width(0.05f)
             .minSegments(10)
             .maxSegments(30)
             .setLifespan(200)

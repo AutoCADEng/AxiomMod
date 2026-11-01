@@ -74,7 +74,7 @@ public class BeamSyncPacket extends AxiologyPacket<BeamSyncPacket> {
                         () -> () -> {
                             Level level = Minecraft.getInstance().level;
                             if (level == null) return;
-                            AbstractBeamEffect newBeam = beam.getNew(castFrom, castTo, level);
+                            AbstractBeamEffect newBeam = beam.createBeam(castFrom, castTo, level);
                             if (newBeam == null) return;
                             BeamEffectRenderer.addBeam(newBeam);
                         }
