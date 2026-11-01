@@ -4,7 +4,7 @@
   "inputs": [
     {
       "type": "item",
-      "input": "minecraft:rotten_flesh",
+      "input": "minecraft:soulsand",
       "count": 1
     },
     {
@@ -16,7 +16,7 @@
   "outputs": [
     {
       "type": "fluid",
-      "input": "axiology:deathwater",
+      "input": "axiology:cursewater",
       "count": 1000
     }
   ]
