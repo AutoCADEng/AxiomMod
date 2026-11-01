@@ -16,12 +16,17 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class FluidSyncPacket {
+public class FluidSyncPacket extends AxiologyPacket<FluidSyncPacket> {
     private final BlockPos pos;
     private final ResourceLocation fluidResource;
     private final int slot;
     private final int amount;
-
+    public FluidSyncPacket(){
+        this.pos = new BlockPos(0, 0, 0);
+        this.fluidResource = null;
+        this.slot = 0;
+        this.amount = 0;
+    };
     public FluidSyncPacket(BlockPos pos, int tank, FluidStack stack) {
         this.pos = pos;
         this.fluidResource = stack.isEmpty() ? null : ForgeRegistries.FLUIDS.getKey(stack.getFluid());
@@ -40,8 +45,8 @@ public class FluidSyncPacket {
             byteBuf.writeFluidStack(new FluidStack(fluid, amount));
         }
     }
-
-    public static FluidSyncPacket decode(FriendlyByteBuf byteBuf) {
+    @Override
+    public FluidSyncPacket decode(FriendlyByteBuf byteBuf) {
         return new FluidSyncPacket(
                 byteBuf.readBlockPos(),
                 byteBuf.readVarInt(),
@@ -49,6 +54,7 @@ public class FluidSyncPacket {
         );
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> context) {
         context.get().enqueueWork(() ->
                 DistExecutor.unsafeRunWhenOn(

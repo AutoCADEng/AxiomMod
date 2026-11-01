@@ -1,6 +1,6 @@
 package eng.cad.auto.engine.network;
 
-import eng.cad.auto.axiom.AxiomMod;
+import eng.cad.auto.axiology.AxiomMod;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,34 +9,35 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
-public class FluidNetwork {
+import java.util.function.Supplier;
+
+public class AxiologyNetwork {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel INSTANCE = NetworkRegistry.newSimpleChannel(
-            ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "net.fluid"),
+            ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "net.axiology"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
     );
 
-    private FluidNetwork() {}
+    private AxiologyNetwork() {}
 
     private static int packetId = 0;
 
-    public static void register() {
+    public static <T extends AxiologyPacket<T>> void register(Class<T> packetClass, Supplier<T> factory){
         INSTANCE.registerMessage(
                 packetId++,
-                FluidSyncPacket.class,
-                FluidSyncPacket::encode,
-                FluidSyncPacket::decode,
-                FluidSyncPacket::handle
+                packetClass,
+                AxiologyPacket::encode,
+                buffer -> factory.get().decode(buffer),
+                AxiologyPacket::handle
         );
     }
-
-    public static void sendToClient(ServerPlayer player, FluidSyncPacket packet){
+    public static void sendToClient(ServerPlayer player, AxiologyPacket<?> packet){
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 
-    public static void sendToClientWithChunk(Level level, BlockPos pos, FluidSyncPacket packet){
+    public static void sendToClientWithChunk(Level level, BlockPos pos, AxiologyPacket<?> packet){
         if (level.isClientSide()) return;
         INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), packet);
     }
