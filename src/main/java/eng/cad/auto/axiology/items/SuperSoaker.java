@@ -1,6 +1,7 @@
 package eng.cad.auto.axiology.items;
 
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
+import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.engine.fluid.IRangedFluidBehaviour;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.BeamSyncPacket;
@@ -79,9 +80,8 @@ public class SuperSoaker extends ItemFluidContainer {
                 entity -> entity.isPickable() && entity != player);
         if (!level.isClientSide()) {
             ResourceLocation fluidTexture = IClientFluidTypeExtensions.of(ammo).getStillTexture();
-            AxiologyNetwork.INSTANCE.send(
-                    PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())),
-                    new BeamSyncPacket(castFrom, castTo, fluidTexture));
+            AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())),
+                    new BeamSyncPacket(0xFFAABBCC, castFrom, castTo, fluidTexture, BeamRegistry.INFUSION.getId(), level));
         }
         if (hitResult == null) return true;
         Entity target = hitResult.getEntity();

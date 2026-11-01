@@ -1,24 +1,16 @@
 package eng.cad.auto.engine.network;
 
-import eng.cad.auto.engine.client.render.BeamEffect;
+import eng.cad.auto.axiology.registry.render.BeamRegistry;
+import eng.cad.auto.engine.client.render.AbstractBeamEffect;
 import eng.cad.auto.engine.client.render.BeamEffectRenderer;
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;
 
 import java.util.function.Supplier;
@@ -27,34 +19,50 @@ public class BeamSyncPacket extends AxiologyPacket<BeamSyncPacket> {
     private final Vector3f castFrom;
     private final Vector3f castTo;
     private final ResourceLocation fluidResource;
-
+    private final ResourceLocation beamEffect;
+    private final int tint;
+    private AbstractBeamEffect beam;
     public BeamSyncPacket(){
         this.castFrom = new Vector3f(0, 0, 0);
         this.castTo = new Vector3f(0, 0, 0);
         this.fluidResource = null;
+        this.beamEffect = null;
+        this.tint = 0xFFFFFFFF;
+        this.beam = null;
     };
-    public BeamSyncPacket(Vector3f castFrom, Vector3f castTo, ResourceLocation fluidResource) {
+    public BeamSyncPacket(int tint, Vector3f castFrom, Vector3f castTo, ResourceLocation fluidResource, ResourceLocation beamEffect, Level level) {
         this.castFrom = castFrom;
         this.castTo = castTo;
         this.fluidResource = fluidResource;
+        this.beamEffect = beamEffect;
+        this.tint = tint;
+        beam = BeamRegistry.BEAMS.getEntries().stream()
+                .filter(holder -> holder.getId().equals(beamEffect))
+                .map(Supplier::get)
+                .findFirst()
+                .orElse(null);
     }
-    public BeamSyncPacket(Vec3 castFrom, Vec3 castTo, ResourceLocation fluidResource) {
-        this.castFrom = castFrom.toVector3f();
-        this.castTo = castTo.toVector3f();
-        this.fluidResource = fluidResource;
+    public BeamSyncPacket(int tint, Vec3 castFrom, Vec3 castTo, ResourceLocation fluidResource, ResourceLocation beamEffect, Level level) {
+       this(tint,castFrom.toVector3f(),castTo.toVector3f(), fluidResource, beamEffect, level);
     }
 
+
     public void encode(FriendlyByteBuf byteBuf) {
+        byteBuf.writeVarInt(tint);
         byteBuf.writeVector3f(castFrom);
         byteBuf.writeVector3f(castTo);
         byteBuf.writeResourceLocation(fluidResource);
+        byteBuf.writeResourceLocation(beamEffect);
     }
     @Override
     public BeamSyncPacket decode(FriendlyByteBuf byteBuf) {
         return new BeamSyncPacket(
+            byteBuf.readVarInt(),
             byteBuf.readVector3f(),
             byteBuf.readVector3f(),
-            byteBuf.readResourceLocation()
+            byteBuf.readResourceLocation(),
+            byteBuf.readResourceLocation(),
+            Minecraft.getInstance().level
         );
     }
 
@@ -66,30 +74,9 @@ public class BeamSyncPacket extends AxiologyPacket<BeamSyncPacket> {
                         () -> () -> {
                             Level level = Minecraft.getInstance().level;
                             if (level == null) return;
-                            BeamEffectRenderer.addBeam(
-                                    new BeamEffect(level.getGameTime())
-                                    .addPos(castFrom)
-                                    .addPos(new Vec3(castFrom).add(0, 15, 0))
-                                    .addPos(new Vec3(castTo).add(0, 3, 0))
-                                    .addPos(castTo)
-                                    .setTint(0xAAFFAAFF)
-                                    .width(0.1f)
-                                    .minSegments(10)
-                                    .maxSegments(30)
-                                    .setLifespan(200)
-                                    .addWave(new BeamEffect.Wave()
-                                            .setAmplitude(0.25f)
-                                            .setWavelength(0.7f)
-                                            .setOffset(0.0f))
-                                    .addWave(new BeamEffect.Wave()
-                                            .setAmplitude(0.10f)
-                                            .setWavelength(0.33f)
-                                            .setOffset(0.1f))
-                                    .addWave(new BeamEffect.Wave()
-                                            .setAmplitude(0.05f)
-                                            .setWavelength(0.44f)
-                                            .setOffset(1.0f))
-                            );
+                            AbstractBeamEffect newBeam = beam.getNew(castFrom, castTo, level);
+                            if (newBeam == null) return;
+                            BeamEffectRenderer.addBeam(newBeam);
                         }
                 )
         );

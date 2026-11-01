@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import java.util.ArrayList;
 
 public class BeamEffectRenderer {
-    private static final ArrayList<BeamEffect> activeBeams = new ArrayList<>();
+    private static final ArrayList<AbstractBeamEffect> activeBeams = new ArrayList<>();
     private BeamEffectRenderer(){};
     public static void init(IEventBus eventBus) {
         eventBus.addListener(BeamEffectRenderer::onRenderLevel);
@@ -37,7 +37,7 @@ public class BeamEffectRenderer {
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         for (int idx = activeBeams.size() - 1; idx >= 0; idx--){
-            BeamEffect beam = activeBeams.get(idx);
+            AbstractBeamEffect beam = activeBeams.get(idx);
             float age = currentTime - beam.creationTick;
             if (age>= beam.lifespan){
                 activeBeams.remove(idx);
@@ -48,15 +48,15 @@ public class BeamEffectRenderer {
                     SoundEvents.BEACON_AMBIENT, SoundSource.AMBIENT, 1.0f, 1.0f, true
             );
             drawBeam(bufferSource.getBuffer(renderType), transformations.last(), beam, camera_pos, age);
-            bufferSource.endBatch(RenderType.debugQuads());
+            bufferSource.endBatch(BeamRenderTypes.BEAM);
         }
     }
 
-    public static void addBeam(BeamEffect beam){
+    public static void addBeam(AbstractBeamEffect beam){
         activeBeams.add(beam);
     }
 
-    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, BeamEffect beam, Vec3 camera_pos, float age){
+    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect beam, Vec3 camera_pos, float age){
         if (beam.positions.isEmpty()) return;
         Vec3 startPosWorld = beam.positions.get(0);
         Vec3 endPosWorld = beam.positions.get(beam.positions.size() - 1);

@@ -2,6 +2,7 @@ package eng.cad.auto.axiology;
 
 import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
+import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.engine.client.colors.ClientItemColorer;
 import eng.cad.auto.axiology.client.core.ClientSetup;
 import eng.cad.auto.engine.client.render.BeamEffectRenderer;
@@ -26,14 +27,15 @@ public class AxiomMod {
 
     public AxiomMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
-        modEventBus.addListener(this::commonSetup);
-        //Registries
         ForgeMod.enableMilkFluid();
+        modEventBus.addListener(this::commonSetup);
+        modEventBus.addListener(BeamRegistry::createRegistry);
+        MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
+        //Registries
         FluidRegistry.FLUIDS.register(modEventBus);
         FluidRegistry.init();
         FluidRegistry.FLUIDTYPES.register(modEventBus);
         BlockRegistry.BLOCKS.register(modEventBus);
-
         MachineRegistry.MACHINES.register(modEventBus);
         MachineRegistry.init();
         ItemRegistry.ITEMS.register(modEventBus);
@@ -42,7 +44,8 @@ public class AxiomMod {
         TagRegistry.register(modEventBus);
         RecipeRegistry.RECIPE_TYPES.register(modEventBus);
         RecipeRegistry.RECIPE_SERIALIZERS.register(modEventBus);
-        MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
+        BeamRegistry.BEAMS.register(modEventBus);
+
         //Client Event Hooks
         ClientSetup.init(modEventBus);
         ClientItemColorer.init(modEventBus);
