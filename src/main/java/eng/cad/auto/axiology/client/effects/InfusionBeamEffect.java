@@ -20,6 +20,7 @@ public class InfusionBeamEffect extends AbstractBeamEffect{
             .minSegments(10)
             .maxSegments(30)
             .setLifespan(200)
+            .setSpeed(0.01f)
             .setTime(level.getGameTime())
             .addWave(new Wave()
                 .setAmplitude(0.25f)
