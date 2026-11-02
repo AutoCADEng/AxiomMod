@@ -9,8 +9,8 @@ import eng.cad.auto.engine.client.render.BeamEffectRenderer;
 import eng.cad.auto.engine.machine.multiblock.MultiblockStructure;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.axiology.registry.*;
-import eng.cad.auto.engine.network.BeamSyncPacket;
-import eng.cad.auto.engine.network.FluidSyncPacket;
+import eng.cad.auto.engine.network.FluidBeamSyncPacket;
+import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddReloadListenerEvent;
@@ -51,8 +51,8 @@ public class AxiomMod {
         ClientItemColorer.init(modEventBus);
         BeamEffectRenderer.init(MinecraftForge.EVENT_BUS);
         //Networking
-        AxiologyNetwork.register(FluidSyncPacket.class, FluidSyncPacket::new);
-        AxiologyNetwork.register(BeamSyncPacket.class, BeamSyncPacket::new);
+        AxiologyNetwork.register(MachineFluidSyncPacket.class, MachineFluidSyncPacket::new);
+        AxiologyNetwork.register(FluidBeamSyncPacket.class, FluidBeamSyncPacket::new);
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {

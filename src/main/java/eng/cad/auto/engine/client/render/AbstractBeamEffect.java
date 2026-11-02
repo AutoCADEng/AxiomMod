@@ -1,12 +1,14 @@
 package eng.cad.auto.engine.client.render;
 
+import eng.cad.auto.axiology.client.effects.FluidBeamEffect;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
 
-public abstract class AbstractBeamEffect {
+public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
     ArrayList<Vec3> positions = new ArrayList<>();
     int lifespan;
     long creationTick;
@@ -17,45 +19,49 @@ public abstract class AbstractBeamEffect {
     int minSegments, maxSegments;
     BezierCurve shape = new BezierCurve();
 
-    public AbstractBeamEffect addPos (Vec3 pos){
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
+    }
+    public T addPos (Vec3 pos){
         positions.add(pos);
         shape = shape.add(pos);
-        return this;
+        return self();
     }
 
-    public AbstractBeamEffect addPos (Vector3f pos){
+    public T addPos (Vector3f pos){
         return addPos(new Vec3(pos));
     }
 
-    public AbstractBeamEffect setTint (int color){
+    public T setTint (int color){
         this.tint = color;
-        return this;
+        return self();
     }
 
-    public AbstractBeamEffect width (float width){
+    public T setWidth (float width){
         this.width = width;
-        return this;
+        return self();
     }
 
 
-    public AbstractBeamEffect setLifespan (int ticks){
+    public T setLifespan (int ticks){
         this.lifespan = ticks;
-        return this;
+        return self();
     }
 
-    public AbstractBeamEffect maxSegments (int segments){
+    public T maxSegments (int segments){
         this.maxSegments = segments;
-        return this;
+        return self();
     }
 
-    public AbstractBeamEffect minSegments (int segments){
+    public T minSegments (int segments){
         this.minSegments = segments;
-        return this;
+        return self();
     }
 
-    public AbstractBeamEffect addWave (Wave wave){
+    public T addWave (Wave wave){
         waves.add(wave);
-        return this;
+        return self();
     }
 
     public float evaluateWave ( float idx, float tick){
@@ -66,15 +72,15 @@ public abstract class AbstractBeamEffect {
         return width + sum;
     }
 
-    public AbstractBeamEffect setTime (long gameTime){
+    public T setTime (long gameTime){
         this.creationTick = gameTime;
-        return this;
+        return self();
     }
-    public AbstractBeamEffect setSpeed (float var){
+    public T setSpeed (float var){
         this.speed = var;
-        return this;
+        return self();
     }
-    public abstract AbstractBeamEffect createBeam(Vector3f castFrom, Vector3f castTo, Level level);
+    public abstract T createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level);
 }
 
 

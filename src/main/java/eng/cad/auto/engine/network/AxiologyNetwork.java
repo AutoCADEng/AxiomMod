@@ -1,6 +1,7 @@
 package eng.cad.auto.engine.network;
 
 import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.engine.network.packet.AxiologyBasePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -24,20 +25,20 @@ public class AxiologyNetwork {
 
     private static int packetId = 0;
 
-    public static <T extends AxiologyPacket<T>> void register(Class<T> packetClass, Supplier<T> factory){
+    public static <T extends AxiologyBasePacket<T>> void register(Class<T> packetClass, Supplier<T> factory){
         INSTANCE.registerMessage(
                 packetId++,
                 packetClass,
-                AxiologyPacket::encode,
+                AxiologyBasePacket::encode,
                 buffer -> factory.get().decode(buffer),
-                AxiologyPacket::handle
+                AxiologyBasePacket::handle
         );
     }
-    public static void sendToClient(ServerPlayer player, AxiologyPacket<?> packet){
+    public static void sendToClient(ServerPlayer player, AxiologyBasePacket<?> packet){
         INSTANCE.send(PacketDistributor.PLAYER.with(() -> player), packet);
     }
 
-    public static void sendToClientWithChunk(Level level, BlockPos pos, AxiologyPacket<?> packet){
+    public static void sendToClientWithChunk(Level level, BlockPos pos, AxiologyBasePacket<?> packet){
         if (level.isClientSide()) return;
         INSTANCE.send(PacketDistributor.TRACKING_CHUNK.with(() -> level.getChunkAt(pos)), packet);
     }

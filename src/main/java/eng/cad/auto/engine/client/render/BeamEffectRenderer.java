@@ -37,7 +37,7 @@ public class BeamEffectRenderer {
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
         for (int idx = activeBeams.size() - 1; idx >= 0; idx--){
-            AbstractBeamEffect beam = activeBeams.get(idx);
+            AbstractBeamEffect<?> beam = activeBeams.get(idx);
             float age = currentTime - beam.creationTick;
             if (age>= beam.lifespan){
                 activeBeams.remove(idx);
@@ -52,11 +52,11 @@ public class BeamEffectRenderer {
         }
     }
 
-    public static void addBeam(AbstractBeamEffect beam){
+    public static void addBeam(AbstractBeamEffect<?> beam){
         activeBeams.add(beam);
     }
 
-    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect beam, Vec3 camera_pos, float age){
+    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect<?> beam, Vec3 camera_pos, float age){
         if (beam.positions.isEmpty()) return;
         Vec3 startPosWorld = beam.positions.get(0);
         Vec3 endPosWorld = beam.positions.get(beam.positions.size() - 1);
@@ -65,7 +65,6 @@ public class BeamEffectRenderer {
 
         Vec3 initialPositionWorld = new Vec3(beam.shape.calculateBezier(0));
         Vec3 initialPositionCamera = initialPositionWorld.subtract(camera_pos);
-        Vec3 nextPositionWorld = new Vec3(beam.shape.calculateBezier(1));
         Vec3 nextPositionCamera = initialPositionWorld.subtract(camera_pos);
         Vec3 initialDirection = nextPositionCamera.subtract(initialPositionCamera).normalize();
         Vec3 cameraDirection = new Vec3(Minecraft.getInstance().gameRenderer.getMainCamera().getLookVector());
