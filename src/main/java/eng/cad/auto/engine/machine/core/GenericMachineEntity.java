@@ -2,7 +2,7 @@ package eng.cad.auto.engine.machine.core;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.FluidSyncPacket;
+import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -144,7 +144,7 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
         AxiologyNetwork.sendToClientWithChunk(
                 level,
                 worldPosition,
-                new FluidSyncPacket(
+                new MachineFluidSyncPacket(
                         worldPosition,
                         tank,
                         machine.tanks.getFluidInTank(tank)

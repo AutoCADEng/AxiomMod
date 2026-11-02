@@ -1,12 +1,10 @@
 package eng.cad.auto.axiology.items;
 
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
-import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.engine.fluid.IRangedFluidBehaviour;
 import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.BeamSyncPacket;
+import eng.cad.auto.engine.network.FluidBeamSyncPacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -22,7 +20,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
@@ -30,6 +27,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.ItemFluidContainer;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 public class SuperSoaker extends ItemFluidContainer {
     public static int COST_PER_SHOT = 50;
@@ -79,9 +77,8 @@ public class SuperSoaker extends ItemFluidContainer {
         EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(level,player,castFrom,castTo,searchBox,
                 entity -> entity.isPickable() && entity != player);
         if (!level.isClientSide()) {
-            ResourceLocation fluidTexture = IClientFluidTypeExtensions.of(ammo).getStillTexture();
             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())),
-                    new BeamSyncPacket(0xFFAABBCC, castFrom, castTo, fluidTexture, BeamRegistry.INFUSION.getId(), level));
+                    new FluidBeamSyncPacket(ForgeRegistries.FLUIDS.getKey(ammo), 0xFFFFFFFF, castFrom.toVector3f(), castTo.toVector3f(), level));
         }
         if (hitResult == null) return true;
         Entity target = hitResult.getEntity();
@@ -91,5 +88,6 @@ public class SuperSoaker extends ItemFluidContainer {
 
         return true;
     }
+
 
 }

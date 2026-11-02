@@ -5,7 +5,7 @@ import eng.cad.auto.engine.fluid.FluidStackHandler;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.FluidSyncPacket;
+import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.axiology.registry.MenuRegistry;
 import net.minecraft.client.gui.GuiGraphics;
@@ -53,7 +53,7 @@ public class GenericUI {
                 for (int idx = 0; idx < this.tanks.getTanks(); idx++) {
                     AxiologyNetwork.sendToClient(
                             player,
-                            new FluidSyncPacket(
+                            new MachineFluidSyncPacket(
                                     blockEntity.getBlockPos(),
                                     idx,
                                     this.tanks.getFluidInTank(idx)

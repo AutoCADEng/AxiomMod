@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.network;
+package eng.cad.auto.engine.network.packet;
 
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
@@ -16,18 +16,18 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.function.Supplier;
 
-public class FluidSyncPacket extends AxiologyPacket<FluidSyncPacket> {
+public class MachineFluidSyncPacket extends AxiologyBasePacket<MachineFluidSyncPacket> {
     private final BlockPos pos;
     private final ResourceLocation fluidResource;
     private final int slot;
     private final int amount;
-    public FluidSyncPacket(){
+    public MachineFluidSyncPacket(){
         this.pos = new BlockPos(0, 0, 0);
         this.fluidResource = null;
         this.slot = 0;
         this.amount = 0;
     };
-    public FluidSyncPacket(BlockPos pos, int tank, FluidStack stack) {
+    public MachineFluidSyncPacket(BlockPos pos, int tank, FluidStack stack) {
         this.pos = pos;
         this.fluidResource = stack.isEmpty() ? null : ForgeRegistries.FLUIDS.getKey(stack.getFluid());
         this.slot = tank;
@@ -46,8 +46,8 @@ public class FluidSyncPacket extends AxiologyPacket<FluidSyncPacket> {
         }
     }
     @Override
-    public FluidSyncPacket decode(FriendlyByteBuf byteBuf) {
-        return new FluidSyncPacket(
+    public MachineFluidSyncPacket decode(FriendlyByteBuf byteBuf) {
+        return new MachineFluidSyncPacket(
                 byteBuf.readBlockPos(),
                 byteBuf.readVarInt(),
                 byteBuf.readFluidStack()
