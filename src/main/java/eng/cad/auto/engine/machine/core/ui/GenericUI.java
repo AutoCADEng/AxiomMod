@@ -128,7 +128,7 @@ public class GenericUI {
         @Override
         protected void renderBg(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y) {
             guiGraphics.blit(GUI, leftPos, topPos, 0, 0, imageWidth, imageHeight);
-            this.getMenu().blockEntity.machineConfig.clientLogic().renderLogic(guiGraphics, tick, mouse_x, mouse_y, this);
+            this.getMenu().blockEntity.machineConfig.clientLogic().UIRenderLogic(guiGraphics, tick, mouse_x, mouse_y, this);
 
         }
 

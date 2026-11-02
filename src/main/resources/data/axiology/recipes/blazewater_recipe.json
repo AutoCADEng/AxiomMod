@@ -4,12 +4,12 @@
   "inputs": [
     {
       "type": "item",
-      "input": "minecraft:rotten_flesh",
+      "input": "minecraft:blaze_powder",
       "count": 1
     },
     {
       "type": "fluid",
-      "input": "axiology:nitric_acid",
+      "input": "axiology:ethanol",
       "count": 8000
     }
   ],

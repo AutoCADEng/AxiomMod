@@ -81,7 +81,7 @@ public class EtchedItemInput {
         }
         public static class Client implements IMachineClientLogic {
             @Override
-            public void renderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
+            public void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
             }
 
             @Override

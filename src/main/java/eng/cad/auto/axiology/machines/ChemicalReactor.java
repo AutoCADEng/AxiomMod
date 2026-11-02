@@ -144,7 +144,7 @@ public class ChemicalReactor {
             public Vector2i tank_size = new Vector2i(16, 32);
 
             @Override
-            public void renderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
+            public void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
                 doProgressBar(guiGraphics, screen, mouse_x, mouse_y, tick);
                 doRenderFluids(guiGraphics, screen, mouse_x, mouse_y, tick);
             }

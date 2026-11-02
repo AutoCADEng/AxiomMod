@@ -68,4 +68,5 @@ public class GenericMachineBlock extends BaseEntityBlock {
                 defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
                 : defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
+
 }

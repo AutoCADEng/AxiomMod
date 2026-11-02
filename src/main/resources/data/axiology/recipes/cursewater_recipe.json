@@ -4,12 +4,12 @@
   "inputs": [
     {
       "type": "item",
-      "input": "minecraft:soulsand",
+      "input": "minecraft:soul_sand",
       "count": 1
     },
     {
       "type": "fluid",
-      "input": "minecraft:water",
+      "input": "axiology:ethanol",
       "count": 8000
     }
   ],

@@ -47,15 +47,15 @@ public class MachineCore {
 
         block = BlockRegistry.registerMachineBlock(name, switch(config.machineType){
                 case MACHINE -> () -> new GenericMachineBlock(
-                                BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
+                                BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
                                 blockEntity,
                                 config);
                 case CONTROLLER -> () -> new GenericMasterBlock(
-                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
+                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
                         blockEntity,
                         config);
                 case FOLLOWER -> () -> new GenericFollowerBlock(
-                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK),
+                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
                         blockEntity,
                         config);
                 });
@@ -167,7 +167,7 @@ public class MachineCore {
 
         IMachineClientLogic clientLogic = new IMachineClientLogic() {
             @Override
-            public void renderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
+            public void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
                 AxiomMod.LOGGER.warn("No custom behaviour defined for renderLogic");
             }
 

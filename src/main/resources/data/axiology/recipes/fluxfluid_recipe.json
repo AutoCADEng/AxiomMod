@@ -9,7 +9,7 @@
     },
     {
       "type": "fluid",
-      "input": "minecraft:water",
+      "input": "axiology:ethanol",
       "count": 8000
     }
   ],
