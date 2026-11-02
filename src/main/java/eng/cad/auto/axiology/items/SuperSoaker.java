@@ -4,7 +4,11 @@ import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
 import eng.cad.auto.engine.fluid.IRangedFluidBehaviour;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.FluidBeamSyncPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,7 +35,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 public class SuperSoaker extends ItemFluidContainer {
     public static int COST_PER_SHOT = 50;
-    public static int RANGE = 5;
+    public static int RANGE = 64;
     public SuperSoaker(Properties properties, int capacity) {
         super(properties, capacity);
     }
@@ -74,12 +78,16 @@ public class SuperSoaker extends ItemFluidContainer {
         Vec3 ray = player.getLookAngle().scale(RANGE);
         Vec3 castTo = castFrom.add(ray);
         AABB searchBox = player.getBoundingBox().expandTowards(castTo.subtract(castFrom)).inflate(1.0);
-        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(level,player,castFrom,castTo,searchBox,
-                entity -> entity.isPickable() && entity != player);
-        if (!level.isClientSide()) {
-            AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())),
-                    new FluidBeamSyncPacket(ForgeRegistries.FLUIDS.getKey(ammo), 0xFFFFFFFF, castFrom.toVector3f(), castTo.toVector3f(), level));
-        }
+        EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(level,player,castFrom,castTo,searchBox, entity -> entity.isPickable() && entity != player);
+        AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())), new FluidBeamSyncPacket(ForgeRegistries.FLUIDS.getKey(ammo), 0xFFFFFFFF, castFrom.toVector3f(), castTo.toVector3f(), level));
+
+        level.playSound(null, castFrom.x, castFrom.y, castFrom.z,
+                SoundEvent.createVariableRangeEvent(
+                    ResourceLocation.fromNamespaceAndPath("axiology", "super_soaker_fire")),
+                    SoundSource.PLAYERS,
+                0.7f + level.random.nextFloat() * 0.6f,
+                0.7f + level.random.nextFloat() * 0.6f);
+
         if (hitResult == null) return true;
         Entity target = hitResult.getEntity();
         if (!(target instanceof LivingEntity livingEntity)) return true;
