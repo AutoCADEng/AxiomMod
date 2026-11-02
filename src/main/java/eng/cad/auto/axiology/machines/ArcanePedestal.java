@@ -21,7 +21,7 @@ public class ArcanePedestal {
     public ArcanePedestal(){
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore.Builder(name)
                 .addItemSlots(1)
-                .addDataSlots(1)
+                .addDataSlots(2)
                 .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
                 .noGui()
                 .rightClickLogic(new Logic.RightClickLogic())

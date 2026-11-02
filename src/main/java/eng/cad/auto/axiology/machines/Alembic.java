@@ -39,7 +39,7 @@ public class Alembic {
                 .addDataSlots(2)
                 .addFluidSlots(1)
                 .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.IN_OUT)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .noGui()
                 .rightClickLogic(new Logic.RightClickLogic())

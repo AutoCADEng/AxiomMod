@@ -1,5 +1,6 @@
 package eng.cad.auto.axiology.machines.multiblock.followers;
 
+import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
@@ -31,7 +32,7 @@ public class EtchedFluidInput {
                 .Builder(name)
                 .addFluidSlots(1)
                 .modifySlot(0, SlotType.FLUID,1000, SlotIORestriction.INPUT)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .rightClickLogic(new Logic.RightClickLogic())
                 .noGui()

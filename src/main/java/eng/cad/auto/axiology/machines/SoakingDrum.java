@@ -40,7 +40,7 @@ public class SoakingDrum {
                 .addFluidSlots(1)
                 .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
                 .modifySlot(0,SlotType.FLUID,8000,SlotIORestriction.IN_OUT)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .noGui()
                 .rightClickLogic(new Logic.RightClickLogic())

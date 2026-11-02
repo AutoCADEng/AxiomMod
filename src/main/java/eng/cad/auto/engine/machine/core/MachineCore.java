@@ -33,6 +33,7 @@ import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 public class MachineCore {
     public RegistryObject<BlockEntityType<? extends GenericMachineEntity>> blockEntity;
@@ -106,7 +107,7 @@ public class MachineCore {
                          int itemSlots,
                          int fluidSlots,
                          int dataSlots,
-                         IMachineLogic serverLogic,
+                         Supplier<IMachineLogic> serverLogic,
                          IMachineClientLogic clientLogic,
                          IMenuSlotLogic menuSlots,
                          IFollowerLogic followerLogic,
@@ -138,7 +139,7 @@ public class MachineCore {
             }
         };
 
-        IMachineLogic serverLogic = new IMachineLogic() {
+        Supplier<IMachineLogic> serverLogic = () -> new IMachineLogic() {
             @Override
             public void serverTick(Level level, BlockPos pos, BlockState state) {
                  AxiomMod.LOGGER.warn("No custom behaviour defined for serverTick");
@@ -231,7 +232,7 @@ public class MachineCore {
             return this;
         }
 
-        public Builder addServerLogic(IMachineLogic logic){
+        public Builder addServerLogic(Supplier<IMachineLogic> logic){
             this.serverLogic = logic;
             return this;
         }

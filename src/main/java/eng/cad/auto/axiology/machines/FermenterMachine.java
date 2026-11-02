@@ -49,7 +49,7 @@ public class FermenterMachine {
                 .modifySlot(0, SlotType.FLUID, 4000, SlotIORestriction.INPUT)
                 .modifySlot(1, SlotType.FLUID, 4000, SlotIORestriction.OUTPUT)
                 .addDataSlots(1)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .rightClickLogic(new Logic.RightClickLogic())
                 .addMenuSlots(new Logic.MenuInit())

@@ -45,7 +45,7 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity){
-        blockEntity.machineConfig.serverLogic().serverTick(level, blockPos, blockState);
+        blockEntity.machineConfig.serverLogic().get().serverTick(level, blockPos, blockState);
         blockEntity.syncData();
     }
 
@@ -66,13 +66,13 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
     @Override
     protected void saveAdditional(CompoundTag p_187471_) {
         super.saveAdditional(p_187471_);
-        machineConfig.serverLogic().saveInventory(this, p_187471_);
+        machineConfig.serverLogic().get().saveInventory(this, p_187471_);
     }
 
     @Override
     public void load(CompoundTag p_155245_) {
         super.load(p_155245_);
-        machineConfig.serverLogic().loadInventory(this, p_155245_);
+        machineConfig.serverLogic().get().loadInventory(this, p_155245_);
     }
 
 

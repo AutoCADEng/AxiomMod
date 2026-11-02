@@ -46,7 +46,7 @@ public class ChemicalReactor {
                 .modifySlot(2, SlotType.FLUID, 4000, SlotIORestriction.OUTPUT)
                 .addDataSlots(1)
                 .rightClickLogic(new Logic.RightClickLogic())
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .build());
     }

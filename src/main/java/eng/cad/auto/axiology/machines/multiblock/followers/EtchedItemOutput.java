@@ -31,7 +31,7 @@ public class EtchedItemOutput {
                 .Builder(name)
                 .addItemSlots(1)
                 .modifySlot(0, SlotType.ITEM,64, SlotIORestriction.OUTPUT)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .rightClickLogic(new Logic.RightClickLogic())
                 .noGui()

@@ -17,6 +17,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -35,7 +36,7 @@ public class ArcaneImbuer {
                 .noGui()
                 .addDataSlots(2)
                 .rightClickLogic(new Logic.RightClickLogic())
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .build());
     }
 
@@ -67,8 +68,8 @@ public class ArcaneImbuer {
                         if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
 
                         if (follower.get().inventory.getStackInSlot(0).isEmpty()
-                                ||  machine.get().metadata.get(activated) == 0
-                                ||  follower.get().metadata.get(0) == 1) {
+                                || machine.get().metadata.get(activated) == 0
+                                || follower.get().metadata.get(0) == 1) {
                             if (!beamIDs.containsKey(followerPos)) continue;
                             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() ->
                                     new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
@@ -92,6 +93,9 @@ public class ArcaneImbuer {
                         if (follower.get().metadata.get(1) > 200){
                             follower.get().metadata.set(1,0);
                             follower.get().metadata.set(0, 1);
+                            follower.get().inventory.setStackInSlot(0, ItemStack.EMPTY);
+                            follower.setChanged();
+                            level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
                         }
                     }
                 }

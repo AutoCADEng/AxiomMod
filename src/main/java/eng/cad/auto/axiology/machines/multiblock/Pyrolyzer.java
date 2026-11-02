@@ -32,7 +32,7 @@ public class Pyrolyzer {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore
                 .Builder(name)
                 .addDataSlots(2)
-                .addServerLogic(new Logic.Server())
+                .addServerLogic(Logic.Server::new)
                 .addClientLogic(new Logic.Client())
                 .isMultiblockController()
                 .build());
