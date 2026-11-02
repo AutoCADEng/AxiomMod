@@ -10,7 +10,6 @@ import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.machine.core.slot.SlotType;
 import eng.cad.auto.engine.machine.multiblock.GenericMasterEntity;
 import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.FluidBeamSyncPacket;
 import eng.cad.auto.engine.network.InfusionSyncPacket;
 import eng.cad.auto.engine.network.KillBeamPacket;
 import net.minecraft.core.BlockPos;
@@ -23,7 +22,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -35,14 +33,15 @@ public class ArcaneImbuer {
                 .addItemSlots(1)
                 .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
                 .noGui()
-                .addDataSlots(1)
+                .addDataSlots(2)
                 .rightClickLogic(new Logic.RightClickLogic())
                 .addServerLogic(new Logic.Server())
                 .build());
     }
 
     public static class Logic{
-        public static int progress = 0;
+
+        public static int activated = 0;
         public static int PEDESTAL_RANGE = 7;
         public static class Server implements IMachineLogic {
             HashMap<BlockPos, UUID> beamIDs = new HashMap<>();
@@ -60,11 +59,16 @@ public class ArcaneImbuer {
                         }
                     }
                 }
+
+                if (machine.get().metadata.get(activated) == 0 && beamIDs.isEmpty()) return;
+
                 for (BlockPos followerPos: entities){
                     if (level.getBlockEntity(followerPos) instanceof GenericMachineEntity follower){
                         if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
-                        if (follower.get().inventory.getStackInSlot(0).isEmpty())
-                        {
+
+                        if (follower.get().inventory.getStackInSlot(0).isEmpty()
+                                ||  machine.get().metadata.get(activated) == 0
+                                ||  follower.get().metadata.get(0) == 1) {
                             if (!beamIDs.containsKey(followerPos)) continue;
                             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() ->
                                     new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
@@ -72,11 +76,22 @@ public class ArcaneImbuer {
                             beamIDs.remove(followerPos);
                             continue;
                         }
-                        if (!beamIDs.containsKey(followerPos)) {
+
+                        if (!beamIDs.containsKey(followerPos) && follower.get().metadata.get(0) == 0) {
                             UUID id = UUID.randomUUID();
                             beamIDs.put(followerPos, id);
                             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
                             new InfusionSyncPacket(id, null, 0xFFFFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
+                            continue;
+                        }
+
+                        if (follower.get().metadata.get(0) == 0){
+                            follower.get().metadata.set(1, follower.get().metadata.get(1) + 1);
+                        }
+
+                        if (follower.get().metadata.get(1) > 200){
+                            follower.get().metadata.set(1,0);
+                            follower.get().metadata.set(0, 1);
                         }
                     }
                 }
@@ -101,7 +116,7 @@ public class ArcaneImbuer {
                 if (blockEntity.get().tanks != null) {
                     tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
-                tag.putInt("progress", blockEntity.get().metadata.get(progress));
+                tag.putInt("progress", blockEntity.get().metadata.get(activated));
             }
 
             @Override
@@ -114,17 +129,17 @@ public class ArcaneImbuer {
                     blockEntity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
 
-                blockEntity.get().metadata.set(progress, tag.getInt("progress"));
+                blockEntity.get().metadata.set(activated, tag.getInt("progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
-                blockEntity.get().metadata.set(progress, 0);
+                blockEntity.get().metadata.set(activated, 0);
             }
 
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int count) {
-                blockEntity.get().metadata.set(progress,blockEntity.get().metadata.get(progress) + count);
+                blockEntity.get().metadata.set(activated,blockEntity.get().metadata.get(activated) + count);
             }
         }
         public static class RightClickLogic implements IRightClickBehaviour {
@@ -137,8 +152,11 @@ public class ArcaneImbuer {
             }
 
             private boolean onRightClick(GenericMachineEntity blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-                if (player.isShiftKeyDown()) return false;
                 if (interactionHand == InteractionHand.OFF_HAND) return false;
+                if (player.isShiftKeyDown()) {
+                    blockEntity.get().metadata.set(activated, blockEntity.get().metadata.get(activated) == 0? 1:0);
+                    return true;
+                }
                 return CommonRightClickBehaviour.itemInHand(0, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
         }

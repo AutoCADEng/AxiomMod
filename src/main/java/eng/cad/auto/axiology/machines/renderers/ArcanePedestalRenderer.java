@@ -29,7 +29,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<GenericMachin
         if (!entity.getLevel().isClientSide) return;
         float t = entity.getLevel().getGameTime() + pTick % 360.0f;
         ItemStack item = entity.get().inventory.getStackInSlot(0);
-        if (!item.isEmpty()) {
+        if (!item.isEmpty() && entity.get().metadata.get(0) == 0) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             poseStack.pushPose();
             poseStack.translate(0.5f, 1.3f + 0.1f*Mth.sin(2*Mth.PI*(t)), 0.5f);
