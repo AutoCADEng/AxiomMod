@@ -41,7 +41,8 @@ public class ArcaneImbuer {
     }
 
     public static class Logic{
-
+        public static int followerCOMPLETE = 0;
+        public static int followerTIMER = 1;
         public static int activated = 0;
         public static int PEDESTAL_RANGE = 7;
         public static class Server implements IMachineLogic {
@@ -53,6 +54,7 @@ public class ArcaneImbuer {
                 if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity machine)) return;
                 if (!Objects.equals(machine.machineConfig.name(), ArcaneImbuer.name)) return;
                 if (level.getGameTime()%20 == 0) {
+                    entities.clear();
                     for(BlockEntity entity:scan(level, pos, PEDESTAL_RANGE)){
                         if (entity instanceof GenericMachineEntity follower){
                             if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
@@ -67,35 +69,38 @@ public class ArcaneImbuer {
                     if (level.getBlockEntity(followerPos) instanceof GenericMachineEntity follower){
                         if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
 
-                        if (follower.get().inventory.getStackInSlot(0).isEmpty()
-                                || machine.get().metadata.get(activated) == 0
-                                || follower.get().metadata.get(0) == 1) {
+                        if (follower.get().inventory.getStackInSlot(0).isEmpty() || machine.get().metadata.get(activated) == 0 || follower.get().metadata.get(followerCOMPLETE) == 1) {
                             if (!beamIDs.containsKey(followerPos)) continue;
                             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() ->
                                     new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
                                     new KillBeamPacket(beamIDs.get(followerPos)));
                             beamIDs.remove(followerPos);
+
+                            if (follower.get().metadata.get(followerCOMPLETE) == 1) {
+                                follower.get().inventory.extractItem(0,64,false);
+                                follower.setChanged();
+                                level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
+                            }
+                            follower.get().metadata.set(followerCOMPLETE, 0);
+                            follower.get().metadata.set(followerTIMER, 0);
                             continue;
                         }
 
-                        if (!beamIDs.containsKey(followerPos) && follower.get().metadata.get(0) == 0) {
+                        if (!beamIDs.containsKey(followerPos) && follower.get().metadata.get(followerCOMPLETE) == 0) {
                             UUID id = UUID.randomUUID();
                             beamIDs.put(followerPos, id);
                             AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
-                            new InfusionSyncPacket(id, null, 0xFFFFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
+                            new InfusionSyncPacket(id, null, 0x77FFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
                             continue;
                         }
 
-                        if (follower.get().metadata.get(0) == 0){
-                            follower.get().metadata.set(1, follower.get().metadata.get(1) + 1);
+                        if (follower.get().metadata.get(followerCOMPLETE) == 0){
+                            follower.get().metadata.set(followerTIMER, follower.get().metadata.get(1) + 1);
                         }
 
-                        if (follower.get().metadata.get(1) > 200){
-                            follower.get().metadata.set(1,0);
-                            follower.get().metadata.set(0, 1);
-                            follower.get().inventory.setStackInSlot(0, ItemStack.EMPTY);
-                            follower.setChanged();
-                            level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
+                        if (follower.get().metadata.get(followerTIMER) > 200){
+                            follower.get().metadata.set(followerCOMPLETE, 1);
+                            follower.get().metadata.set(followerTIMER, 0);
                         }
                     }
                 }

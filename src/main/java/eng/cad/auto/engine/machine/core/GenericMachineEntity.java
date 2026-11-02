@@ -1,6 +1,7 @@
 package eng.cad.auto.engine.machine.core;
 
 import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
 import eng.cad.auto.axiology.registry.MachineRegistry;
@@ -36,16 +37,18 @@ public class GenericMachineEntity extends BlockEntity implements MenuProvider {
     public MachineCore.Config machineConfig;
     private int[] lastSyncedData;
     private long lastDataSyncTime;
+    protected final IMachineLogic logic;
 
     public GenericMachineEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, MachineCore.Config machineConfig){
         super(type, pos, state);
         this.machineConfig = machineConfig;
         machine = new MachineInventory(machineConfig, this);
+        logic = machineConfig.serverLogic().get();
         refreshCapabilities();
     }
 
     public static void tick(Level level, BlockPos blockPos, BlockState blockState, GenericMachineEntity blockEntity){
-        blockEntity.machineConfig.serverLogic().get().serverTick(level, blockPos, blockState);
+        blockEntity.logic.serverTick(level, blockPos, blockState);
         blockEntity.syncData();
     }
 

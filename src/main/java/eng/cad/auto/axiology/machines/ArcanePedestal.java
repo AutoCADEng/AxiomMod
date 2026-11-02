@@ -4,10 +4,12 @@ import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
+import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.machine.core.slot.SlotType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -25,11 +27,52 @@ public class ArcanePedestal {
                 .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
                 .noGui()
                 .rightClickLogic(new Logic.RightClickLogic())
+                .addServerLogic(Logic.Server::new)
                 .build());
     }
 
     public static class Logic{
+        public static class Server implements IMachineLogic {
 
+            @Override
+            public void serverTick(Level level, BlockPos pos, BlockState state) {
+
+            }
+
+            @Override
+            public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
+                if (entity.get().inventory != null) {
+                    tag.put("Inventory", entity.get().inventory.serializeNBT());
+                }
+                if (entity.get().tanks != null) {
+                    tag.put("Tanks", entity.get().tanks.serializeNBT());
+                }
+                tag.putInt("Progress", entity.get().metadata.get(0));
+                tag.putInt("Flag", entity.get().metadata.get(1));
+            }
+
+            @Override
+            public void loadInventory(GenericMachineEntity entity, CompoundTag tag) {
+                if (entity.get().inventory != null && tag.contains("Inventory")) {
+                    entity.get().inventory.deserializeNBT(tag.getCompound("Inventory"));
+                }
+                if (entity.get().tanks != null && tag.contains("Tanks")) {
+                    entity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
+                }
+                if (tag.contains("Progress")) entity.get().metadata.set(0, tag.getInt("Progress"));
+                if (tag.contains("Flag")) entity.get().metadata.set(1, tag.getInt("Flag"));
+            }
+
+            @Override
+            public void resetProgress(GenericMachineEntity blockEntity) {
+
+            }
+
+            @Override
+            public void incrementProgress(GenericMachineEntity blockEntity, int count) {
+
+            }
+        }
         public static class RightClickLogic implements IRightClickBehaviour {
             @Override
             public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
