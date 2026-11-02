@@ -13,6 +13,7 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
     int lifespan;
     long creationTick;
     int tint;
+    boolean fadeable = false;
     float width;
     float speed = 0.05f;
     ArrayList<Wave> waves = new ArrayList<>();
@@ -43,6 +44,10 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
         return self();
     }
 
+    public T doFade(){
+        this.fadeable = true;
+        return self();
+    }
 
     public T setLifespan (int ticks){
         this.lifespan = ticks;

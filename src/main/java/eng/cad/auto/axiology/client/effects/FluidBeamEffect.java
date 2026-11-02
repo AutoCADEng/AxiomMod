@@ -31,6 +31,7 @@ public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
                 .setLifespan(20)
                 .setSpeed(0f)
                 .setTime(level.getGameTime())
+                .doFade()
                 .addWave(new Wave()
                     .setAmplitude(0.03f)
                     .setWavelength(1f)

@@ -44,9 +44,6 @@ public class BeamEffectRenderer {
                 continue;
             }
             RenderType renderType = BeamRenderTypes.BEAM;
-            mc.level.playLocalSound(new BlockPos((int) beam.positions.get(0).x, (int) beam.positions.get(0).y, (int) beam.positions.get(0).z),
-                    SoundEvents.BEACON_AMBIENT, SoundSource.AMBIENT, 1.0f, 1.0f, true
-            );
             drawBeam(bufferSource.getBuffer(renderType), transformations.last(), beam, camera_pos, age);
             bufferSource.endBatch(BeamRenderTypes.BEAM);
         }
@@ -69,8 +66,8 @@ public class BeamEffectRenderer {
         Vec3 initialDirection = nextPositionCamera.subtract(initialPositionCamera).normalize();
         Vec3 cameraDirection = new Vec3(Minecraft.getInstance().gameRenderer.getMainCamera().getLookVector());
         Vec3 initialPerpendicular = initialDirection.cross(cameraDirection).normalize();
-        drawVertex(vertexConsumer, pose, initialPositionCamera.subtract(initialPerpendicular.scale(beam.evaluateWave(0, age))), 0.0F, 0, beam.tint);
-        drawVertex(vertexConsumer, pose, initialPositionCamera.add(initialPerpendicular.scale(beam.evaluateWave(0, age))), 0.0F, 0, beam.tint);
+        drawVertex(vertexConsumer, pose, initialPositionCamera.subtract(initialPerpendicular.scale(beam.evaluateWave(0, age))),  beam.tint);
+        drawVertex(vertexConsumer, pose, initialPositionCamera.add(initialPerpendicular.scale(beam.evaluateWave(0, age))), beam.tint);
 
         for (int idx = 1; idx<= segments; idx++){
             float curvePosition = (float) idx / segments;
@@ -84,12 +81,14 @@ public class BeamEffectRenderer {
             Vec3 direction = positionCamera.subtract(lastPositionCamera).normalize();
             Vec3 perpendicular = direction.cross(cameraDirection).normalize();
 
-            drawVertex(vertexConsumer, pose, positionCamera.subtract(perpendicular.scale(beam.evaluateWave(curvePosition, age))), 0.0F, (float) curvePosition, beam.tint);
-            drawVertex(vertexConsumer, pose, positionCamera.add(perpendicular.scale(beam.evaluateWave(curvePosition, age))), 0.0F, (float) curvePosition, beam.tint);
+            float fadeMod =  1 - (age/(float) beam.lifespan);
+            int fadedColor = ((int) (((beam.tint >> 24) & 0xFF) * fadeMod) << 24) | (beam.tint & 0x00FFFFFF);
+            drawVertex(vertexConsumer, pose, positionCamera.subtract(perpendicular.scale(beam.evaluateWave(curvePosition, age))), fadedColor);
+            drawVertex(vertexConsumer, pose, positionCamera.add(perpendicular.scale(beam.evaluateWave(curvePosition, age))), fadedColor);
         }
     }
 
-    private static void drawVertex(VertexConsumer c, PoseStack.Pose pose, Vec3 position, float textureU, float textureV, int rgb) {
+    private static void drawVertex(VertexConsumer c, PoseStack.Pose pose, Vec3 position, int rgb) {
         float a = ((rgb >> 24) & 0xFF) / 255.0F;
         float r = ((rgb >> 16) & 0xFF) / 255.0F;
         float g = ((rgb >> 8)  & 0xFF) / 255.0F;
