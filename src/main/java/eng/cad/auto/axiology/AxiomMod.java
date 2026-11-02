@@ -16,7 +16,9 @@ import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.multiblock.MultiblockStructure;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.axiology.registry.*;
+import eng.cad.auto.engine.network.InfusionSyncPacket;
 import eng.cad.auto.engine.network.FluidBeamSyncPacket;
+import eng.cad.auto.engine.network.KillBeamPacket;
 import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.common.ForgeMod;
@@ -62,6 +64,8 @@ public class AxiomMod {
         //Networking
         AxiologyNetwork.register(MachineFluidSyncPacket.class, MachineFluidSyncPacket::new);
         AxiologyNetwork.register(FluidBeamSyncPacket.class, FluidBeamSyncPacket::new);
+        AxiologyNetwork.register(InfusionSyncPacket.class, InfusionSyncPacket::new);
+        AxiologyNetwork.register(KillBeamPacket.class, KillBeamPacket::new);
     }
 
     private static void onAddReloadListeners(AddReloadListenerEvent event) {

@@ -7,13 +7,16 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
+    public boolean dead = false;
     ArrayList<Vec3> positions = new ArrayList<>();
     int lifespan;
     long creationTick;
     int tint;
     boolean fadeable = false;
+    UUID id;
     float width;
     float speed = 0.05f;
     ArrayList<Wave> waves = new ArrayList<>();
@@ -33,7 +36,10 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
     public T addPos (Vector3f pos){
         return addPos(new Vec3(pos));
     }
-
+    public T setUUID(UUID id){
+        this.id = id;
+        return self();
+    }
     public T setTint (int color){
         this.tint = color;
         return self();
@@ -85,7 +91,7 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
         this.speed = var;
         return self();
     }
-    public abstract T createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level);
+    public abstract T createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level, UUID id);
 }
 
 

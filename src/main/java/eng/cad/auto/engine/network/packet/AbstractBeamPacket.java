@@ -13,6 +13,7 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
 import org.joml.Vector3f;
 
+import java.util.UUID;
 import java.util.function.Supplier;
 
 public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B extends AbstractBeamEffect<B>> extends AxiologyBasePacket<T> {
@@ -23,35 +24,37 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
     private final ResourceLocation texture;
     private B beam;
     private Level level;
-
+    private UUID id;
     @SuppressWarnings("unchecked")
     protected T self() {
         return (T) this;
     }
 
     protected AbstractBeamPacket() {
-        this(new Vector3f(), new Vector3f(), null, 0xFFFFFFFF, null);
+        this(null, new Vector3f(), new Vector3f(), null, 0xFFFFFFFF, null);
     }
 
-    protected AbstractBeamPacket(Vec3 castFrom, Vec3 castTo, ResourceLocation texture, int tint, Level level) {
-        this(castFrom.toVector3f(), castTo.toVector3f(), texture, tint, level);
+    protected AbstractBeamPacket(UUID id, Vec3 castFrom, Vec3 castTo, ResourceLocation texture, int tint, Level level) {
+        this(id, castFrom.toVector3f(), castTo.toVector3f(), texture, tint, level);
     }
 
-    protected AbstractBeamPacket(Vector3f castFrom, Vector3f castTo, ResourceLocation texture, int tint, Level level) {
+    protected AbstractBeamPacket(UUID id, Vector3f castFrom, Vector3f castTo, ResourceLocation texture, int tint, Level level) {
         this.castFrom = castFrom;
         this.castTo = castTo;
         this.tint = tint;
         this.level = level;
         this.texture = texture;
+        this.id = id;
     }
-    public AbstractBeamPacket(Vector3f castFrom, Vector3f castTo, int tint, Level level) {
-        this(castFrom,castTo,null,tint,level);
+    public AbstractBeamPacket(UUID id, Vector3f castFrom, Vector3f castTo, int tint, Level level) {
+        this(id, castFrom,castTo,null,tint,level);
     }
     public abstract B getBeam();
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
-        buffer.writeResourceLocation(texture);
+        buffer.writeUUID(id);
+        buffer.writeResourceLocation(texture == null? ResourceLocation.parse("minecraft:air"):texture);
         buffer.writeVarInt(tint);
         buffer.writeVector3f(castFrom);
         buffer.writeVector3f(castTo);
@@ -70,7 +73,8 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
                                     texture,
                                     castFrom,
                                     castTo,
-                                    level
+                                    level,
+                                    id
                             );
 
                             if (newBeam == null) return;

@@ -9,14 +9,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
+import java.util.UUID;
+
 public class FluidBeamSyncPacket extends AbstractBeamPacket<FluidBeamSyncPacket, FluidBeamEffect> {
 
     public FluidBeamSyncPacket() {
         super();
     }
 
-    public FluidBeamSyncPacket(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level) {
-        super(castFrom, castTo, texture, tint, level);
+    public FluidBeamSyncPacket(UUID id, ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level) {
+        super(id, castFrom, castTo, texture, tint, level);
     }
 
     @Override
@@ -27,6 +29,7 @@ public class FluidBeamSyncPacket extends AbstractBeamPacket<FluidBeamSyncPacket,
     @Override
     public FluidBeamSyncPacket decode(FriendlyByteBuf buffer) {
         return new FluidBeamSyncPacket(
+                buffer.readUUID(),
                 buffer.readResourceLocation(),
                 buffer.readVarInt(),
                 buffer.readVector3f(),

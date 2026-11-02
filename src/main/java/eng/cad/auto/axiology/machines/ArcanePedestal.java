@@ -2,12 +2,14 @@ package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;
+import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
-import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.machine.core.slot.SlotType;
+import eng.cad.auto.engine.machine.multiblock.GenericFollowerEntity;
+import eng.cad.auto.engine.machine.multiblock.IFollowerLogic;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -29,6 +31,7 @@ public class ArcanePedestal {
     }
 
     public static class Logic{
+
         public static class RightClickLogic implements IRightClickBehaviour {
             @Override
             public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {

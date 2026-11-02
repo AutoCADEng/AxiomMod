@@ -3,7 +3,6 @@ package eng.cad.auto.axiology.machines.renderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import eng.cad.auto.axiology.machines.ArcaneImbuer;
-import eng.cad.auto.axiology.machines.ArcanePedestal;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;

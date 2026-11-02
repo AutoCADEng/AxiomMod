@@ -15,14 +15,16 @@ import org.joml.Vector3f;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 
 public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
 
     static final HashMap<ResourceLocation, Integer> FluidColorCache = new HashMap<>();
     @Override
-    public FluidBeamEffect createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level) {
+    public FluidBeamEffect createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
         return new FluidBeamEffect()
                 .setTexture(texture)
+                .setUUID(id)
                 .addPos(castFrom.add(0.1f,0,-0.1f))
                 .addPos(castTo)
                 .setWidth(0.1f)

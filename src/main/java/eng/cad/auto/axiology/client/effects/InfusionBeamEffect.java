@@ -8,12 +8,14 @@ import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import java.util.UUID;
 
 public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect>{
 
     @Override
-    public InfusionBeamEffect createBeam(@Nullable ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level) {
+    public InfusionBeamEffect createBeam(@Nullable ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
         return new InfusionBeamEffect()
+            .setUUID(id)
             .addPos(castFrom)
             .addPos(new Vec3(castFrom).add(0,1,0))
             .addPos(new Vec3(castTo).add(0,15,0))
@@ -22,7 +24,7 @@ public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect>{
             .setTint(0xFFFFFFFF)
             .minSegments(10)
             .maxSegments(300)
-            .setLifespan(200)
+            .setLifespan(9999)
             .setSpeed(0.005f)
             .setTime(level.getGameTime())
             .addWave(new Wave()

@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.machines.multiblock;
+package eng.cad.auto.axiology.machines.multiblock.followers;
 
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;

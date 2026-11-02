@@ -9,14 +9,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3f;
 
-public class BeamSyncPacket extends AbstractBeamPacket<BeamSyncPacket, InfusionBeamEffect> {
+import java.util.UUID;
 
-    public BeamSyncPacket() {
+public class InfusionSyncPacket extends AbstractBeamPacket<InfusionSyncPacket, InfusionBeamEffect> {
+
+    public InfusionSyncPacket() {
         super();
     }
 
-    public BeamSyncPacket(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level) {
-        super(castFrom, castTo, tint, level);
+    public InfusionSyncPacket(UUID id, ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level) {
+        super(id,castFrom, castTo, tint, level);
     }
 
     @Override
@@ -25,8 +27,9 @@ public class BeamSyncPacket extends AbstractBeamPacket<BeamSyncPacket, InfusionB
     }
 
     @Override
-    public BeamSyncPacket decode(FriendlyByteBuf buffer) {
-        return new BeamSyncPacket(
+    public InfusionSyncPacket decode(FriendlyByteBuf buffer) {
+        return new InfusionSyncPacket(
+                buffer.readUUID(),
                 buffer.readResourceLocation(),
                 buffer.readVarInt(),
                 buffer.readVector3f(),

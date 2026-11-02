@@ -14,9 +14,12 @@ import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.UUID;
 
 public class BeamEffectRenderer {
-    private static final ArrayList<AbstractBeamEffect> activeBeams = new ArrayList<>();
+    private static final HashMap<UUID, AbstractBeamEffect<?>> activeBeams = new HashMap();
     private BeamEffectRenderer(){};
     public static void init(IEventBus eventBus) {
         eventBus.addListener(BeamEffectRenderer::onRenderLevel);
@@ -36,11 +39,13 @@ public class BeamEffectRenderer {
         PoseStack transformations = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource = mc.renderBuffers().bufferSource();
 
-        for (int idx = activeBeams.size() - 1; idx >= 0; idx--){
-            AbstractBeamEffect<?> beam = activeBeams.get(idx);
+        //RIP for loop </3
+        Iterator<AbstractBeamEffect<?>> it = activeBeams.values().iterator();
+        while (it.hasNext()) {
+            AbstractBeamEffect<?> beam = it.next();
             float age = currentTime - beam.creationTick;
-            if (age>= beam.lifespan){
-                activeBeams.remove(idx);
+            if (age >= beam.lifespan || beam.dead){
+                it.remove();
                 continue;
             }
             RenderType renderType = BeamRenderTypes.BEAM;
@@ -50,9 +55,13 @@ public class BeamEffectRenderer {
     }
 
     public static void addBeam(AbstractBeamEffect<?> beam){
-        activeBeams.add(beam);
+        activeBeams.put(beam.id, beam);
     }
 
+    public static void killBeam(UUID id){
+        if(!activeBeams.containsKey(id)) return;
+        activeBeams.get(id).dead = true;
+    }
     private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect<?> beam, Vec3 camera_pos, float age){
         if (beam.positions.isEmpty()) return;
         Vec3 startPosWorld = beam.positions.get(0);

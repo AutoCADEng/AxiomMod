@@ -33,6 +33,8 @@ import net.minecraftforge.fluids.capability.ItemFluidContainer;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.UUID;
+
 public class SuperSoaker extends ItemFluidContainer {
     public static int COST_PER_SHOT = 50;
     public static int RANGE = 64;
@@ -79,7 +81,7 @@ public class SuperSoaker extends ItemFluidContainer {
         Vec3 castTo = castFrom.add(ray);
         AABB searchBox = player.getBoundingBox().expandTowards(castTo.subtract(castFrom)).inflate(1.0);
         EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(level,player,castFrom,castTo,searchBox, entity -> entity.isPickable() && entity != player);
-        AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())), new FluidBeamSyncPacket(ForgeRegistries.FLUIDS.getKey(ammo), 0xFFFFFFFF, castFrom.toVector3f(), castTo.toVector3f(), level));
+        AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(castFrom.x, castFrom.y, castFrom.z, 128, level.dimension())), new FluidBeamSyncPacket(UUID.randomUUID(),ForgeRegistries.FLUIDS.getKey(ammo), 0xFFFFFFFF, castFrom.toVector3f(), castTo.toVector3f(), level));
 
         level.playSound(null, castFrom.x, castFrom.y, castFrom.z,
                 SoundEvent.createVariableRangeEvent(

@@ -3,6 +3,7 @@ package eng.cad.auto.axiology.registry;
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.machines.*;
 import eng.cad.auto.axiology.machines.multiblock.*;
+import eng.cad.auto.axiology.machines.multiblock.followers.*;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.registries.DeferredRegister;

@@ -28,7 +28,6 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
 public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEntity> {
-    int deg = 0;
     public SoakingDrumRenderer(BlockEntityRendererProvider.Context context) {
 
     }
@@ -37,7 +36,7 @@ public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEn
         if (!entity.machineConfig.name().equals(SoakingDrum.name)) return;
         if (entity.getLevel() == null) return;
         if (!entity.getLevel().isClientSide) return;
-
+        float t = entity.getLevel().getGameTime() + pTick % 360.0f;
         FluidStack fluid = entity.get().tanks.getFluidInTank(0);
         float fill = (float) fluid.getAmount() / (float) entity.get().config.fluidSlotConfig().get(0).capacity();
 
@@ -50,15 +49,14 @@ public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEn
             poseStack.translate(0f, -0.3f, 0f);
 
             if (!fluid.isEmpty()){
-                poseStack.translate(0,fill,0);
-                poseStack.mulPose(Axis.YP.rotationDegrees(deg/(float) 100));
+                poseStack.translate(0, fill,0);
+                poseStack.mulPose(Axis.YP.rotationDegrees(t));
             }
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             poseStack.scale(0.75f,0.75f,0.75f);
             itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
             poseStack.popPose();
-            if (deg == 35999) deg = -1;
-            deg+=15;
+
         }
         if (!fluid.isEmpty()) {
             renderFluid(fluid.getFluid(), fill, entity, pTick, poseStack, bufferSource, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), overlay);

@@ -96,6 +96,7 @@ public class Pyrolyzer {
                 incrementProgress(blockEntity, 1);
             }
 
+            //TODO Test if this machine keeps it inventory
             @Override
             public void saveInventory(GenericMachineEntity entity, CompoundTag tag) {
                 if (!(entity instanceof GenericMasterEntity blockEntity)) return;
