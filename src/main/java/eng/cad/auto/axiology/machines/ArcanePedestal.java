@@ -23,7 +23,7 @@ public class ArcanePedestal {
     public ArcanePedestal(){
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore.Builder(name)
                 .addItemSlots(1)
-                .addDataSlots(2)
+                .addDataSlots(1)
                 .modifySlot(0, SlotType.ITEM,1, SlotIORestriction.IN_OUT)
                 .noGui()
                 .rightClickLogic(new Logic.RightClickLogic())
@@ -48,7 +48,6 @@ public class ArcanePedestal {
                     tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
                 tag.putInt("Progress", entity.get().metadata.get(0));
-                tag.putInt("Flag", entity.get().metadata.get(1));
             }
 
             @Override
@@ -60,7 +59,6 @@ public class ArcanePedestal {
                     entity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
                 if (tag.contains("Progress")) entity.get().metadata.set(0, tag.getInt("Progress"));
-                if (tag.contains("Flag")) entity.get().metadata.set(1, tag.getInt("Flag"));
             }
 
             @Override
@@ -79,6 +77,10 @@ public class ArcanePedestal {
                 if (!(level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine)) return InteractionResult.PASS;
                 if (!machine.machineConfig.name().equals(ArcanePedestal.name)) return InteractionResult.PASS;
                 boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
+                if (success) {
+                    machine.get().metadata.set(0,0);
+                    machine.syncData();
+                }
                 return success? InteractionResult.SUCCESS : InteractionResult.PASS;
             }
 

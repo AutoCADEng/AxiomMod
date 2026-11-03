@@ -17,7 +17,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,9 +41,10 @@ public class ArcaneImbuer {
 
     public static class Logic{
         public static int followerCOMPLETE = 0;
-        public static int followerTIMER = 1;
         public static int activated = 0;
+        public static int progress = 1;
         public static int PEDESTAL_RANGE = 7;
+        public static int MAX_PROGRESS = 200;
         public static class Server implements IMachineLogic {
             HashMap<BlockPos, UUID> beamIDs = new HashMap<>();
             HashSet<BlockPos> entities = new HashSet<>();
@@ -53,58 +53,49 @@ public class ArcaneImbuer {
                 if (level == null || level.isClientSide) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity machine)) return;
                 if (!Objects.equals(machine.machineConfig.name(), ArcaneImbuer.name)) return;
-                if (level.getGameTime()%20 == 0) {
-                    entities.clear();
-                    for(BlockEntity entity:scan(level, pos, PEDESTAL_RANGE)){
-                        if (entity instanceof GenericMachineEntity follower){
-                            if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
-                            entities.add(follower.getBlockPos());
-                        }
-                    }
+
+                updatePedestals(level, pos);
+                
+                if (machine.get().metadata.get(activated) == 0 && beamIDs.isEmpty()) {
+                    resetProgress(machine);
+                    return;
                 }
-
-                if (machine.get().metadata.get(activated) == 0 && beamIDs.isEmpty()) return;
-
+                if (checkCompletion(level)) {
+                    performRitual();
+                    return;
+                }
+                incrementProgress(machine, 1);
                 for (BlockPos followerPos: entities){
-                    if (level.getBlockEntity(followerPos) instanceof GenericMachineEntity follower){
-                        if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
+                    if (!(level.getBlockEntity(followerPos) instanceof GenericMachineEntity follower)) continue;
+                    if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
 
-                        if (follower.get().inventory.getStackInSlot(0).isEmpty() || machine.get().metadata.get(activated) == 0 || follower.get().metadata.get(followerCOMPLETE) == 1) {
-                            if (!beamIDs.containsKey(followerPos)) continue;
-                            AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() ->
-                                    new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
-                                    new KillBeamPacket(beamIDs.get(followerPos)));
-                            beamIDs.remove(followerPos);
+                    if (machine.get().metadata.get(progress) >= MAX_PROGRESS) {
+                        if (follower.get().metadata.get(followerCOMPLETE) == 1) continue;
+                        if (follower.get().inventory.getStackInSlot(0).isEmpty()) continue;
+                        resetProgress(machine);
+                        follower.get().metadata.set(followerCOMPLETE, 1);
+                        follower.syncData();
+                    }
 
-                            if (follower.get().metadata.get(followerCOMPLETE) == 1) {
-                                follower.get().inventory.extractItem(0,64,false);
-                                follower.setChanged();
-                                level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
-                            }
-                            follower.get().metadata.set(followerCOMPLETE, 0);
-                            follower.get().metadata.set(followerTIMER, 0);
-                            continue;
-                        }
+                    if (follower.get().inventory.getStackInSlot(0).isEmpty() || machine.get().metadata.get(activated) == 0 || follower.get().metadata.get(followerCOMPLETE) == 1) {
+                        if (!removePedestalBeam(followerPos, pos, level)) continue;
+                        if (follower.get().metadata.get(followerCOMPLETE) == 1) {
+                            //follower.get().inventory.setStackInSlot(0, ItemStack.EMPTY);
+                            follower.setChanged();
+                            level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
+                        } continue;
+                    }
 
-                        if (!beamIDs.containsKey(followerPos) && follower.get().metadata.get(followerCOMPLETE) == 0) {
-                            UUID id = UUID.randomUUID();
-                            beamIDs.put(followerPos, id);
-                            AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
-                            new InfusionSyncPacket(id, null, 0x77FFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
-                            continue;
-                        }
-
-                        if (follower.get().metadata.get(followerCOMPLETE) == 0){
-                            follower.get().metadata.set(followerTIMER, follower.get().metadata.get(1) + 1);
-                        }
-
-                        if (follower.get().metadata.get(followerTIMER) > 200){
-                            follower.get().metadata.set(followerCOMPLETE, 1);
-                            follower.get().metadata.set(followerTIMER, 0);
-                        }
+                    if (!beamIDs.containsKey(followerPos)) {
+                        if (follower.get().metadata.get(followerCOMPLETE) != 0) continue;
+                        addPedestalBeam(followerPos, pos, level);
                     }
                 }
             }
+
+            private void performRitual() {
+            }
+
             public static ArrayList<BlockEntity> scan(Level level, BlockPos center, int radius) {
                 ArrayList<BlockEntity> pedestals = new ArrayList<>();
                 for (BlockPos pos : BlockPos.betweenClosed(
@@ -125,7 +116,6 @@ public class ArcaneImbuer {
                 if (blockEntity.get().tanks != null) {
                     tag.put("Tanks", entity.get().tanks.serializeNBT());
                 }
-                tag.putInt("progress", blockEntity.get().metadata.get(activated));
             }
 
             @Override
@@ -138,17 +128,51 @@ public class ArcaneImbuer {
                     blockEntity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
                 }
 
-                blockEntity.get().metadata.set(activated, tag.getInt("progress"));
             }
 
             @Override
             public void resetProgress(GenericMachineEntity blockEntity) {
-                blockEntity.get().metadata.set(activated, 0);
+                blockEntity.get().metadata.set(progress, 0);
             }
 
             @Override
             public void incrementProgress(GenericMachineEntity blockEntity, int count) {
-                blockEntity.get().metadata.set(activated,blockEntity.get().metadata.get(activated) + count);
+                blockEntity.get().metadata.set(progress,blockEntity.get().metadata.get(progress) + count);
+            }
+
+            public void updatePedestals(Level level, BlockPos pos){
+                if (level.getGameTime()%20 == 0) {
+                    entities.clear();
+                    for(BlockEntity entity:scan(level, pos, PEDESTAL_RANGE)){
+                        if (entity instanceof GenericMachineEntity follower){
+                            if (!(Objects.equals(follower.machineConfig.name(), ArcanePedestal.name))) continue;
+                            entities.add(follower.getBlockPos());
+                        }
+                    }
+                }
+            }
+
+            public boolean checkCompletion(Level level){
+                if (entities.isEmpty()) return false;
+                return entities.stream()
+                        .allMatch(entity -> {
+                            if (!(level.getBlockEntity(entity) instanceof GenericMachineEntity machine)) return false;
+                            return machine.get().metadata.get(0) == 1;
+                        });
+            }
+            public void addPedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
+                UUID id = UUID.randomUUID();
+                beamIDs.put(followerPos, id);
+                AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
+                    new InfusionSyncPacket(id, null, 0x77FFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
+            }
+            public boolean removePedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
+                if (!beamIDs.containsKey(followerPos)) return false;
+                AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() ->
+                    new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
+                    new KillBeamPacket(beamIDs.get(followerPos)));
+                beamIDs.remove(followerPos);
+                return true;
             }
         }
         public static class RightClickLogic implements IRightClickBehaviour {
