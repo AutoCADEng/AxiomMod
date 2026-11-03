@@ -29,15 +29,16 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<GenericMachin
         if (!entity.getLevel().isClientSide) return;
         float t = entity.getLevel().getGameTime() + pTick % 360.0f;
         ItemStack item = entity.get().inventory.getStackInSlot(0);
-        if (!item.isEmpty() && entity.get().metadata.get(0) == 0) {
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            poseStack.pushPose();
-            poseStack.translate(0.5f, 1.3f + 0.1f*Mth.sin(2*Mth.PI*(t)), 0.5f);
-            poseStack.scale(0.75f,0.75f,0.75f);
-            poseStack.mulPose(Axis.YP.rotationDegrees(t));
-            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
-            poseStack.popPose();
-        }
+        if (item.isEmpty()) return;
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        poseStack.pushPose();
+        poseStack.translate(0.5f, 1.3f + 0.1f*Mth.sin(2*Mth.PI*(t)), 0.5f);
+        poseStack.scale(0.75f,0.75f,0.75f);
+        poseStack.mulPose(Axis.YP.rotationDegrees(t));
+        if (entity.get().metadata.get(0) == 1) poseStack.scale(0.25f, 0.25f ,0.25f);
+        itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
+
+        poseStack.popPose();
     }
 
     private int getLightLevel(Level level, BlockPos pos) {
