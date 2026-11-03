@@ -1,7 +1,10 @@
-package eng.cad.auto.engine.crafting.core;
+package eng.cad.auto.axiology.crafting;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import eng.cad.auto.engine.crafting.core.AbstractRecipe;
+import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -16,13 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
-public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, GenericRecipe> {
+public class GenericMachineRecipe extends AbstractRecipe<CustomCraftingContainer, GenericMachineRecipe> {
     private final ResourceLocation craftingRecipe;
     private final NonNullList<CraftingIngredient> input;
     final NonNullList<CraftingIngredient> output;
-    private final RecipeType<GenericRecipe> recipeType;
+    private final RecipeType<GenericMachineRecipe> recipeType;
 
-    public GenericRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe, RecipeType<GenericRecipe> recipeType) {
+    public GenericMachineRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe, RecipeType<GenericMachineRecipe> recipeType) {
         this.input = input;
         this.output = outputs;
         this.craftingRecipe = craftingRecipe;
@@ -82,12 +85,12 @@ public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, Gener
     }
 
     @Override
-    public RecipeSerializer<GenericRecipe> getSerializer() {
+    public RecipeSerializer<GenericMachineRecipe> getSerializer() {
         return Serializer.INSTANCE;
     }
 
     @Override
-    public RecipeType<GenericRecipe> getType() {
+    public RecipeType<GenericMachineRecipe> getType() {
         return recipeType;
     }
 
@@ -174,26 +177,26 @@ public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, Gener
         return output;
     }
 
-    public static class Type implements RecipeType<GenericRecipe> {
+    public static class Type implements RecipeType<GenericMachineRecipe> {
     }
 
-    public static class Serializer implements RecipeSerializer<GenericRecipe>{
+    public static class Serializer implements RecipeSerializer<GenericMachineRecipe>{
 
         public static final Serializer INSTANCE =  new Serializer();
 
         @Override
-        public GenericRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
+        public GenericMachineRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             String recipeTypeString = jsonObject.get("recipe_type").getAsString();
-            RecipeType<GenericRecipe> recipeType = (RecipeType<GenericRecipe>) ForgeRegistries.RECIPE_TYPES.getValue(ResourceLocation.parse(recipeTypeString));
+            RecipeType<GenericMachineRecipe> recipeType = (RecipeType<GenericMachineRecipe>) ForgeRegistries.RECIPE_TYPES.getValue(ResourceLocation.parse(recipeTypeString));
             JsonArray ingredientJSON = GsonHelper.getAsJsonArray(jsonObject,"inputs");
             NonNullList<CraftingIngredient> ingredient = CraftingIngredient.arrayFromJson(ingredientJSON);
             JsonArray outputJSON = GsonHelper.getAsJsonArray(jsonObject,"outputs");
             NonNullList<CraftingIngredient> outputs = CraftingIngredient.arrayFromJson(outputJSON);
-            return new GenericRecipe(ingredient, outputs, resourceLocation, recipeType);
+            return new GenericMachineRecipe(ingredient, outputs, resourceLocation, recipeType);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf byteBuffer, GenericRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf byteBuffer, GenericMachineRecipe recipe) {
             byteBuffer.writeResourceLocation(Objects.requireNonNull(ForgeRegistries.RECIPE_TYPES.getKey(recipe.recipeType)));
             byteBuffer.writeInt(recipe.input.size());
             for (CraftingIngredient ingredient:recipe.input){
@@ -207,7 +210,7 @@ public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, Gener
         }
 
         @Override
-        public GenericRecipe fromNetwork(@NotNull ResourceLocation resourceLocation, FriendlyByteBuf byteBuffer) {
+        public GenericMachineRecipe fromNetwork(@NotNull ResourceLocation resourceLocation, FriendlyByteBuf byteBuffer) {
             ResourceLocation recipeType = byteBuffer.readResourceLocation();
             int numberOfIngredients = byteBuffer.readInt();
 
@@ -220,7 +223,7 @@ public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, Gener
             for (int i = 0; i<numberOfOutputs; i++){
                 outputs.add(CraftingIngredient.fromNetwork(byteBuffer));
             }
-            return new GenericRecipe(inputs, outputs, resourceLocation, (RecipeType<GenericRecipe>) ForgeRegistries.RECIPE_TYPES.getValue(recipeType));
+            return new GenericMachineRecipe(inputs, outputs, resourceLocation, (RecipeType<GenericMachineRecipe>) ForgeRegistries.RECIPE_TYPES.getValue(recipeType));
         }
     }
 }

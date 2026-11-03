@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.FluidStack;
  * as a Container for a machine, only for crafting.
  */
 public class CustomCraftingContainer implements Container {
-    NonNullList<FluidStack> tanks = NonNullList.create();
-    NonNullList<ItemStack> items = NonNullList.create();
+    public NonNullList<FluidStack> tanks = NonNullList.create();
+    public NonNullList<ItemStack> items = NonNullList.create();
     GenericMachineEntity blockEntity;
 
     public CustomCraftingContainer(GenericMachineEntity blockEntity){

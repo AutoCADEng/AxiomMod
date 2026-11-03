@@ -4,7 +4,7 @@ import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.crafting.core.GenericRecipe;
+import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
 import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
@@ -100,7 +100,7 @@ public class ArcaneImbuer {
             private void performRitual(GenericMachineEntity entity, Level level) {
                 CustomCraftingContainer inventories = new CustomCraftingContainer(entity);
                 // we need a special recipe type for this ...
-                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                GenericMachineRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         inventories,
                         RecipeRegistry.INFUSION.get(),
                         level,

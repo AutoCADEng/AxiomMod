@@ -3,7 +3,7 @@ package eng.cad.auto.axiology.machines;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.crafting.core.GenericRecipe;
+import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
 import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
@@ -61,7 +61,7 @@ public class SoakingDrum {
                 if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), SoakingDrum.name))) return;
 
-                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                GenericMachineRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                                 .addTank(blockEntity.get().tanks.getFluidInTank(fluid_tank))
                                 .addSlot(blockEntity.get().inventory.getStackInSlot(item_slot)),

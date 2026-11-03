@@ -4,7 +4,7 @@ package eng.cad.auto.axiology.machines;
 import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.crafting.core.GenericRecipe;
+import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
 import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
@@ -73,7 +73,7 @@ public class Fermenter {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
-                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                GenericMachineRecipe activeRecipe = CraftingUtil.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
                         .addTank(blockEntity.get().tanks.getFluidInTank(input_tank))
                         .addTank(blockEntity.get().tanks.getFluidInTank(output_tank))
