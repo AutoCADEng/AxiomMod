@@ -2,6 +2,10 @@ package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;
+import eng.cad.auto.axiology.registry.RecipeRegistry;
+import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.engine.crafting.core.GenericRecipe;
+import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
@@ -60,8 +64,8 @@ public class ArcaneImbuer {
                     resetProgress(machine);
                     return;
                 }
-                if (checkCompletion(level)) {
-                    performRitual();
+                if (checkPedestalCompletion(level)) {
+                    performRitual(machine, level);
                     return;
                 }
                 incrementProgress(machine, 1);
@@ -93,7 +97,14 @@ public class ArcaneImbuer {
                 }
             }
 
-            private void performRitual() {
+            private void performRitual(GenericMachineEntity entity, Level level) {
+                CustomCraftingContainer inventories = new CustomCraftingContainer(entity);
+                // we need a special recipe type for this ...
+                GenericRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                        inventories,
+                        RecipeRegistry.INFUSION.get(),
+                        level,
+                        entity);
             }
 
             public static ArrayList<BlockEntity> scan(Level level, BlockPos center, int radius) {
@@ -152,7 +163,7 @@ public class ArcaneImbuer {
                 }
             }
 
-            public boolean checkCompletion(Level level){
+            public boolean checkPedestalCompletion(Level level){
                 if (entities.isEmpty()) return false;
                 return entities.stream()
                         .allMatch(entity -> {

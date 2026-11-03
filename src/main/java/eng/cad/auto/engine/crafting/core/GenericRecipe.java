@@ -16,13 +16,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
 
-public class GenericRecipe implements Recipe<CustomCraftingContainer> {
+public class GenericRecipe extends AbstractRecipe<CustomCraftingContainer, GenericRecipe> {
     private final ResourceLocation craftingRecipe;
     private final NonNullList<CraftingIngredient> input;
     final NonNullList<CraftingIngredient> output;
-    private final RecipeType<? extends GenericRecipe> recipeType;
+    private final RecipeType<GenericRecipe> recipeType;
 
-    public GenericRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe, RecipeType<? extends GenericRecipe> recipeType) {
+    public GenericRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe, RecipeType<GenericRecipe> recipeType) {
         this.input = input;
         this.output = outputs;
         this.craftingRecipe = craftingRecipe;
@@ -82,12 +82,12 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<GenericRecipe> getSerializer() {
         return Serializer.INSTANCE;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public RecipeType<GenericRecipe> getType() {
         return recipeType;
     }
 
@@ -181,9 +181,6 @@ public class GenericRecipe implements Recipe<CustomCraftingContainer> {
 
         public static final Serializer INSTANCE =  new Serializer();
 
-        // The recipe_type is critical to assigning recipes to specific machines,
-        // as minecraft's regular type system is incompatible with the way I decided to implement recipes.
-        // I am sure there is a way to get around it, and mesh nicely with type, but I will save that for another day.
         @Override
         public GenericRecipe fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
             String recipeTypeString = jsonObject.get("recipe_type").getAsString();

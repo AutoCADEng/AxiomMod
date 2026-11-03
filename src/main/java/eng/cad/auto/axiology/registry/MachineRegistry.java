@@ -23,7 +23,7 @@ public class MachineRegistry
     }
 
     public static void init(){
-        new FermenterMachine();
+        new Fermenter();
         new SoakingDrum();
         new Alembic();
         new ChemicalReactor();

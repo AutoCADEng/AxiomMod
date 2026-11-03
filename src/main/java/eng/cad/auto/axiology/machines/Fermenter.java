@@ -36,10 +36,10 @@ import org.joml.Vector2i;
 
 import java.util.Objects;
 
-public class FermenterMachine {
+public class Fermenter {
     MachineCore INSTANCE;
     public static final String name = "fermenter";
-    public FermenterMachine() {
+    public Fermenter() {
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore
                 .Builder(name)
                 .addItemSlots(2)
@@ -243,7 +243,7 @@ public class FermenterMachine {
             @Override
             public InteractionResult useMachine(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
                 if (!(level.getBlockEntity(blockPos) instanceof GenericMachineEntity machine)) return InteractionResult.PASS;
-                if (!machine.machineConfig.name().equals(FermenterMachine.name)) return InteractionResult.PASS;
+                if (!machine.machineConfig.name().equals(Fermenter.name)) return InteractionResult.PASS;
                 boolean success = onRightClick(machine, blockState, level, blockPos, player, interactionHand, result);
                 return success? InteractionResult.SUCCESS : CommonRightClickBehaviour.openGui(machine, blockState, level, blockPos, player,interactionHand,result);
             }
