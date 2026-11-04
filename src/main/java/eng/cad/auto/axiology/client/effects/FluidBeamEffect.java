@@ -21,7 +21,7 @@ public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
 
     static final HashMap<ResourceLocation, Integer> FluidColorCache = new HashMap<>();
     @Override
-    public FluidBeamEffect createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
+    public FluidBeamEffect createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
         return new FluidBeamEffect()
                 .setTexture(texture)
                 .setUUID(id)

@@ -22,7 +22,7 @@ public class Wave{
         return this;
     }
 
-    public float evaluate(float val){
-        return amplitude * Mth.sin((2.0F * Mth.PI * (offset+val)) / wavelength) ;
+    public float evaluate(float val, float beamWidth){
+        return Math.max(beamWidth*0.5f* Mth.sin((2.0F * Mth.PI * (offset+val)) / wavelength), beamWidth*0.1f) ;
     }
 }

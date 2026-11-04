@@ -18,8 +18,8 @@ public class InfusionSyncPacket extends AbstractBeamPacket<InfusionSyncPacket, I
     }
 
     public InfusionSyncPacket(UUID id, ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level) {
-        super(id,castFrom, castTo, tint, level);
-    }
+        super(id,castFrom, castTo, texture, tint, level);
+}
 
     @Override
     public InfusionBeamEffect getBeam() {

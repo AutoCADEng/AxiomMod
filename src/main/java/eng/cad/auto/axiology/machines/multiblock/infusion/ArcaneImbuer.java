@@ -15,18 +15,19 @@ import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.machine.core.slot.SlotType;
-import eng.cad.auto.engine.machine.multiblock.GenericFollowerEntity;
 import eng.cad.auto.engine.machine.multiblock.GenericMasterEntity;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.InfusionSyncPacket;
 import eng.cad.auto.engine.network.KillBeamPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -34,6 +35,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.*;
 
@@ -57,7 +59,7 @@ public class ArcaneImbuer {
         public static int activated = 0;
         public static int progress = 1;
         public static int PEDESTAL_RANGE = 7;
-        public static int MAX_PROGRESS = 200;
+        public static int MAX_PROGRESS = 60;
         public static class Server implements IMachineLogic {
             HashMap<BlockPos, UUID> beamIDs = new HashMap<>();
             HashSet<BlockPos> entities = new HashSet<>();
@@ -77,6 +79,16 @@ public class ArcaneImbuer {
                     performRitual(machine, level);
                     return;
                 }
+//                level.playSound(
+//                        null,
+//                        pos,
+//                        SoundEvent.createVariableRangeEvent(
+//                                ResourceLocation.fromNamespaceAndPath("axiology", "infuser_hum")
+//                        ),
+//                        SoundSource.BLOCKS,
+//                        1.0F,
+//                        1.0F
+//                );
                 incrementProgress(machine, 1);
                 for (BlockPos followerPos: entities){
                     if (!(level.getBlockEntity(followerPos) instanceof GenericMachineEntity follower)) continue;
@@ -107,6 +119,7 @@ public class ArcaneImbuer {
 
             private void performRitual(GenericMachineEntity entity, Level level) {
                 CustomCraftingContainer inventories = new CustomCraftingContainer(entity);
+                //if (inventories.isEmpty()) return;
                 InfusionRecipe activeRecipe = InfusionRecipe.getActiveRecipe(
                         inventories,
                         RecipeRegistry.INFUSION.get(),
@@ -139,6 +152,16 @@ public class ArcaneImbuer {
                         level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
                     }
                 }
+                level.playSound(
+                        null,
+                        entity.getBlockPos(),
+                        SoundEvent.createVariableRangeEvent(
+                                ResourceLocation.fromNamespaceAndPath("axiology", "infuser_fail")
+                        ),
+                        SoundSource.BLOCKS,
+                        0.5F,
+                        0.9F
+                );
                 entity.get().metadata.set(activated, 0);
             }
 
@@ -207,10 +230,16 @@ public class ArcaneImbuer {
                         .allMatch(machine -> machine.get().metadata.get(0) == 1);
             }
             public void addPedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
+                if (!(level.getBlockEntity(followerPos) instanceof GenericMachineEntity machine)) return;
                 UUID id = UUID.randomUUID();
                 beamIDs.put(followerPos, id);
                 AxiologyNetwork.INSTANCE.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(pos.getX(), pos.getY(), pos.getZ(), 128, level.dimension())),
-                    new InfusionSyncPacket(id, null, 0x77FFFFFF, pos.getCenter().toVector3f(), followerPos.getCenter().toVector3f(), level));
+                    new InfusionSyncPacket(id,
+                            ForgeRegistries.ITEMS.getKey(machine.get().inventory.getStackInSlot(0).getItem()),
+                            0,
+                            pos.getCenter().toVector3f(), 
+                            followerPos.getCenter().toVector3f(),
+                            level));
             }
             public boolean removePedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
                 if (!beamIDs.containsKey(followerPos)) return false;

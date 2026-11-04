@@ -12,17 +12,17 @@ public class BeamRenderTypes extends RenderType {
     }
 
     public static final RenderType BEAM = RenderType.create(
-            "axiology_beam",
-            DefaultVertexFormat.POSITION_COLOR,
-            VertexFormat.Mode.TRIANGLE_STRIP,
-            256,
-            false,
-            false,
-            RenderType.CompositeState.builder()
-                    .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
-                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                    .setCullState(RenderStateShard.NO_CULL)
-                    .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
-                    .createCompositeState(false)
+        "axiology_beam",
+        DefaultVertexFormat.POSITION_COLOR,
+        VertexFormat.Mode.TRIANGLE_STRIP,
+        256,
+        false,
+        false,
+        RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+            .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+            .setCullState(RenderStateShard.NO_CULL)
+            .setDepthTestState(RenderStateShard.LEQUAL_DEPTH_TEST)
+            .createCompositeState(false)
     );
 }

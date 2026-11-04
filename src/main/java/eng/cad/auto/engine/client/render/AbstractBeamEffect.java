@@ -78,9 +78,9 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
     public float evaluateWave ( float idx, float tick){
         float sum = 0;
         for (Wave wave : waves) {
-            sum += wave.evaluate(idx - tick * speed);
+            sum += wave.evaluate(idx - tick * speed, width);
         }
-        return width + sum;
+        return sum/waves.size();
     }
 
     public T setTime (long gameTime){
@@ -91,7 +91,7 @@ public abstract class AbstractBeamEffect<T extends AbstractBeamEffect<T>> {
         this.speed = var;
         return self();
     }
-    public abstract T createBeam(ResourceLocation texture, Vector3f castFrom, Vector3f castTo, Level level, UUID id);
+    public abstract T createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id);
 }
 
 

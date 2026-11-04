@@ -40,6 +40,7 @@ public class KillBeamPacket extends AxiologyBasePacket<KillBeamPacket> {
                         () -> () -> {
                             BeamEffectRenderer.killBeam(id);
                         }));
+        context.get().setPacketHandled(true);
     }
 
     @Override

@@ -71,6 +71,7 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
 
                             B newBeam = getBeam().createBeam(
                                     texture,
+                                    tint,
                                     castFrom,
                                     castTo,
                                     level,
