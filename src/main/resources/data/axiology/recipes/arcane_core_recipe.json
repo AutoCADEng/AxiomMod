@@ -15,13 +15,13 @@
   "outputs": [
     {
       "type": "item",
-      "input": "minecraft:charcoal",
-      "count": 4
+      "input": "axiology:arcane_core",
+      "count": 1
     },
     {
       "type": "fluid",
       "input": "axiology:tar",
-      "count": 1000
+      "count": 100
     }
   ]
 }
