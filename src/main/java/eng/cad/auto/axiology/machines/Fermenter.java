@@ -138,7 +138,6 @@ public class Fermenter {
             public Vector2i progress_texture_coords = new Vector2i(0,166);
             public Vector2i progress_size = new Vector2i(61,39);
 
-
             //Fluid Tanks
             public Vector2i water_tank_coords = new Vector2i(55,23);
             public Vector2i ethanol_tank_coords = new Vector2i(126,23);

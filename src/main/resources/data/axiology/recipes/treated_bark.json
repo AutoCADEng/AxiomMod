@@ -2,7 +2,7 @@
   "type": "axiology:soaking_drum",
   "inputs": [
     {
-      "type": "tag",
+      "type": "item",
       "input": "#minecraft:planks",
       "count": 1
     },
@@ -15,7 +15,7 @@
   "outputs": [
     {
       "type": "item",
-      "input": "axiology:treated_planks",
+      "input": "axiology:treated_bark",
       "count": 1
     }
   ]

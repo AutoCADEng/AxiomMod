@@ -3,12 +3,12 @@
   "inputs": [
     {
       "type": "item",
-      "input": "minecraft:sugar",
+      "input": "minecraft:wheat",
       "count": 1
     },
     {
       "type": "item",
-      "input": "minecraft:wheat",
+      "input": "minecraft:sugar",
       "count": 1
     },
     {
@@ -21,7 +21,7 @@
     {
       "type": "fluid",
       "input": "axiology:dilute_ethanol",
-      "count": 250
+      "count": 500
     }
   ]
 }

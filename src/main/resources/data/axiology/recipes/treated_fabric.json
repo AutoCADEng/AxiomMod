@@ -2,8 +2,8 @@
   "type": "axiology:soaking_drum",
   "inputs": [
     {
-      "type": "tag",
-      "input": "#minecraft:wools",
+      "type": "item",
+      "input": "#minecraft:wool",
       "count": 1
     },
     {
