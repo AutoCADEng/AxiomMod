@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
+import eng.cad.auto.axiology.crafting.machines.ChemicalReactorRecipe;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.engine.crafting.core.CraftingIngredient;
@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector2i;
 
-public class ChemicalReactorRecipeCategory implements IRecipeCategory<AlembicRecipe> {
+public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalReactorRecipe> {
 
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/chemical_reactor_menu.png");
 
@@ -45,7 +45,7 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<AlembicRec
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, AlembicRecipe recipe, IFocusGroup focuses) {
+    public void setRecipe(IRecipeLayoutBuilder builder, ChemicalReactorRecipe recipe, IFocusGroup focuses) {
         NonNullList<CraftingIngredient> inputs = recipe.craftingIngredients;
         NonNullList<CraftingIngredient> outputs = recipe.craftingOutputs;
 
@@ -67,12 +67,12 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<AlembicRec
     }
 
     @Override
-    public void draw(AlembicRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(ChemicalReactorRecipe recipe, IRecipeSlotsView slotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<AlembicRecipe> getRecipeType() { return AxiologyJEI.ALEMBIC_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.alembic"); }
+    @Override public RecipeType<ChemicalReactorRecipe> getRecipeType() { return AxiologyJEI.CHEMICAL_REACTOR_RECIPE_TYPE; }
+    @Override public Component getTitle() { return Component.translatable("axiology.jei.chemical.reactor"); }
     @Override public IDrawable getIcon() { return icon; }
     @Override public int getWidth() { return WIDTH; }
     @Override public int getHeight() { return HEIGHT; }
