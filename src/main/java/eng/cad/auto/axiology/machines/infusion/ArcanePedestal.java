@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.machines;
+package eng.cad.auto.axiology.machines.infusion;
 
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.MachineRegistry;

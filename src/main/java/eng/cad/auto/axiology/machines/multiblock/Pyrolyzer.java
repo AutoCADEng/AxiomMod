@@ -1,7 +1,8 @@
 package eng.cad.auto.axiology.machines.multiblock;
 
 
-import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
+import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
+import eng.cad.auto.axiology.crafting.machines.PyrolyzerRecipe;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
@@ -71,7 +72,7 @@ public class Pyrolyzer {
                     inventories = inventories.merge(follower.getCraftingContainer(follower));
                 }
 
-                GenericMachineRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                PyrolyzerRecipe activeRecipe = PyrolyzerRecipe.getActiveRecipe(
                         inventories,
                         RecipeRegistry.PYROLYZER.get(),
                         level,

@@ -48,9 +48,9 @@ public class MachineCore {
 
         block = BlockRegistry.registerMachineBlock(name, switch(config.machineType){
                 case MACHINE -> () -> new GenericMachineBlock(
-                                BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
-                                blockEntity,
-                                config);
+                        BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
+                        blockEntity,
+                        config);
                 case CONTROLLER -> () -> new GenericMasterBlock(
                         BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion(),
                         blockEntity,
@@ -64,42 +64,41 @@ public class MachineCore {
         blockItem = ItemRegistry.registerBlockItem(name, block);
 
         blockEntity = MachineRegistry.MACHINES.register(name, switch(config.machineType){
-                    case MACHINE -> () ->
-                        BlockEntityType.Builder.of(
+                case MACHINE -> () ->
+                    BlockEntityType.Builder.of(
+                    (blockPos, blockState) ->
+                        new GenericMachineEntity(
+                            blockEntity.get(),
+                            blockPos,
+                            blockState,
+                            config),
+                            block.get()
+                            ).build(null);
+                case CONTROLLER -> () ->
+                    BlockEntityType.Builder.of(
                         (blockPos, blockState) ->
-                            new GenericMachineEntity(
-                                blockEntity.get(),
-                                blockPos,
-                                blockState,
-                                config),
-                        block.get()
-                        ).build(null);
-                            case CONTROLLER -> () ->
-                                    BlockEntityType.Builder.of(
-                                            (blockPos, blockState) ->
-                                                    new GenericMasterEntity(
-                                                            blockEntity.get(),
-                                                            blockPos,
-                                                            blockState,
-                                                            config),
-                                            block.get()
-                                    ).build(null);
-                            case FOLLOWER -> () ->
-                                    BlockEntityType.Builder.of(
-                                            (blockPos, blockState) ->
-                                                    new GenericFollowerEntity(
-                                                            blockEntity.get(),
-                                                            blockPos,
-                                                            blockState,
-                                                            config),
-                                            block.get()
-                                    ).build(null);
-                        });
-        if (!config.noGui) {
-            ui = new GenericUI(config, blockEntity);
+                        new GenericMasterEntity(
+                            blockEntity.get(),
+                            blockPos,
+                            blockState,
+                            config),
+                            block.get()
+                            ).build(null);
+                case FOLLOWER -> () ->
+                    BlockEntityType.Builder.of(
+                        (blockPos, blockState) ->
+                            new GenericFollowerEntity(
+                            blockEntity.get(),
+                            blockPos,
+                            blockState,
+                            config),
+                            block.get()
+                           ).build(null);
+                    });
+            if (!config.noGui) {
+                ui = new GenericUI(config, blockEntity);
+            }
         }
-
-    }
 
 
     //This is getting comically long :(
@@ -115,7 +114,7 @@ public class MachineCore {
                          String name,
                          HashMap<Integer, SlotConfig> itemSlotConfig,
                          HashMap<Integer, SlotConfig> fluidSlotConfig,
-                         Builder.MACHINETYPE machineType) {
+                         Builder.MACHINE_TYPE machineType) {
     }
 
     public static class Builder {
@@ -130,7 +129,7 @@ public class MachineCore {
         boolean noGui = false;
         public String name;
 
-        MACHINETYPE machineType = MACHINETYPE.MACHINE;
+        MACHINE_TYPE machineType = MACHINE_TYPE.MACHINE;
 
         IMenuSlotLogic menuSlot = new IMenuSlotLogic() {
             @Override
@@ -278,13 +277,13 @@ public class MachineCore {
         }
 
         public Builder isMultiblockController() {
-            machineType = MACHINETYPE.CONTROLLER;
+            machineType = MACHINE_TYPE.CONTROLLER;
             return this;
         }
 
         public Builder isMultiblockFollower(IFollowerLogic logic) {
             followerLogic = logic;
-            machineType = MACHINETYPE.FOLLOWER;
+            machineType = MACHINE_TYPE.FOLLOWER;
             return this;
         }
 
@@ -293,7 +292,7 @@ public class MachineCore {
             return this;
         }
 
-        public enum MACHINETYPE {
+        public enum MACHINE_TYPE {
             MACHINE, CONTROLLER, FOLLOWER;
         }
     }

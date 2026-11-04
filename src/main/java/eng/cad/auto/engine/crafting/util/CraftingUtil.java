@@ -1,6 +1,8 @@
 package eng.cad.auto.engine.crafting.util;
 
-import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
+import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
+import eng.cad.auto.engine.crafting.core.AbstractRecipe;
+import eng.cad.auto.engine.crafting.core.BaseRecipe;
 import eng.cad.auto.engine.crafting.core.CraftingIngredient;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
@@ -17,11 +19,10 @@ import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
 
 public class CraftingUtil {
 
-    public static boolean craft(GenericMachineEntity entity, GenericMachineRecipe recipe){
+    public static boolean craft(GenericMachineEntity entity, BaseRecipe<?, ?> recipe){
         if (!validate(entity, null, recipe)) return false;
 
         for (CraftingIngredient ingredient: recipe.getCraftingIngredients()){
@@ -34,7 +35,7 @@ public class CraftingUtil {
         return true;
     }
 
-    public static boolean craft(GenericMasterEntity entity, ArrayList<GenericFollowerEntity> followers, GenericMachineRecipe recipe){
+    public static boolean craft(GenericMasterEntity entity, ArrayList<GenericFollowerEntity> followers, BaseRecipe<?, ?> recipe){
         if (!validate(entity, followers, recipe)) return false;
 
         for (CraftingIngredient ingredient: recipe.getCraftingIngredients()){
@@ -47,7 +48,7 @@ public class CraftingUtil {
         return true;
     }
 
-    private static void produce(CraftingIngredient recipeOutput, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, GenericMachineRecipe recipe) {
+    private static void produce(CraftingIngredient recipeOutput, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, BaseRecipe<?, ?>  recipe) {
         int required = 0;
 
         ArrayList<GenericMachineEntity> machines = new ArrayList<>();
@@ -103,7 +104,7 @@ public class CraftingUtil {
         }
     }
 
-    private static void consume(CraftingIngredient target, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, GenericMachineRecipe recipe) {
+    private static void consume(CraftingIngredient target, ArrayList<GenericFollowerEntity> followers, GenericMachineEntity blockEntity, BaseRecipe<?, ?>  recipe) {
         int required = 0;
         ArrayList<GenericMachineEntity> machines = new ArrayList<>();
         machines.add(blockEntity);
@@ -187,10 +188,10 @@ public class CraftingUtil {
         }
     }
 
-    public static boolean validate(GenericMachineEntity entity, GenericMachineRecipe recipe){
+    public static boolean validate(GenericMachineEntity entity, BaseRecipe<?, ?>  recipe){
         return validate(entity, null, recipe);
     }
-    public static boolean validate(GenericMachineEntity blockEntity, ArrayList<GenericFollowerEntity> followers, GenericMachineRecipe recipe){
+    public static boolean validate(GenericMachineEntity blockEntity, ArrayList<GenericFollowerEntity> followers, BaseRecipe<?, ?>  recipe){
         HashMap<Item, Integer> recipeItems = new HashMap<>();
         HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
         HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
@@ -280,20 +281,11 @@ public class CraftingUtil {
         return recipeItems.values().stream().allMatch(count -> count <= 0) && recipeFluids.values().stream().allMatch(count -> count <= 0);
     }
 
-    public static GenericMachineRecipe getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<GenericMachineRecipe> type, Level level, GenericMachineEntity blockEntity ){
-                Optional<GenericMachineRecipe> recipeOutput = level.getRecipeManager()
-                .getAllRecipesFor(type)
-                .stream()
-                .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level)).findFirst();
-
-        return recipeOutput.orElse(null);
-    }
-
-    public static boolean hasSpace(GenericMachineEntity blockEntity, GenericMachineRecipe recipe) {
+    public static boolean hasSpace(GenericMachineEntity blockEntity, BaseRecipe<?, ?>  recipe) {
         return hasSpace(blockEntity, null, recipe);
     }
 
-    public static boolean hasSpace(GenericMachineEntity blockEntity, ArrayList<GenericFollowerEntity> followers, GenericMachineRecipe recipe) {
+    public static boolean hasSpace(GenericMachineEntity blockEntity, ArrayList<GenericFollowerEntity> followers, BaseRecipe<?, ?>  recipe) {
         HashMap<GenericMachineEntity, ItemStack[]> recipeItems = new HashMap<>();
         HashMap<GenericMachineEntity, FluidStack[]> recipeFluids = new HashMap<>();
 

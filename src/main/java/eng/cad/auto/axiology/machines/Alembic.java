@@ -1,9 +1,10 @@
 package eng.cad.auto.axiology.machines;
 
+import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
+import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.crafting.GenericMachineRecipe;
 import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
@@ -59,16 +60,15 @@ public class Alembic {
                 if(level.isClientSide()) return;
                 if (!(level.getBlockEntity(pos) instanceof GenericMachineEntity blockEntity)) return;
                 if (!(Objects.equals(blockEntity.machineConfig.name(), Alembic.name))) return;
-
                 if (level.getBlockState(pos.below()).is(TagRegistry.HOT_BLOCKS) || level.getFluidState(pos.below()).is(TagRegistry.HOT_FLUIDS)) {
                     blockEntity.get().metadata.set(heated, 1);
                 }else{
                     blockEntity.get().metadata.set(heated, 0);
                 }
 
-                GenericMachineRecipe activeRecipe = CraftingUtil.getActiveRecipe(
+                AlembicRecipe activeRecipe = AlembicRecipe.getActiveRecipe(
                         new CustomCraftingContainer(blockEntity)
-                                .addTank(blockEntity.get().tanks.getFluidInTank(fluid_tank)),
+                        .addTank(blockEntity.get().tanks.getFluidInTank(fluid_tank)),
                         RecipeRegistry.ALEMBIC.get(),
                         level,
                         blockEntity);
