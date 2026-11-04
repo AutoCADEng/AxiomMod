@@ -31,7 +31,7 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalRe
     private static final Vector2i TANK_2 = new Vector2i(110, 22).sub(TRIM, TRIM);
 
     private static final Vector2i TANK_SIZE = new Vector2i(16, 32);
-    private static final Vector2i GLASS_UV = new Vector2i(0, 166);
+    private static final Vector2i GLASS_UV = new Vector2i(158, 166);
 
 
     private final IDrawable icon;
