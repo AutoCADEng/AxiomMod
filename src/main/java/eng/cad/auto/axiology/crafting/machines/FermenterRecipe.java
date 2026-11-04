@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 public class FermenterRecipe extends AbstractMachineRecipe<FermenterRecipe> {
     public FermenterRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe) {
         super(input, outputs, craftingRecipe);
+
     }
 
     @Override

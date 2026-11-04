@@ -5,7 +5,7 @@ import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
 import eng.cad.auto.axiology.crafting.machines.*;
 import eng.cad.auto.axiology.machines.*;
-import eng.cad.auto.axiology.machines.infusion.ArcaneImbuer;
+import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
 import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;

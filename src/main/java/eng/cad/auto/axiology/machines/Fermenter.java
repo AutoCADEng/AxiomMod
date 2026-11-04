@@ -5,8 +5,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axiology.crafting.machines.FermenterRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
-import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
@@ -34,7 +32,6 @@ import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidType;
 import net.minecraftforge.items.SlotItemHandler;
 import org.joml.Vector2i;
-
 import java.util.Objects;
 
 public class Fermenter {
@@ -89,13 +86,13 @@ public class Fermenter {
                     return;
                 }
 
-                if (!CraftingUtil.hasSpace(blockEntity, activeRecipe)) {
+                if (!activeRecipe.hasSpace(blockEntity, activeRecipe)) {
                     resetProgress(blockEntity);
                     return;
                 }
 
                 if (blockEntity.get().metadata.get(progressBar_Data) >= Max_Processing_Ticks) {
-                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
+                    if (activeRecipe.validate(blockEntity, activeRecipe)) activeRecipe.craft(blockEntity, activeRecipe);
                     resetProgress(blockEntity);
                     return;
                 }

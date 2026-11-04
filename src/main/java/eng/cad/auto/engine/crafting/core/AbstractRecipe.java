@@ -26,8 +26,8 @@ public abstract class AbstractRecipe<C extends CustomCraftingContainer, T extend
     @Override @ParametersAreNonnullByDefault
     public boolean matches(C container, Level level){
         if (level.isClientSide()) return false;
-        if (input.isEmpty()) return false;
-        for (CraftingIngredient ingredient:input){
+        if (craftingIngredients.isEmpty()) return false;
+        for (CraftingIngredient ingredient: craftingIngredients){
             if (!container.containsIngredient(ingredient)) return false;
         }
         return true;
@@ -35,7 +35,7 @@ public abstract class AbstractRecipe<C extends CustomCraftingContainer, T extend
 
     @Override
     public ItemStack assemble(C container, RegistryAccess registryAccess){
-        return output.stream()
+        return craftingOutputs.stream()
                 .filter(ingredient -> ingredient.is(CraftingIngredient.Kind.ITEM))
                 .map(CraftingIngredient::getItem)
                 .findFirst()
@@ -50,7 +50,7 @@ public abstract class AbstractRecipe<C extends CustomCraftingContainer, T extend
 
     @Override @ParametersAreNonnullByDefault
     public ItemStack getResultItem(RegistryAccess p_267052_){
-        return output.stream()
+        return craftingOutputs.stream()
                 .filter(ingredient -> ingredient.is(CraftingIngredient.Kind.ITEM))
                 .map(CraftingIngredient::getItem)
                 .findFirst()
@@ -83,13 +83,13 @@ public abstract class AbstractRecipe<C extends CustomCraftingContainer, T extend
 
         @Override
         public void toNetwork(FriendlyByteBuf byteBuffer, T recipe){
-            byteBuffer.writeInt(recipe.input.size());
-            for (CraftingIngredient ingredient:recipe.input){
+            byteBuffer.writeInt(recipe.craftingIngredients.size());
+            for (CraftingIngredient ingredient:recipe.craftingIngredients){
                 ingredient.toNetwork(byteBuffer);
             }
 
-            byteBuffer.writeInt(recipe.output.size());
-            for (CraftingIngredient result:recipe.output){
+            byteBuffer.writeInt(recipe.craftingOutputs.size());
+            for (CraftingIngredient result:recipe.craftingOutputs){
                 result.toNetwork(byteBuffer);
             }
         }

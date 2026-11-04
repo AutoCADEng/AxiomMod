@@ -2,23 +2,22 @@ package eng.cad.auto.engine.crafting.core;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 public class BaseRecipe<C extends CustomCraftingContainer, T extends AbstractRecipe<C, T>>{
     public final ResourceLocation craftingRecipe;
-    public final NonNullList<CraftingIngredient> input;
-    public final NonNullList<CraftingIngredient> output;
+    public final NonNullList<CraftingIngredient> craftingIngredients;
+    public final NonNullList<CraftingIngredient> craftingOutputs;
 
     protected BaseRecipe(ResourceLocation craftingRecipe, NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> output) {
         this.craftingRecipe = craftingRecipe;
-        this.input = input;
-        this.output = output;
+        this.craftingIngredients = input;
+        this.craftingOutputs = output;
     }
 
     public boolean matchesTypeAndQuantity(C machineInventory, Level level, T recipe){
         if (!recipe.matches(machineInventory, level)) return false;
-        for (CraftingIngredient ingredient:input){
+        for (CraftingIngredient ingredient: craftingIngredients){
             if (ingredient.isEmpty() || machineInventory.isEmpty()) return false;
             switch (ingredient.getType()){
                 case ITEM -> {
@@ -56,10 +55,10 @@ public class BaseRecipe<C extends CustomCraftingContainer, T extends AbstractRec
     }
 
     public NonNullList<CraftingIngredient> getCraftingIngredients() {
-        return input;
+        return craftingIngredients;
     }
 
     public NonNullList<CraftingIngredient> getCraftingOutput() {
-        return output;
+        return craftingOutputs;
     }
 }

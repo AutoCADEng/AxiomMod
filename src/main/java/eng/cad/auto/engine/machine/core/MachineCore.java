@@ -173,7 +173,7 @@ public class MachineCore {
 
             @Override
             public void clientTick(Level level, BlockPos pos, BlockState state, GenericMachineEntity blockEntity) {
-                AxiomMod.LOGGER.warn("No custom behaviour defined for clientTick");
+                //AxiomMod.LOGGER.warn("No custom behaviour defined for clientTick");
             }
         };
 

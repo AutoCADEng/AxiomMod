@@ -1,7 +1,13 @@
-package eng.cad.auto.axiology.machines.infusion;
+package eng.cad.auto.axiology.machines.multiblock.infusion;
 
+import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
+import eng.cad.auto.axiology.magic.rebounds.Rebounds;
+import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
+import eng.cad.auto.axiology.magic.rebounds.core.InfusionContext;
 import eng.cad.auto.axiology.registry.MachineRegistry;
+import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
@@ -9,18 +15,23 @@ import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
 import eng.cad.auto.engine.machine.core.interfaces.IRightClickBehaviour;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.machine.core.slot.SlotType;
+import eng.cad.auto.engine.machine.multiblock.GenericFollowerEntity;
 import eng.cad.auto.engine.machine.multiblock.GenericMasterEntity;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.InfusionSyncPacket;
 import eng.cad.auto.engine.network.KillBeamPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
 
@@ -28,6 +39,7 @@ import java.util.*;
 
 public class ArcaneImbuer {
     MachineCore INSTANCE;
+
     public static final String name = "arcane_imbuer";
     public ArcaneImbuer(){
         this.INSTANCE = MachineRegistry.registerMachine(new MachineCore.Builder(name)
@@ -81,7 +93,6 @@ public class ArcaneImbuer {
                     if (follower.get().inventory.getStackInSlot(0).isEmpty() || machine.get().metadata.get(activated) == 0 || follower.get().metadata.get(followerCOMPLETE) == 1) {
                         if (!removePedestalBeam(followerPos, pos, level)) continue;
                         if (follower.get().metadata.get(followerCOMPLETE) == 1) {
-                            //follower.get().inventory.setStackInSlot(0, ItemStack.EMPTY);
                             follower.setChanged();
                             level.sendBlockUpdated(followerPos, follower.getBlockState(), follower.getBlockState(), 3);
                         } continue;
@@ -96,12 +107,39 @@ public class ArcaneImbuer {
 
             private void performRitual(GenericMachineEntity entity, Level level) {
                 CustomCraftingContainer inventories = new CustomCraftingContainer(entity);
-                // we need a special recipe type for this ...
-//                InfusionRecipe activeRecipe = InfusionRecipe.getActiveRecipe(
-//                        inventories,
-//                        RecipeRegistry.INFUSION.get(),
-//                        level,
-//                        entity);
+                InfusionRecipe activeRecipe = InfusionRecipe.getActiveRecipe(
+                        inventories,
+                        RecipeRegistry.INFUSION.get(),
+                        level,
+                        entity);
+                List<GenericMachineEntity> followerList = entities.stream()
+                        .map(level::getBlockEntity)
+                        .filter(ent -> ent instanceof GenericMachineEntity)
+                        .map(ent -> (GenericMachineEntity) ent)
+                        .toList();
+                if (activeRecipe != null && activeRecipe.validate(entity,followerList, activeRecipe)) {
+                    activeRecipe.craft(entity, activeRecipe);
+                } else {
+                    AbstractRebound effect = Rebounds.randomEffect();
+                    AxiomMod.LOGGER.warn("FAILED A RECIPE FOR INFUSER applying {}", effect.toString());
+                    for(ServerPlayer player:level.getEntitiesOfClass(ServerPlayer.class, new AABB(entity.getBlockPos()).inflate(PEDESTAL_RANGE*2))) {
+                        effect.apply(new InfusionContext(
+                            level,
+                            entity.getBlockPos(),
+                            player
+                        ));
+                    }
+
+                    for(GenericMachineEntity pedestal:followerList){
+                        pedestal.get().inventory.setStackInSlot(0, ItemStack.EMPTY);
+                        pedestal.get().metadata.set(0,0);
+
+                        pedestal.syncData();
+                        pedestal.setChanged();
+                        level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
+                    }
+                }
+                entity.get().metadata.set(activated, 0);
             }
 
             public static ArrayList<BlockEntity> scan(Level level, BlockPos center, int radius) {
@@ -163,10 +201,10 @@ public class ArcaneImbuer {
             public boolean checkPedestalCompletion(Level level){
                 if (entities.isEmpty()) return false;
                 return entities.stream()
-                        .allMatch(entity -> {
-                            if (!(level.getBlockEntity(entity) instanceof GenericMachineEntity machine)) return false;
-                            return machine.get().metadata.get(0) == 1;
-                        });
+                        .filter(pos -> level.getBlockEntity(pos) instanceof GenericMachineEntity)
+                        .map(pos -> (GenericMachineEntity) level.getBlockEntity(pos))
+                        .filter(machine -> !machine.get().inventory.getStackInSlot(0).isEmpty())
+                        .allMatch(machine -> machine.get().metadata.get(0) == 1);
             }
             public void addPedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
                 UUID id = UUID.randomUUID();

@@ -1,11 +1,9 @@
 package eng.cad.auto.axiology.machines;
 
-import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
@@ -28,7 +26,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-
 import java.util.Objects;
 
 public class Alembic {
@@ -79,7 +76,7 @@ public class Alembic {
                 }
 
                 if (blockEntity.get().metadata.get(progress) >= MAX_PROGRESS) {
-                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
+                    if (activeRecipe.validate(blockEntity, activeRecipe)) activeRecipe.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     resetProgress(blockEntity);
                     return;

@@ -4,8 +4,6 @@ import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
-import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import eng.cad.auto.engine.machine.core.slot.SlotIORestriction;
@@ -76,7 +74,7 @@ public class SoakingDrum {
                 }
 
                 if (blockEntity.get().metadata.get(progress) >= MAX_PROGRESS) {
-                    if (CraftingUtil.validate(blockEntity, activeRecipe)) CraftingUtil.craft(blockEntity, activeRecipe);
+                    if (activeRecipe.validate(blockEntity, activeRecipe)) activeRecipe.craft(blockEntity, activeRecipe);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     resetProgress(blockEntity);
                     return;

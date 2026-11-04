@@ -26,6 +26,7 @@ import java.util.Objects;
  */
 // Warning: Do not convert into a record, or it will become possible to have both an Item and a Fluid active at the same time.
 public class CraftingIngredient{
+
     public enum Kind { EMPTY, ITEM, FLUID, FLUID_TAG, ITEM_TAG}
     public record SmartTag(TagKey<?> tag, int count){};
     private final FluidStack fluid;

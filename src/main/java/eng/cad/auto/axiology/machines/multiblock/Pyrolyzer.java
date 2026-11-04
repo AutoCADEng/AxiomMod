@@ -1,13 +1,10 @@
 package eng.cad.auto.axiology.machines.multiblock;
 
-
-import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
 import eng.cad.auto.axiology.crafting.machines.PyrolyzerRecipe;
 import eng.cad.auto.axiology.registry.MachineRegistry;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.engine.client.machine.core.IMachineClientLogic;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.crafting.util.CraftingUtil;
 import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import eng.cad.auto.engine.machine.core.MachineCore;
 import eng.cad.auto.engine.machine.core.interfaces.IMachineLogic;
@@ -22,7 +19,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -82,13 +78,13 @@ public class Pyrolyzer {
                     resetProgress(blockEntity);
                     return;
                 }
-                if (!CraftingUtil.hasSpace(blockEntity, followerEntities, activeRecipe)) {
+                if (!activeRecipe.hasSpace(blockEntity, followerEntities, activeRecipe)) {
                     resetProgress(blockEntity);
                     return;
                 }
 
                 if (blockEntity.get().metadata.get(progress) >= Max_Processing_Ticks) {
-                    if (CraftingUtil.validate(blockEntity, followerEntities, activeRecipe)) CraftingUtil.craft(blockEntity, followerEntities, activeRecipe);
+                    if (activeRecipe.validate(blockEntity, followerEntities, activeRecipe)) activeRecipe.craft(blockEntity, followerEntities, activeRecipe);
                     resetProgress(blockEntity);
                     level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
                     return;

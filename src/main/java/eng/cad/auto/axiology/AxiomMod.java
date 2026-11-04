@@ -2,8 +2,8 @@ package eng.cad.auto.axiology;
 
 import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
-import eng.cad.auto.axiology.machines.infusion.ArcaneImbuer;
-import eng.cad.auto.axiology.machines.infusion.ArcanePedestal;
+import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
+import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.machines.renderers.ArcaneImbuerRenderer;
 import eng.cad.auto.axiology.machines.renderers.ArcanePedestalRenderer;
