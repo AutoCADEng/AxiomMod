@@ -1,6 +1,5 @@
 {
-  "type": "axiology:generic",
-  "recipe_type": "axiology:pyrolyzer",
+  "type": "axiology:pyrolyzer",
   "inputs": [
     {
       "type": "item",

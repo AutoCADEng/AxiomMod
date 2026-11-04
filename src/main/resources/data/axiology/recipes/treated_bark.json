@@ -1,6 +1,5 @@
 {
-  "type": "axiology:generic",
-  "recipe_type": "axiology:soaking_drum",
+  "type": "axiology:soaking_drum",
   "inputs": [
     {
       "type": "tag",

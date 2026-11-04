@@ -1,6 +1,5 @@
 {
-  "type": "axiology:generic",
-  "recipe_type": "axiology:chemical_reactor",
+  "type": "axiology:chemical_reactor",
   "inputs": [
     {
       "type": "fluid",

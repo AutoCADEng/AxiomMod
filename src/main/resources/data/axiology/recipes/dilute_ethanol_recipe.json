@@ -1,6 +1,5 @@
 {
-  "type": "axiology:generic",
-  "recipe_type": "axiology:fermenter",
+  "type": "axiology:fermenter",
   "inputs": [
     {
       "type": "item",

@@ -1,6 +1,5 @@
 {
-  "type": "axiology:generic",
-  "recipe_type": "axiology:alembic",
+  "type": "axiology:alembic",
   "inputs": [
     {
       "type": "fluid",
