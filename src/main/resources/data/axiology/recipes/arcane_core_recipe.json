@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["AAB", "DEB", "DCC"],
+  "pattern": ["ABC", "DED", "CBA"],
   "key": {
     "A": {
-      "item" : "axiology:etched_iron_ingot"
+      "item" : "axiology:cursed_ingot"
     },
     "B" : {
       "item" : "axiology:blazing_ingot"
@@ -12,7 +12,7 @@
       "item" : "axiology:fluxed_ingot"
     },
     "D" : {
-      "item" : "axiology:cursed_ingot"
+      "item" : "axiology:etched_iron_ingot"
     },
     "E" : {
       "item" : "axiology:mundane_core"

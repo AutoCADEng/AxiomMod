@@ -1,11 +1,7 @@
 package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
-import eng.cad.auto.axiology.crafting.machines.ChemicalReactorRecipe;
-import eng.cad.auto.axiology.crafting.machines.FermenterRecipe;
-import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
-import eng.cad.auto.axiology.machines.ChemicalReactor;
+import eng.cad.auto.axiology.crafting.machines.*;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.recipe.RecipeType;
@@ -22,6 +18,7 @@ public class AxiologyJEI implements IModPlugin {
     public static final RecipeType<SoakerRecipe> SOAKER_RECIPE_TYPE = new RecipeType<SoakerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"soaker_recipe"), SoakerRecipe.class);
     public static final RecipeType<AlembicRecipe> ALEMBIC_RECIPE_TYPE = new RecipeType<AlembicRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"alembic_recipe"), AlembicRecipe.class);
     public static final RecipeType<ChemicalReactorRecipe> CHEMICAL_REACTOR_RECIPE_TYPE = new RecipeType<ChemicalReactorRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"chemical_reactor_recipe"), ChemicalReactorRecipe.class);
+    public static final RecipeType<PyrolyzerRecipe> PYROLYZER_RECIPE_TYPE = new RecipeType<PyrolyzerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"pyrolyzer_recipe"), PyrolyzerRecipe.class);
 
 
 
@@ -35,6 +32,7 @@ public class AxiologyJEI implements IModPlugin {
         registration.addRecipeCategories(new SoakingDrumRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new AlembicRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new ChemicalReactorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
+        registration.addRecipeCategories(new PyrolyzerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
     @Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
@@ -58,5 +56,6 @@ public class AxiologyJEI implements IModPlugin {
         registration.addRecipes(SOAKER_RECIPE_TYPE, minecraft.level.getRecipeManager().getAllRecipesFor(SoakerRecipe.SoakerType.INSTANCE));
         registration.addRecipes(ALEMBIC_RECIPE_TYPE, minecraft.level.getRecipeManager().getAllRecipesFor(AlembicRecipe.AlembicType.INSTANCE));
         registration.addRecipes(CHEMICAL_REACTOR_RECIPE_TYPE, minecraft.level.getRecipeManager().getAllRecipesFor(ChemicalReactorRecipe.ChemicalReactorType.INSTANCE));
+        registration.addRecipes(PYROLYZER_RECIPE_TYPE, minecraft.level.getRecipeManager().getAllRecipesFor(PyrolyzerRecipe.PyrolyzerType.INSTANCE));
     }
 }
