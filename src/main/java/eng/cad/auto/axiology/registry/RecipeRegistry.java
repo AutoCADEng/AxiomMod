@@ -23,15 +23,15 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeType<SoakerRecipe>> SOAKING_DRUM = RecipeRegistry.RECIPE_TYPES.register(SoakingDrum.name, () -> SoakerRecipe.SoakerType.INSTANCE);
     public static final RegistryObject<RecipeSerializer<SoakerRecipe>> SOAKING_DRUM_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(SoakingDrum.name, () -> SoakerRecipe.SoakerSerializer.INSTANCE);
 
-    public static RegistryObject<RecipeType<AlembicRecipe>> ALEMBIC = RecipeRegistry.RECIPE_TYPES.register(Alembic.name, () -> AlembicRecipe.AlembicType.INSTANCE);
-    public static RegistryObject<RecipeSerializer<AlembicRecipe>> ALEMBIC_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Alembic.name, () -> AlembicRecipe.AlembicSerializer.INSTANCE);
+    public static final RegistryObject<RecipeType<AlembicRecipe>> ALEMBIC = RecipeRegistry.RECIPE_TYPES.register(Alembic.name, () -> AlembicRecipe.AlembicType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<AlembicRecipe>> ALEMBIC_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Alembic.name, () -> AlembicRecipe.AlembicSerializer.INSTANCE);
 
-    public static RegistryObject<RecipeType<ChemicalReactorRecipe>> CHEMICAL_REACTOR = RecipeRegistry.RECIPE_TYPES.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorType.INSTANCE);
-    public static RegistryObject<RecipeSerializer<ChemicalReactorRecipe>> CHEMICAL_REACTOR_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorSerializer.INSTANCE);
+    public static final RegistryObject<RecipeType<ChemicalReactorRecipe>> CHEMICAL_REACTOR = RecipeRegistry.RECIPE_TYPES.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<ChemicalReactorRecipe>> CHEMICAL_REACTOR_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorSerializer.INSTANCE);
 
-    public static RegistryObject<RecipeType<PyrolyzerRecipe>> PYROLYZER = RecipeRegistry.RECIPE_TYPES.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerType.INSTANCE);
-    public static RegistryObject<RecipeSerializer<PyrolyzerRecipe>> PYROLYZER_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerSerializer.INSTANCE);
+    public static final RegistryObject<RecipeType<PyrolyzerRecipe>> PYROLYZER = RecipeRegistry.RECIPE_TYPES.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<PyrolyzerRecipe>> PYROLYZER_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerSerializer.INSTANCE);
 
-    public static RegistryObject<RecipeType<InfusionRecipe>> INFUSION = RecipeRegistry.RECIPE_TYPES.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionType.INSTANCE);
-    public static RegistryObject<RecipeSerializer<InfusionRecipe>> INFUSION_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionSerializer.INSTANCE);
+    public static final RegistryObject<RecipeType<InfusionRecipe>> INFUSION = RecipeRegistry.RECIPE_TYPES.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<InfusionRecipe>> INFUSION_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionSerializer.INSTANCE);
 }
