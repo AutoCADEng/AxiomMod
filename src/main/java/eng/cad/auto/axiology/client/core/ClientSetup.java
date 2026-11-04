@@ -54,6 +54,7 @@ public class ClientSetup {
             event.accept(ItemRegistry.TREATED_BARK);
             event.accept(ItemRegistry.ETCHED_IRON_NUGGET);
             event.accept(ItemRegistry.TREATED_FABRIC);
+            event.accept(ItemRegistry.INNERT_ARCANE_CORE);
             event.accept(ItemRegistry.ARCANE_CORE);
             event.accept(ItemRegistry.ARCANE_MACHINE_FRAME);
             event.accept(ItemRegistry.MUNDANE_CORE);

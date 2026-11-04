@@ -33,6 +33,8 @@ public class FluidRegistry {
         Fluid_Holders.put(Blazewater.name, new FluidHolder(Blazewater.name, Blazewater.color, MapColor.COLOR_BLACK, new Blazewater.CustomFluidBehaviour()));
         Fluid_Holders.put(Fluxfluid.name, new FluidHolder(Fluxfluid.name, Fluxfluid.color, MapColor.COLOR_BLACK, new Fluxfluid.CustomFluidBehaviour()));
         Fluid_Holders.put(Creosote.name, new FluidHolder(Creosote.name, Creosote.color, MapColor.COLOR_BLACK, new Creosote.CustomFluidBehaviour()));
+
+        Fluid_Holders.put(Tar.name, new FluidHolder(Tar.name, Tar.color, MapColor.COLOR_BLACK, new Tar.CustomFluidBehaviour()));
     }
 
 

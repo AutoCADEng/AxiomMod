@@ -26,6 +26,7 @@ public class ItemRegistry {
     public static final RegistryObject<Item> CURSED_INGOT = registerItem("cursed_ingot", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> MUNDANE_CORE = registerItem("mundane_core", () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> INNERT_ARCANE_CORE = registerItem("innert_arcane_core", () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ARCANE_CORE = registerItem("arcane_core", () -> new Item(new Item.Properties()));
 
     public static final RegistryObject<Item> MUNDANE_MACHINE_FRAME = registerItem("mundane_machine_frame", () -> new Item(new Item.Properties()));

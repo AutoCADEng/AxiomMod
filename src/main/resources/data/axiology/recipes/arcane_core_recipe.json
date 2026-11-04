@@ -1,24 +1,27 @@
 {
-  "type": "minecraft:crafting_shaped",
-  "pattern": ["ABC", "DED", "CBA"],
-  "key": {
-    "A": {
-      "item" : "axiology:cursed_ingot"
+  "type": "axiology:pyrolyzer",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "axiology:innert_arcane_core",
+      "count": 1
     },
-    "B" : {
-      "item" : "axiology:blazing_ingot"
-    },
-    "C" : {
-      "item" : "axiology:fluxed_ingot"
-    },
-    "D" : {
-      "item" : "axiology:etched_iron_ingot"
-    },
-    "E" : {
-      "item" : "axiology:mundane_core"
+    {
+      "type": "fluid",
+      "input": "axiology:nital",
+      "count": 1000
     }
-  },
-  "result": {
-    "item": "axiology:arcane_core"
-  }
+  ],
+  "outputs": [
+    {
+      "type": "item",
+      "input": "minecraft:charcoal",
+      "count": 4
+    },
+    {
+      "type": "fluid",
+      "input": "axiology:tar",
+      "count": 1000
+    }
+  ]
 }
