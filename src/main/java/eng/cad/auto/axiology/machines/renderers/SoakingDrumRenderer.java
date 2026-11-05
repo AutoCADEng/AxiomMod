@@ -3,8 +3,8 @@ package eng.cad.auto.axiology.machines.renderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.machines.SoakingDrum;
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -23,24 +23,25 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEntity> {
+public class SoakingDrumRenderer implements BlockEntityRenderer<BaseMachine> {
     public SoakingDrumRenderer(BlockEntityRendererProvider.Context context) {
 
     }
     @Override
-    public void render(GenericMachineEntity entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
-        if (!entity.machineConfig.name().equals(SoakingDrum.name)) return;
-        if (entity.getLevel() == null) return;
-        if (!entity.getLevel().isClientSide) return;
-        float t = entity.getLevel().getGameTime() + pTick % 360.0f;
-        FluidStack fluid = entity.get().tanks.getFluidInTank(0);
-        float fill = (float) fluid.getAmount() / (float) entity.get().config.fluidSlotConfig().get(0).capacity();
+    public void render(@NotNull BaseMachine baseMachine, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+        if (!(baseMachine instanceof SoakingDrum soakingDrum)) return;
+        if (soakingDrum.getLevel() == null) return;
+        if (!soakingDrum.getLevel().isClientSide) return;
+        float t = soakingDrum.getLevel().getGameTime() + pTick % 360.0f;
+        FluidStack fluid = soakingDrum.getFluidSlots().getFluidInTank(0);
+        float fill = (float) fluid.getAmount() / (float) soakingDrum.getFluidSlots().getTankCapacity(0);
 
-        ItemStack item = entity.get().inventory.getStackInSlot(0);
+        ItemStack item = soakingDrum.getItemSlots().getStackInSlot(0);
         if (!item.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             poseStack.pushPose();
@@ -54,12 +55,12 @@ public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEn
             }
             poseStack.mulPose(Axis.XP.rotationDegrees(90));
             poseStack.scale(0.75f,0.75f,0.75f);
-            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
+            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(soakingDrum.getLevel(), soakingDrum.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, soakingDrum.getLevel(), 1);
             poseStack.popPose();
 
         }
         if (!fluid.isEmpty()) {
-            renderFluid(fluid.getFluid(), fill, entity, pTick, poseStack, bufferSource, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), overlay);
+            renderFluid(fluid.getFluid(), fill, soakingDrum, pTick, poseStack, bufferSource, getLightLevel(soakingDrum.getLevel(), soakingDrum.getBlockPos().above()), overlay);
         }
     }
 
@@ -69,7 +70,7 @@ public class SoakingDrumRenderer implements BlockEntityRenderer<GenericMachineEn
         return LightTexture.pack(bLight, sLight);
     }
 
-    private void renderFluid(Fluid fluid, float fill, GenericMachineEntity be, float partialTick, PoseStack pose, MultiBufferSource buffer, int light, int overlay){
+    private void renderFluid(Fluid fluid, float fill, SoakingDrum soakingDrum, float partialTick, PoseStack pose, MultiBufferSource buffer, int light, int overlay){
         ResourceLocation fluidResource = IClientFluidTypeExtensions.of(fluid).getStillTexture();
         int tint = IClientFluidTypeExtensions.of(fluid).getTintColor();
         var sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidResource);

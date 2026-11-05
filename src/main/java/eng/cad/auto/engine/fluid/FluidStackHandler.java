@@ -1,7 +1,8 @@
 package eng.cad.auto.engine.fluid;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.engine.machine.core.slot.SlotConfig;
+import eng.cad.auto.axiology.core.slot.SlotConfig;
+import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -11,25 +12,19 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
 
-
-//TODO DOCUMENT THIS
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
     protected NonNullList<FluidStackLimiter> stacks = NonNullList.create();
+    SlotConfig[] slots;
 
-    public FluidStackHandler(SlotConfig config)
+    public FluidStackHandler(SlotConfig[] configs)
     {
-        this(1, new SlotConfig[] {config});
-    }
-
-    public FluidStackHandler(int size, SlotConfig[] configs)
-    {
-        if (size != configs.length){
-            AxiomMod.LOGGER.error("Invalid FluidStack Config Provided to FLUIDSTACKHANDLER !");
-            return;
-        };
         for (int idx = 0; idx<configs.length;idx++){
             stacks.add(idx, new FluidStackLimiter(FluidStack.EMPTY, configs[idx]));
         }
+        slots = configs;
+    }
+
+    public FluidStackHandler() {
 
     }
 
@@ -99,18 +94,18 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     }
 
     @Override
-    public @NotNull FluidStack getFluidInTank(int tank) {
-        validateSlotIndex(tank);
-        return stacks.get(tank).stack;
+    public @NotNull FluidStack getFluidInTank(int slot) {
+        validateSlotIndex(slot);
+        return stacks.get(slot).stack;
     }
 
     @Override
-    public int getTankCapacity(int tank) {
-        return stacks.get(tank).config.capacity();
+    public int getTankCapacity(int slot) {
+        return slots[slot].capacity();
     }
 
     @Override
-    public boolean isFluidValid(int tank, @NotNull FluidStack stack) {
+    public boolean isFluidValid(int slot, @NotNull FluidStack stack) {
         return true;
     }
 
@@ -200,6 +195,10 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         }
 
         return FluidStack.EMPTY;
+    }
+
+    public boolean operationAllowed(int slot, SlotIORestriction operation){
+        return slots[slot].operationAllowed(operation);
     }
 
     public record FluidStackLimiter(FluidStack stack, SlotConfig config){

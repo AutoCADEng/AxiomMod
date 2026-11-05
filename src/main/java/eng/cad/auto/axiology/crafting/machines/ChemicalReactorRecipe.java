@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.crafting.machines;
 
 import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
-import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import org.jetbrains.annotations.Nullable;
 
 public class ChemicalReactorRecipe extends AbstractMachineRecipe<ChemicalReactorRecipe> {
-    public ChemicalReactorRecipe(NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> outputs, ResourceLocation craftingRecipe) {
+    public ChemicalReactorRecipe(NonNullList<UniversalSlot> input, NonNullList<UniversalSlot> outputs, ResourceLocation craftingRecipe) {
         super(input, outputs, craftingRecipe);
     }
 
@@ -32,7 +32,7 @@ public class ChemicalReactorRecipe extends AbstractMachineRecipe<ChemicalReactor
         public static ChemicalReactorSerializer INSTANCE = new ChemicalReactorSerializer();
 
         @Override
-        protected ChemicalReactorRecipe create(NonNullList<CraftingIngredient> inputs, NonNullList<CraftingIngredient> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
+        protected ChemicalReactorRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
             return new ChemicalReactorRecipe(inputs,outputs, recipeId);
         }
     }

@@ -1,15 +1,16 @@
 package eng.cad.auto.engine.crafting.core;
 
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public class BaseRecipe<C extends CustomCraftingContainer, T extends AbstractRecipe<C, T>>{
     public final ResourceLocation craftingRecipe;
-    public final NonNullList<CraftingIngredient> craftingIngredients;
-    public final NonNullList<CraftingIngredient> craftingOutputs;
+    public final NonNullList<UniversalSlot> craftingIngredients;
+    public final NonNullList<UniversalSlot> craftingOutputs;
 
-    protected BaseRecipe(ResourceLocation craftingRecipe, NonNullList<CraftingIngredient> input, NonNullList<CraftingIngredient> output) {
+    protected BaseRecipe(ResourceLocation craftingRecipe, NonNullList<UniversalSlot> input, NonNullList<UniversalSlot> output) {
         this.craftingRecipe = craftingRecipe;
         this.craftingIngredients = input;
         this.craftingOutputs = output;
@@ -17,7 +18,7 @@ public class BaseRecipe<C extends CustomCraftingContainer, T extends AbstractRec
 
     public boolean matchesTypeAndQuantity(C machineInventory, Level level, T recipe){
         if (!recipe.matches(machineInventory, level)) return false;
-        for (CraftingIngredient ingredient: craftingIngredients){
+        for (UniversalSlot ingredient: craftingIngredients){
             if (ingredient.isEmpty() || machineInventory.isEmpty()) return false;
             switch (ingredient.getType()){
                 case ITEM -> {
@@ -54,11 +55,11 @@ public class BaseRecipe<C extends CustomCraftingContainer, T extends AbstractRec
         return true;
     }
 
-    public NonNullList<CraftingIngredient> getCraftingIngredients() {
+    public NonNullList<UniversalSlot> getCraftingIngredients() {
         return craftingIngredients;
     }
 
-    public NonNullList<CraftingIngredient> getCraftingOutput() {
+    public NonNullList<UniversalSlot> getCraftingOutput() {
         return craftingOutputs;
     }
 }

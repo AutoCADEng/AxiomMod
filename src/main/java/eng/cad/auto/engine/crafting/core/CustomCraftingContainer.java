@@ -1,6 +1,7 @@
 package eng.cad.auto.engine.crafting.core;
 
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
@@ -16,9 +17,9 @@ import net.minecraftforge.fluids.FluidStack;
 public class CustomCraftingContainer implements Container {
     public NonNullList<FluidStack> tanks = NonNullList.create();
     public NonNullList<ItemStack> items = NonNullList.create();
-    GenericMachineEntity blockEntity;
+    BaseMachine blockEntity;
 
-    public CustomCraftingContainer(GenericMachineEntity blockEntity){
+    public CustomCraftingContainer(BaseMachine blockEntity){
         this.blockEntity = blockEntity;
     }
 
@@ -94,7 +95,7 @@ public class CustomCraftingContainer implements Container {
      * @param ingredient
      * @return true if the ingredient is present and the amount stored in the tank is >= the amount the ingredient holds
      */
-    public boolean containsIngredient(CraftingIngredient ingredient) {
+    public boolean containsIngredient(UniversalSlot ingredient) {
         switch(ingredient.getType()){
             case FLUID -> {
                 for (FluidStack fluid:tanks){

@@ -1,6 +1,7 @@
 package eng.cad.auto.engine.network.packet;
 
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
+import eng.cad.auto.axiology.core.ISlotFluid;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
@@ -64,10 +65,11 @@ public class MachineFluidSyncPacket extends AxiologyBasePacket<MachineFluidSyncP
                             if (level == null) return;
 
                             BlockEntity blockEntity = level.getBlockEntity(pos);
-                            if (!(blockEntity instanceof GenericMachineEntity genericBlockEntity)) return;
-                            if (genericBlockEntity.machineConfig.fluidSlots() <= 0) return;
-                            if (genericBlockEntity.get().tanks == null) return;
-                            if (slot < 0 || slot >= genericBlockEntity.get().tanks.getTanks()) return;
+                            if (!(blockEntity instanceof BaseMachine genericBlockEntity)) return;
+                            if (!(genericBlockEntity instanceof ISlotFluid fluidMachine)) return;
+                            if (fluidMachine.getFluidSlots().getTanks() <= 0) return;
+                            if (fluidMachine.getFluidSlots() == null) return;
+                            if (slot < 0 || slot >= fluidMachine.getFluidSlots().getTanks()) return;
 
                             FluidStack stack = FluidStack.EMPTY;
 
@@ -78,7 +80,7 @@ public class MachineFluidSyncPacket extends AxiologyBasePacket<MachineFluidSyncP
                                 }
                             }
 
-                            genericBlockEntity.get().tanks.setStackInSlot(slot, stack);
+                            fluidMachine.getFluidSlots().setStackInSlot(slot, stack);
                         }
                 )
         );

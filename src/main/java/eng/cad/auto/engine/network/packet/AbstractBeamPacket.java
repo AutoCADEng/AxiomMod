@@ -2,7 +2,6 @@ package eng.cad.auto.engine.network.packet;
 
 import eng.cad.auto.engine.client.render.AbstractBeamEffect;
 import eng.cad.auto.engine.client.render.BeamEffectRenderer;
-import eng.cad.auto.engine.network.FluidBeamSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

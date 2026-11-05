@@ -2,9 +2,10 @@ package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.crafting.machines.FermenterRecipe;
+import eng.cad.auto.axiology.machines.Alembic;
 import eng.cad.auto.axiology.machines.Fermenter;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -39,15 +40,15 @@ public class FermenterRecipeCategory implements IRecipeCategory<FermenterRecipe>
     private final IDrawable glassOverlay;
 
     public FermenterRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Fermenter.name).blockItem.get().getDefaultInstance());
+        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Alembic.name).blockItem.get().getDefaultInstance());
         this.background = guiHelper.createDrawable(LOCATION, TRIM, TRIM, WIDTH, HEIGHT);
         this.glassOverlay = guiHelper.createDrawable(LOCATION, GLASS_UV.x, GLASS_UV.y, TANK_SIZE.x, TANK_SIZE.y);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FermenterRecipe recipe, IFocusGroup focuses) {
-        NonNullList<CraftingIngredient> inputs = recipe.craftingIngredients;
-        NonNullList<CraftingIngredient> outputs = recipe.craftingOutputs;
+        NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
+        NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         builder.addInputSlot(SLOT_0.x, SLOT_0.y).addItemStack(inputs.get(0).getItem());
         builder.addInputSlot(SLOT_1.x, SLOT_1.y).addItemStack(inputs.get(1).getItem());

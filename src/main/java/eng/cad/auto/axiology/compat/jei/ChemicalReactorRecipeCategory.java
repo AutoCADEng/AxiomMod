@@ -2,9 +2,10 @@ package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.crafting.machines.ChemicalReactorRecipe;
+import eng.cad.auto.axiology.machines.Alembic;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -39,15 +40,15 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalRe
     private final IDrawable glassOverlay;
 
     public ChemicalReactorRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockItem.get().getDefaultInstance());
+        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Alembic.name).blockItem.get().getDefaultInstance());
         this.background = guiHelper.createDrawable(LOCATION, TRIM, TRIM, WIDTH, HEIGHT);
         this.glassOverlay = guiHelper.createDrawable(LOCATION, GLASS_UV.x, GLASS_UV.y, TANK_SIZE.x, TANK_SIZE.y);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, ChemicalReactorRecipe recipe, IFocusGroup focuses) {
-        NonNullList<CraftingIngredient> inputs = recipe.craftingIngredients;
-        NonNullList<CraftingIngredient> outputs = recipe.craftingOutputs;
+        NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
+        NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         builder.addInputSlot(TANK_0.x, TANK_0.y)
             .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)

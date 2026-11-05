@@ -2,10 +2,10 @@ package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
-import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
+import eng.cad.auto.axiology.machines.Alembic;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -17,12 +17,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector2i;
-
-import java.util.List;
 
 public class AlembicRecipeCategory implements IRecipeCategory<AlembicRecipe> {
 
@@ -44,15 +39,15 @@ public class AlembicRecipeCategory implements IRecipeCategory<AlembicRecipe> {
     private final IDrawable glassOverlay;
 
     public AlembicRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockItem.get().getDefaultInstance());
+        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Alembic.name).blockItem.get().getDefaultInstance());
         this.background = guiHelper.createDrawable(LOCATION, TRIM, TRIM, WIDTH, HEIGHT);
         this.glassOverlay = guiHelper.createDrawable(LOCATION, GLASS_UV.x, GLASS_UV.y, TANK_SIZE.x, TANK_SIZE.y);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, AlembicRecipe recipe, IFocusGroup focuses) {
-        NonNullList<CraftingIngredient> inputs = recipe.craftingIngredients;
-        NonNullList<CraftingIngredient> outputs = recipe.craftingOutputs;
+        NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
+        NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         builder.addInputSlot(TANK_0.x, TANK_0.y)
             .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)

@@ -1,7 +1,8 @@
 package eng.cad.auto.engine.item;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
+import eng.cad.auto.axiology.core.ISlotFluid;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -42,11 +43,13 @@ public class CustomBucket extends BucketItem {
 
     //Move to a dedicated fluid helper class at some point?
 
-    public static boolean fluidToItem(GenericMachineEntity blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidToItem(BaseMachine blockEntity, Player player, InteractionHand interactionHand) {
+        if (!(blockEntity instanceof ISlotFluid tank)) return false;
+
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         FluidActionResult result = FluidUtil.tryFillContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.get().tanks,
+                tank.getFluidSlots(),
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,
@@ -60,12 +63,13 @@ public class CustomBucket extends BucketItem {
         return result.isSuccess();
     }
 
-    public static boolean fluidFromItem(GenericMachineEntity blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidFromItem(BaseMachine blockEntity, Player player, InteractionHand interactionHand) {
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
+        if (!(blockEntity instanceof ISlotFluid tank)) return false;
 
         FluidActionResult result = FluidUtil.tryEmptyContainerAndStow(
                 player.getItemInHand(interactionHand),
-                blockEntity.get().tanks,
+                tank.getFluidSlots(),
                 new PlayerInvWrapper(player.getInventory()),
                 1000,
                 player,

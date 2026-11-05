@@ -1,10 +1,11 @@
 package eng.cad.auto.axiology.client.core;
 
+import eng.cad.auto.axiology.core.machine.MachineRegistryObject;
 import eng.cad.auto.axiology.fluids.*;
-import eng.cad.auto.axiology.machines.SoakingDrum;
+import eng.cad.auto.axiology.machines.ChemicalReactor;
+import eng.cad.auto.axiology.machines.Fermenter;
 import eng.cad.auto.axiology.registry.*;
-import eng.cad.auto.engine.machine.core.MachineCore;
-import eng.cad.auto.engine.machine.core.ui.GenericUI;
+import eng.cad.auto.axiology.core.MachineUI;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -22,22 +23,10 @@ public class ClientSetup {
 
     private static void clientSetup(final FMLClientSetupEvent event) {
         //Machine UIs
-        for (MachineCore machine: MachineRegistry.MACHINELIST.values()) {
-            if (machine.config.noGui()) continue;
-            event.enqueueWork(() ->
-                    MenuScreens.<GenericUI.Menu, GenericUI.Screen>register(
-                        machine.ui.menu.get(),
-                        (menu, inventory, title) ->
-                                machine.ui.new Screen(
-                                        machine.config.name(),
-                                        menu,
-                                        inventory,
-                                        title
-                                )
-                    )
-            );
-        }
+        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.CHEMICAL_REACTOR.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.CHEMICAL_REACTOR.createScreen(ChemicalReactor.name, menu, inv, title)));
+        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.FERMENTER.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.FERMENTER.createScreen(Fermenter.name, menu, inv, title)));
 
+        // Fluid Renderers
         for (RegistryObject<? extends Fluid> fluid:FluidRegistry.FLUIDLIST.values()) {
             event.enqueueWork(() ->
                     ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent())
@@ -62,7 +51,7 @@ public class ClientSetup {
             event.accept(ItemRegistry.CURSED_INGOT);
 
             //Machine Blocks
-            for (MachineCore machine: MachineRegistry.MACHINELIST.values()){
+            for (MachineRegistryObject machine: MachineRegistry.MACHINELIST.values()){
                 event.accept(machine.blockItem);
             }
         }

@@ -2,8 +2,8 @@ package eng.cad.auto.axiology.machines.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
-import eng.cad.auto.engine.machine.core.GenericMachineEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,26 +18,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 
-public class ArcaneImbuerRenderer implements BlockEntityRenderer<GenericMachineEntity> {
+public class ArcaneImbuerRenderer implements BlockEntityRenderer<BaseMachine> {
     public ArcaneImbuerRenderer(BlockEntityRendererProvider.Context context) {
 
     }
     @Override
-    public void render(GenericMachineEntity entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
-        if (!entity.machineConfig.name().equals(ArcaneImbuer.name)) return;
-        if (entity.getLevel() == null) return;
-        if (!entity.getLevel().isClientSide) return;
-        float t = entity.getLevel().getGameTime() + pTick % 360.0f;
-        ItemStack item = entity.get().inventory.getStackInSlot(0);
-        if (!item.isEmpty()) {
-            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-            poseStack.pushPose();
-            poseStack.translate(0.5f, 1.3f + 0.1f*Mth.sin(2*Mth.PI*(t)), 0.5f);
-            poseStack.scale(0.75f,0.75f,0.75f);
-            poseStack.mulPose(Axis.YP.rotationDegrees(t));
-            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
-            poseStack.popPose();
-        }
+    public void render(BaseMachine entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+//        if (entity.getLevel() == null) return;
+//        if (!entity.getLevel().isClientSide) return;
+//        float t = entity.getLevel().getGameTime() + pTick % 360.0f;
+//        ItemStack item = entity.get().inventory.getStackInSlot(0);
+//        if (!item.isEmpty()) {
+//            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+//            poseStack.pushPose();
+//            poseStack.translate(0.5f, 1.3f + 0.1f*Mth.sin(2*Mth.PI*(t)), 0.5f);
+//            poseStack.scale(0.75f,0.75f,0.75f);
+//            poseStack.mulPose(Axis.YP.rotationDegrees(t));
+//            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
+//            poseStack.popPose();
+//        }
     }
 
     private int getLightLevel(Level level, BlockPos pos) {

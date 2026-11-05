@@ -1,40 +1,30 @@
 package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.machines.*;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
-import eng.cad.auto.axiology.machines.multiblock.*;
-import eng.cad.auto.axiology.machines.multiblock.followers.*;
-import eng.cad.auto.engine.machine.core.MachineCore;
+import eng.cad.auto.axiology.core.machine.MachineRegistryObject;
+import eng.cad.auto.axiology.machines.Alembic;
+import eng.cad.auto.axiology.machines.ChemicalReactor;
+import eng.cad.auto.axiology.machines.Fermenter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.HashMap;
 
 public class MachineRegistry
 {
     public static final DeferredRegister<BlockEntityType<?>> MACHINES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, AxiomMod.MODID);
+    public static final HashMap<String, MachineRegistryObject> MACHINELIST = new HashMap<>();
 
-    public static final HashMap<String, MachineCore> MACHINELIST = new HashMap<>();
+    public static final MachineRegistryObject ALEMBIC = registerMachine(new MachineRegistryObject(Alembic.name, Alembic::new, Alembic.MachineBlock::new));
+    public static final MachineRegistryObject CHEMICAL_REACTOR = registerMachine(new MachineRegistryObject(ChemicalReactor.name, ChemicalReactor::new, ChemicalReactor.MachineBlock::new));
+    public static final MachineRegistryObject FERMENTER = registerMachine(new MachineRegistryObject(Fermenter.name, Fermenter::new, Fermenter.MachineBlock::new));
 
-    public static MachineCore registerMachine(MachineCore machine){
-        MACHINELIST.put(machine.config.name(), machine);
+    public static MachineRegistryObject registerMachine(MachineRegistryObject machine){
+        MACHINELIST.put(machine.name, machine);
         return machine;
-    }
-
-    public static void init(){
-        new Fermenter();
-        new SoakingDrum();
-        new Alembic();
-        new ChemicalReactor();
-        new EtchedFluidInput();
-        new EtchedFluidOutput();
-        new EtchedItemInput();
-        new EtchedItemOutput();
-        new Pyrolyzer();
-        new ArcanePedestal();
-        new ArcaneImbuer();
     }
 }

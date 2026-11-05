@@ -2,9 +2,10 @@ package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.crafting.machines.PyrolyzerRecipe;
+import eng.cad.auto.axiology.machines.Alembic;
 import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.engine.crafting.core.CraftingIngredient;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -44,15 +45,15 @@ public class PyrolyzerRecipeCategory implements IRecipeCategory<PyrolyzerRecipe>
     private final IDrawable glassOverlay;
 
     public PyrolyzerRecipeCategory(IGuiHelper guiHelper) {
-        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Pyrolyzer.name).blockItem.get().getDefaultInstance());
+        this.icon = guiHelper.createDrawableItemStack(MachineRegistry.MACHINELIST.get(Alembic.name).blockItem.get().getDefaultInstance());
         this.background = guiHelper.createDrawable(LOCATION, TRIM, TRIM, WIDTH, HEIGHT);
         this.glassOverlay = guiHelper.createDrawable(LOCATION, GLASS_UV.x, GLASS_UV.y, TANK_SIZE.x, TANK_SIZE.y);
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, PyrolyzerRecipe recipe, IFocusGroup focuses) {
-        NonNullList<CraftingIngredient> inputs = recipe.craftingIngredients;
-        NonNullList<CraftingIngredient> outputs = recipe.craftingOutputs;
+        NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
+        NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         switch (inputs.get(0).getType()){
             case ITEM -> builder.addInputSlot(SLOT_0.x, SLOT_0.y).addItemStack(inputs.get(0).getItem());
