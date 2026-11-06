@@ -30,27 +30,27 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     }
 
     /**
-     * Performs the crafting action in the master/base machine entity. This method will modify the inventory of "entity"!
+     * See documentation for three-variable variant of craft
      * @param entity
      * @param recipe
      * @return
      * @param <G> an instance of BaseMachine
      */
     public <G extends BaseMachine<?>> boolean craft(G entity, BaseRecipe<?, ?> recipe){
-        if (!validate(entity, null, recipe)) return false;
-
-        for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
-            consume(ingredient, null, entity, recipe);
-        }
-
-        for (UniversalSlot output: recipe.getCraftingOutput()){
-            produce(output, null, entity, recipe);
-        }
-        return true;
+        return craft(entity, null, recipe);
     }
 
+    /**
+     * Performs the action of crafting within a machine(base/follower/master) network. This method will alter inventories!
+     * @param entity
+     * @param followers
+     * @param recipe
+     * @param <F>
+     * @param <G> an instance of BaseMachine
+     * @return True if the recipe is valid, false if not
+     */
     public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
-        if (!validate(entity, followers, recipe)) return false;
+        if (!validate(entity, followers, recipe)) return false; //Candidate for deletion, we always check at the machine level anyway.
 
         for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
             consume(ingredient, followers, entity, recipe);
