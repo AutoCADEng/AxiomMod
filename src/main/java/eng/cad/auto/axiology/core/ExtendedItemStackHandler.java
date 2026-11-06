@@ -21,6 +21,10 @@ public class ExtendedItemStackHandler extends ItemStackHandler{
     public boolean operationAllowed(int slot, SlotIORestriction operation){
         return slots[slot].operationAllowed(operation);
     }
+    public boolean operationNotAllowed(int slot, SlotIORestriction operation){
+        return !slots[slot].operationAllowed(operation);
+    }
+
 
     public int getCapacity(int slot){
         return slots[slot].capacity();
