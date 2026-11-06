@@ -11,21 +11,24 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
+import java.util.function.Consumer;
 
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
     protected NonNullList<FluidStackLimiter> stacks = NonNullList.create();
     SlotConfig[] slots;
+    private final Consumer<Integer> onContentsChanged;
 
-    public FluidStackHandler(SlotConfig[] configs)
+    public FluidStackHandler(SlotConfig[] configs, Consumer<Integer> onContentsChanged)
     {
         for (int idx = 0; idx<configs.length;idx++){
             stacks.add(idx, new FluidStackLimiter(FluidStack.EMPTY, configs[idx]));
         }
         slots = configs;
+        this.onContentsChanged = onContentsChanged;
     }
 
     public FluidStackHandler() {
-
+        this.onContentsChanged = slot -> {};
     }
 
     @Override
@@ -34,7 +37,6 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         validateSlotIndex(slot);
         SlotConfig config = stacks.get(slot).config;
         this.stacks.set(slot, new FluidStackLimiter(stack, config));
-        onContentsChanged(slot);
     }
 
     @Override
@@ -84,9 +86,8 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
 
     }
 
-    protected void onContentsChanged(int slot)
-    {
-
+    protected void onContentsChanged(int slot) {
+        onContentsChanged.accept(slot);
     }
     @Override
     public int getTanks() {

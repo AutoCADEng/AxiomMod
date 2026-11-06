@@ -8,7 +8,6 @@ import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
-import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
@@ -16,18 +15,14 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, IRightClickable, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
+public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
     public static final String name = "alembic";
     int[] dataSync = new int[0];
     long lastSync = 0;
@@ -36,7 +31,7 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
 
         this.fluids = new FluidStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.IN_OUT, 1000)
-        });
+        }, this::onFluidContentsChanged);
 
         this.data = new DataSlotHandler("heating", "progress");
         refreshCapabilities();
@@ -91,19 +86,6 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
 
             level.addParticle(ParticleTypes.SMOKE, x, y, z, xSpeed, ySpeed, zSpeed);
         }
-    }
-
-    @Override
-    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        boolean success = onRightClick(blockState, level, blockPos, player, interactionHand, result);
-        return success? InteractionResult.SUCCESS:InteractionResult.CONSUME;
-    }
-
-    private boolean onRightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        if (player.isShiftKeyDown()) return false;
-        if (interactionHand == InteractionHand.OFF_HAND) return false;
-        if (!(level.getBlockEntity(blockPos) instanceof Alembic alembic)) return false;
-        return CommonRightClickBehaviour.bucketInHand(0, alembic, blockState, level, blockPos, player, interactionHand, result);
     }
 
     @Override

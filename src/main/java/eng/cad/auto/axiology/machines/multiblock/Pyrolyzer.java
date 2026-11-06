@@ -12,22 +12,26 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 
-public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable, ISlotData, ITickable, IMachineProgress, IRecipeMachine<PyrolyzerRecipe> {
+public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable, ISlotData, IClientTickable, ITickable, IMachineProgress, IRecipeMachine<PyrolyzerRecipe> {
     public static final String name = "pyrolyzer";
     int[] dataSync = new int[0];
     long lastSync = 0;
-    boolean firstInit = false;
+    boolean firstInit = true;
     public Pyrolyzer(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-        this.data = new DataSlotHandler("progress", "valid_shape");
+        this.data = new DataSlotHandler("progress", "validShape");
         refreshCapabilities();
     }
 
@@ -67,13 +71,22 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
     }
 
     @Override
+    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+        if (level.isClientSide) return InteractionResult.CONSUME;
+        validateStructure(getBlockPos(), level);
+        syncWithClients(level, getBlockPos());
+        return InteractionResult.PASS;
+    }
+
+    @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(level.isClientSide()) return;
         if (!(level.getBlockEntity(pos) instanceof Pyrolyzer pyrolyzer)) return;
 
-        if (!firstInit){
+        if (firstInit){
             validateStructure(getBlockPos(), level);
-            firstInit = true;
+            syncWithClients(level, getBlockPos());
+            firstInit = false;
         }
 
         if (!isStructureValid()){
@@ -146,14 +159,17 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
         }
     }
 
+
     @Override
     public void updateStructureValidity(boolean validity) {
-        getDataSlots().set("valid_shape", validity?1:0);
+        getDataSlots().set("validShape", validity?1:0);
+        syncWithClients(level, getBlockPos());
+        setChanged();
     }
 
     @Override
     public boolean isStructureValid() {
-        return getDataSlots().get("valid_shape") == 1;
+        return getDataSlots().get("validShape") == 1;
     }
 
     public static class MachineBlock extends BaseMachineBlock {

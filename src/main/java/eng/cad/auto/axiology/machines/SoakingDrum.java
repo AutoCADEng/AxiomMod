@@ -5,22 +5,19 @@ import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
+import eng.cad.auto.axiology.core.slot.SlotConfig;
+import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
-import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.engine.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 
 public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
@@ -29,7 +26,14 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
     long lastSync = 0;
     public SoakingDrum(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
+        this.fluids = new FluidStackHandler(new SlotConfig[]{
+                new SlotConfig(SlotIORestriction.IN_OUT, 8000)
+        }, this::onFluidContentsChanged);
+        this.items = new ExtendedItemStackHandler(new SlotConfig[]{
+                new SlotConfig(SlotIORestriction.IN_OUT, 1)
+        });
         this.data = new DataSlotHandler("progress");
+        refreshCapabilities();
     }
 
     @Override
@@ -101,13 +105,15 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
 
         SoakerRecipe activeRecipe = findRecipe(blockEntity, level);
 
-        if (activeRecipe == null || !activeRecipe.hasSpace(blockEntity, activeRecipe)) {
+        if (activeRecipe == null) {
             resetProgress(blockEntity);
             return;
         }
 
         if (progressCompleted(blockEntity)) {
-            if (activeRecipe.validate(blockEntity, activeRecipe)) activeRecipe.craft(blockEntity, activeRecipe);
+            if (activeRecipe.validate(blockEntity, activeRecipe)) {
+                activeRecipe.craft(blockEntity, activeRecipe);
+            }
             level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
             resetProgress(blockEntity);
             return;
@@ -132,31 +138,9 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
         return 24000 / 60;
     }
 
-    @Override
-    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        return onRightClick(blockState, level, blockPos, player, interactionHand, result) ? InteractionResult.SUCCESS : InteractionResult.PASS;
-    }
-
-    private boolean onRightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        if (player.isShiftKeyDown()) return false;
-        if (interactionHand == InteractionHand.OFF_HAND) return false;
-        if (!(level.getBlockEntity(blockPos) instanceof SoakingDrum soakingDrum)) return false;
-        if (CommonRightClickBehaviour.itemInHand(0,soakingDrum, blockState, level, blockPos, player, interactionHand, result)) return true;
-        return CommonRightClickBehaviour.bucketInHand(soakingDrum.getFluidSlots().getFluidInTank(0).getAmount(), soakingDrum, blockState, level, blockPos, player, interactionHand, result);
-    }
-
     public static class MachineBlock extends BaseMachineBlock {
         public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
             super(properties, blockEntity);
-        }
-
-        @Override
-        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
-            if (level.getBlockEntity(blockPos) instanceof IRightClickable clickable) {
-                InteractionResult clicked = clickable.rightClick(blockState, level, blockPos, player, hand, result);
-                if (clicked == InteractionResult.SUCCESS) return clicked;
-            }
-            return super.use(blockState, level, blockPos, player, hand, result);
         }
     }
 }

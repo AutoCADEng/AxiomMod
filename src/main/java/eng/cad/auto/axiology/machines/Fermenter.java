@@ -61,7 +61,7 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
         this.fluids = new FluidStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.INPUT, 4000),
                 new SlotConfig(SlotIORestriction.OUTPUT, 4000)
-        });
+        }, this::onFluidContentsChanged);
 
         refreshCapabilities();
     }
@@ -109,18 +109,6 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
     @Override
     public int maxProgress() {
         return 24000 / 60;
-    }
-
-    @Override
-    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        return onRightClick(blockState, level, blockPos, player, interactionHand, result) ? InteractionResult.SUCCESS : InteractionResult.PASS;
-    }
-
-    private boolean onRightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        if (player.isShiftKeyDown()) return false;
-        if (interactionHand == InteractionHand.OFF_HAND) return false;
-        if (!(level.getBlockEntity(blockPos) instanceof Fermenter fermenter)) return false;
-        return CommonRightClickBehaviour.bucketInHand(fermenter.getFluidSlots().getFluidInTank(INPUT_TANK).getAmount(), fermenter, blockState, level, blockPos, player, interactionHand, result);
     }
 
     @Override
@@ -250,15 +238,6 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
     public static class MachineBlock extends BaseMachineBlock {
         public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
             super(properties, blockEntity);
-        }
-
-        @Override
-        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
-            if (level.getBlockEntity(blockPos) instanceof IRightClickable clickable) {
-                InteractionResult clicked = clickable.rightClick(blockState, level, blockPos, player, hand, result);
-                if (clicked == InteractionResult.SUCCESS) return clicked;
-            }
-            return super.use(blockState, level, blockPos, player, hand, result);
         }
     }
 }

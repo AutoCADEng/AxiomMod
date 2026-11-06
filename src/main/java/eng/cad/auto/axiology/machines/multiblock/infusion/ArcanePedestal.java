@@ -5,6 +5,7 @@ import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.core.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, ISlotData {
+public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, ISlotData, IRightClickable {
     public static String name = "arcane_pedestal";
     int[] lastSyncData;
     long lastSyncTime;

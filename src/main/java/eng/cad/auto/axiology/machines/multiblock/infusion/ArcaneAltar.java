@@ -6,19 +6,26 @@ import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.IMachineProgress;
+import eng.cad.auto.axiology.core.component.IRightClickable;
 import eng.cad.auto.axiology.core.component.ITickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.BaseMaster;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
+import eng.cad.auto.axiology.machines.ChemicalReactor;
 import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
+import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 
-public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, ISlotData, IMachineProgress, ITickable {
+public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, ISlotData, IMachineProgress, ITickable, IRightClickable {
     public static String name = "arcane_altar";
     int[] lastSyncData;
     long lastSyncTime;
@@ -36,7 +43,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(level.isClientSide()) return;
-        if (!(level.getBlockEntity(pos) instanceof Pyrolyzer pyrolyzer)) return;
+        if (!(level.getBlockEntity(pos) instanceof ArcaneAltar altar)) return;
 
         if (!firstInit){
             validateStructure(getBlockPos(), level);
@@ -44,7 +51,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         }
 
         if (!isStructureValid()){
-            resetProgress(pyrolyzer);
+            resetProgress(altar);
             return;
         }
     }
@@ -86,7 +93,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
 
     @Override
     public ExtendedItemStackHandler getItemSlots() {
-        return null;
+        return this.items;
     }
 
     @Override

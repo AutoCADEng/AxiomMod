@@ -3,7 +3,6 @@ package eng.cad.auto.axiology.core.component;
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.registry.MultiblockRegistry;
 import eng.cad.auto.axiology.core.machine.MultiblockStructure;
 import net.minecraft.core.BlockPos;
@@ -13,7 +12,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraftforge.event.level.BlockEvent;
 import java.util.HashSet;
 
 public interface IMultiblockMaster {
@@ -23,6 +21,10 @@ public interface IMultiblockMaster {
     default void validateStructure(BlockPos masterPos, Level level){
         if (level == null) return;
         var machineStructure = getStructure(level, masterPos);
+        if (machineStructure == null){
+            updateStructureValidity(false);
+            return;
+        }
 
         int y = machineStructure.shapeList.size();
         int z = machineStructure.shapeList.get(0).length;
@@ -42,8 +44,10 @@ public interface IMultiblockMaster {
                 for (int col = 0; col < x; col++) {
                     if (!validateBlock(new BlockPos(col, layer, row), machineStructure, level, rotation, masterPos)){
                         updateStructureValidity(false);
+                        clearFollowers(level);
                         return;
                     }
+
                 }
             }
         }
@@ -57,14 +61,12 @@ public interface IMultiblockMaster {
         BlockPos worldPos = masterPos.offset(rotatedPos);
         Block blockAtPos = level.getBlockState(worldPos).getBlock();
 
-        char buildKey = structure.shapeList.get(relativeFollowerPos.getY())[relativeFollowerPos.getX()].charAt(relativeFollowerPos.getZ());
-        if (!structure.blockMap.get(buildKey).contains(blockAtPos) && (!structure.blockMap.get(buildKey).get(0).defaultBlockState().isAir())){
+        char buildKey = structure.shapeList.get(relativeFollowerPos.getY())[relativeFollowerPos.getZ()].charAt(relativeFollowerPos.getX());
+        if (!structure.blockMap.get(buildKey).contains(blockAtPos)){
             return false;
         }
-        if (blockAtPos instanceof BaseMachineBlock followerBlock){
-            return true;
-        }
-        return false;
+        getFollowerPositions().add(worldPos);
+        return true;
     }
 
     default MultiblockStructure getStructure(Level level, BlockPos pos){
@@ -80,15 +82,19 @@ public interface IMultiblockMaster {
         if (level == null) return followerEntities;
         for (BlockPos followerPos:getFollowerPositions()){
             if ((level.getBlockEntity(followerPos) instanceof IMultiblockFollower followerEntity)){
-                if (!(level.getBlockEntity(followerPos) instanceof TickingMachine<?> follower)) return null;
-                followerEntities.add((TickingMachine<? extends IMultiblockFollower>) follower); // Fighting with the compiler here >:( Feel free to replace
+                if (!(level.getBlockEntity(followerPos) instanceof BaseMachine<?> follower)) continue;
+                followerEntities.add((BaseMachine<? extends IMultiblockFollower>) follower); // Fighting with the compiler here >:( Feel free to replace
             }
         }
         return followerEntities;
     }
 
-    default void dropFollower(BaseMachine<? extends IMultiblockFollower> follower, BlockEvent.BreakEvent event){
-        getFollowerPositions().remove(follower.getBlockPos());
+    default void clearFollowers(Level level){
+        for (BaseMachine<? extends IMultiblockFollower> follower: getFollowers(level)){
+            if (!(follower instanceof IMultiblockFollower followerEntity)) return;
+            followerEntity.clearMaster();
+        }
+        getFollowerPositions().clear();
     }
 
     void updateStructureValidity(boolean validity);

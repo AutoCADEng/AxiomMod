@@ -2,6 +2,7 @@ package eng.cad.auto.axiology.machines.multiblock.followers;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.core.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -12,13 +13,14 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.RegistryObject;
 
-public class FluidInputHatch extends Hatch<FluidInputHatch> implements ISlotFluid {
+public class FluidInputHatch extends Hatch<FluidInputHatch> implements ISlotFluid, IRightClickable {
     public static String name = "fluid_input_hatch";
     public FluidInputHatch(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.fluids = new FluidStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.INPUT, 1000)
-        });
+        }, this::onFluidContentsChanged);
+        refreshCapabilities();
     }
 
     @Override

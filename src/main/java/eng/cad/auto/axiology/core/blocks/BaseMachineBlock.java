@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -46,9 +47,12 @@ public abstract class BaseMachineBlock extends BaseEntityBlock {
     }
 
     @Override
-    public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
-        if (!(level.getBlockEntity(blockPos) instanceof IRightClickable clickable)) return InteractionResult.CONSUME;
-        return clickable.rightClick(blockState, level, blockPos, player, interactionHand, result);
+    public @NotNull InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+        if (level.getBlockEntity(blockPos) instanceof IRightClickable clickable) {
+            InteractionResult clicked = clickable.rightClick(blockState, level, blockPos, player, hand, result);
+            if (clicked == InteractionResult.SUCCESS) return clicked;
+        }
+        return super.use(blockState, level, blockPos, player, hand, result);
     }
 
     @Override
