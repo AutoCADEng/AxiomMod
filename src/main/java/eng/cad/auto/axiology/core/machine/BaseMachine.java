@@ -1,16 +1,14 @@
 package eng.cad.auto.axiology.core.machine;
 
 import eng.cad.auto.axiology.core.*;
-import eng.cad.auto.axiology.core.component.IClientTickable;
 import eng.cad.auto.axiology.core.component.IMachinePersistable;
 import eng.cad.auto.axiology.core.component.ISidedMachine;
-import eng.cad.auto.axiology.core.component.ITickable;
 import eng.cad.auto.engine.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.world.level.Level;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -118,6 +116,10 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
         }
     }
 
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
     public void refreshCapabilities() {
         if (getInstance() instanceof ISlotItem item) {
             itemCapability = item.getItemSlots().getSlots() > 0
