@@ -2,6 +2,7 @@ package eng.cad.auto.axiology.machines.multiblock.followers;
 
 import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.ISlotFluid;
+import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
@@ -10,7 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ItemOutputHatch extends Hatch<ItemOutputHatch> implements ISlotFluid {
+public class ItemOutputHatch extends Hatch<ItemOutputHatch> implements ISlotItem {
     public static String name = "item_output_hatch";
     public ItemOutputHatch(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
@@ -19,10 +20,6 @@ public class ItemOutputHatch extends Hatch<ItemOutputHatch> implements ISlotFlui
         });
     }
 
-    @Override
-    public FluidStackHandler getFluidSlots() {
-        return this.fluids;
-    }
 
     @Override
     public String getName() {
@@ -37,6 +34,11 @@ public class ItemOutputHatch extends Hatch<ItemOutputHatch> implements ISlotFlui
     @Override
     public CustomCraftingContainer getCraftingContainer() {
         return new CustomCraftingContainer(this)
-                .addTank(getFluidSlots().getFluidInTank(0));
+                .addSlot(getItemSlots().getStackInSlot(0));
+    }
+
+    @Override
+    public ExtendedItemStackHandler getItemSlots() {
+        return this.items;
     }
 }
