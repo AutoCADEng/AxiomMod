@@ -2,10 +2,10 @@
   "type": "minecraft:crafting_shapeless",
   "ingredients" : [
     {
-      "item": "axiology:etched_item_output"
+      "item": "axiology:item_output_hatch"
     }
   ],
   "result": {
-    "item":"axiology:etched_item_input"
+    "item":"axiology:item_input_hatch"
   }
 }

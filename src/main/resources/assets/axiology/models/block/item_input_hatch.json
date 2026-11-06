@@ -2,7 +2,7 @@
   "parent": "minecraft:block/block",
   "render_type": "cutout",
   "textures": {
-    "base": "axiology:block/etched_fluid_hatch_base",
+    "base": "axiology:block/item_hatch_base",
     "hatch": "axiology:block/input_hatch"
   },
   "elements": [

@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "axiology:block/fluid_output_hatch"
+    },
+    "facing=east": {
+      "model": "axiology:block/fluid_output_hatch",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "axiology:block/fluid_output_hatch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "axiology:block/fluid_output_hatch",
+      "y": 270
+    }
+  }
+}

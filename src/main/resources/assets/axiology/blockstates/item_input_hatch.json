@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "axiology:block/item_input_hatch"
+    },
+    "facing=east": {
+      "model": "axiology:block/item_input_hatch",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "axiology:block/item_input_hatch",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "axiology:block/item_input_hatch",
+      "y": 270
+    }
+  }
+}
