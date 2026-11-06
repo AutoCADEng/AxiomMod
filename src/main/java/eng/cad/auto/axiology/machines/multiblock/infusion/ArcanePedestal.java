@@ -19,12 +19,11 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
 
     public ArcanePedestal(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-        this.data = new DataSlotHandler("itemVisible");
+        this.data = new DataSlotHandler("isItemVisible");
         this.items = new ExtendedItemStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.INPUT, 1)
             }
         );
-
         refreshCapabilities();
     }
 

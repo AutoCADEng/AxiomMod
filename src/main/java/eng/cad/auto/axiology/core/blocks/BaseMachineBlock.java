@@ -65,13 +65,13 @@ public abstract class BaseMachineBlock extends BaseEntityBlock {
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-
-        return createTickerHelper(type, this.blockEntity.get(),
-                (lvl, pos, blockState, blockEntityInstance) -> {
-            if (blockEntityInstance instanceof TickingMachine<?> tickingMachine) {
+        return createTickerHelper(type, this.blockEntity.get(), (lvl, pos, blockState, baseMachineInstance) -> {
+            if (baseMachineInstance instanceof TickingMachine tickingMachine) {
                 TickingMachine.tick(lvl, pos, blockState, tickingMachine);
             }
         });
     }
+
+
 
 }

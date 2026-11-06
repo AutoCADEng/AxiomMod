@@ -1,8 +1,11 @@
 package eng.cad.auto.axiology.core.machine;
 
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.level.BlockEvent;
@@ -49,7 +52,18 @@ public abstract class BaseMaster<H extends BaseMaster<H>> extends TickingMachine
 
         if(!(level.getBlockEntity(event.getPos()) instanceof BaseFollower<?> follower)) return;
         if (follower.getMaster() != null) return;
+        Direction facing = level.getBlockState(this.getBlockPos()).getValue(BaseMachineBlock.FACING);
+
+        Rotation rotation = switch (facing) {
+            case EAST -> Rotation.CLOCKWISE_90;
+            case SOUTH -> Rotation.CLOCKWISE_180;
+            case WEST -> Rotation.COUNTERCLOCKWISE_90;
+            default -> Rotation.NONE;
+        };
+
+        if (!validateBlock(event.getPos(), structure, level, rotation, this.getBlockPos())) return;
         follower.setMaster(this);
         followers.add(event.getPos());
     }
+
 }

@@ -1,7 +1,9 @@
 package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.core.*;
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
@@ -19,6 +21,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.registries.RegistryObject;
 
 public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
     public static String name = "soaking_drum";
@@ -142,4 +145,18 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
         return CommonRightClickBehaviour.bucketInHand(soakingDrum.getFluidSlots().getFluidInTank(0).getAmount(), soakingDrum, blockState, level, blockPos, player, interactionHand, result);
     }
 
+    public static class MachineBlock extends BaseMachineBlock {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
+            super(properties, blockEntity);
+        }
+
+        @Override
+        public InteractionResult use(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+            if (level.getBlockEntity(blockPos) instanceof IRightClickable clickable) {
+                InteractionResult clicked = clickable.rightClick(blockState, level, blockPos, player, hand, result);
+                if (clicked == InteractionResult.SUCCESS) return clicked;
+            }
+            return super.use(blockState, level, blockPos, player, hand, result);
+        }
+    }
 }

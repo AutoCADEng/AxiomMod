@@ -2,8 +2,10 @@ package eng.cad.auto.axiology.machines;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axiology.core.*;
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.blocks.GuiMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
@@ -245,8 +247,8 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
         lastSync = time;
     }
 
-    public static class MachineBlock extends GuiMachineBlock {
-        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
+    public static class MachineBlock extends BaseMachineBlock {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
             super(properties, blockEntity);
         }
 

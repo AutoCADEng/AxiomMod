@@ -3,6 +3,7 @@ package eng.cad.auto.axiology.machines;
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -164,8 +165,9 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
     public void load(@NotNull CompoundTag tag) {
         super.load(tag);
     }
+
     public static class MachineBlock extends BaseMachineBlock {
-        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
             super(properties, blockEntity);
         }
     }

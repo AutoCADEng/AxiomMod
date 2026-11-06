@@ -15,17 +15,17 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class MachineRegistryObject {
-    public RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity;
+    public RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity;
     public RegistryObject<Item> blockItem;
     public RegistryObject<Block> block;
 
     public final String name;
 
-    public MachineRegistryObject(String name, TickingMachine.MachineFactory factory, BlockFactory blockFactory) {
+    public MachineRegistryObject(String name, BaseMachine.MachineFactory factory, BlockFactory blockFactory) {
         this(name, factory, blockFactory, () -> BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion());
     }
 
-    public MachineRegistryObject(String name, TickingMachine.MachineFactory factory, BlockFactory blockFactory, Supplier<BlockBehaviour.Properties> props) {
+    public MachineRegistryObject(String name, BaseMachine.MachineFactory factory, BlockFactory blockFactory, Supplier<BlockBehaviour.Properties> props) {
         AxiomMod.LOGGER.info("Registering new machine of {}", name);
         this.name = name;
 
@@ -33,12 +33,12 @@ public class MachineRegistryObject {
 
         blockItem = ItemRegistry.registerBlockItem(name, block);
 
-        blockEntity = MachineRegistry.MACHINES.register(name, () -> BlockEntityType.Builder.<TickingMachine>of((pos, state) -> factory.create(blockEntity.get(), pos, state), block.get()).build(null));
+        blockEntity = MachineRegistry.MACHINES.register(name, () -> BlockEntityType.Builder.<BaseMachine<?>>of((pos, state) -> factory.create(blockEntity.get(), pos, state), block.get()).build(null));
 
     }
 
     @FunctionalInterface
     public interface BlockFactory {
-        BaseMachineBlock create(BlockBehaviour.Properties props, RegistryObject<BlockEntityType<? extends TickingMachine>> entity);
+        BaseMachineBlock create(BlockBehaviour.Properties props, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> entity);
     }
 }

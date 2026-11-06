@@ -2,11 +2,11 @@ package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
 
-import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
+
 import eng.cad.auto.axiology.crafting.machines.*;
 import eng.cad.auto.axiology.machines.*;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
 import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
+import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneAltar;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.registries.DeferredRegister;
@@ -32,6 +32,6 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeType<PyrolyzerRecipe>> PYROLYZER = RecipeRegistry.RECIPE_TYPES.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerType.INSTANCE);
     public static final RegistryObject<RecipeSerializer<PyrolyzerRecipe>> PYROLYZER_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerSerializer.INSTANCE);
 
-//    public static final RegistryObject<RecipeType<InfusionRecipe>> INFUSION = RecipeRegistry.RECIPE_TYPES.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionType.INSTANCE);
-//    public static final RegistryObject<RecipeSerializer<InfusionRecipe>> INFUSION_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionSerializer.INSTANCE);
+    public static final RegistryObject<RecipeType<InfusionRecipe>> INFUSION = RecipeRegistry.RECIPE_TYPES.register(ArcaneAltar.name, () -> InfusionRecipe.InfusionType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<InfusionRecipe>> INFUSION_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ArcaneAltar.name, () -> InfusionRecipe.InfusionSerializer.INSTANCE);
 }

@@ -22,8 +22,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
     public static final String name = "pyrolyzer";
     int[] dataSync = new int[0];
     long lastSync = 0;
-    int tickCounter = 0;
-
+    boolean firstInit = false;
     public Pyrolyzer(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.data = new DataSlotHandler("progress", "valid_shape");
@@ -69,14 +68,13 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(level.isClientSide()) return;
         if (!(level.getBlockEntity(pos) instanceof Pyrolyzer pyrolyzer)) return;
-        tickCounter++;
 
-        if (tickCounter >= 10){
-            tickCounter = 0;
-            pyrolyzer.getDataSlots().set("valid_shape", pyrolyzer.validateStructure(pos, level)?1:0); // lazy implementation for now, we will look into events when I got more time.
+        if (!firstInit){
+            validateStructure(getBlockPos(), level);
+            firstInit = true;
         }
 
-        if (pyrolyzer.getDataSlots().get("valid_shape") == 0){
+        if (!isStructureValid()){
             resetProgress(pyrolyzer);
             return;
         }
@@ -147,7 +145,12 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
     }
 
     @Override
-    public MultiblockStructure getStructure() {
-        return null;
+    public void updateStructureValidity(boolean validity) {
+        getDataSlots().set("valid_shape", validity?1:0);
+    }
+
+    @Override
+    public boolean isStructureValid() {
+        return getDataSlots().get("valid_shape") == 1;
     }
 }

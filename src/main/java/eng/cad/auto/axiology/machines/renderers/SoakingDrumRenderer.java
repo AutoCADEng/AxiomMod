@@ -3,6 +3,7 @@ package eng.cad.auto.axiology.machines.renderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import net.minecraft.client.Minecraft;
@@ -28,13 +29,12 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class SoakingDrumRenderer implements BlockEntityRenderer<TickingMachine> {
+public class SoakingDrumRenderer implements BlockEntityRenderer<SoakingDrum> {
     public SoakingDrumRenderer(BlockEntityRendererProvider.Context context) {
 
     }
     @Override
-    public void render(@NotNull TickingMachine baseMachine, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
-        if (!(baseMachine instanceof SoakingDrum soakingDrum)) return;
+    public void render(@NotNull SoakingDrum soakingDrum, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         if (soakingDrum.getLevel() == null) return;
         if (!soakingDrum.getLevel().isClientSide) return;
         float t = soakingDrum.getLevel().getGameTime() + pTick % 360.0f;

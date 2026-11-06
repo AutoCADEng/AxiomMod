@@ -20,44 +20,51 @@ public interface IMultiblockMaster {
 
     HashSet<BlockPos> getFollowerPositions();
 
-    default boolean validateStructure(BlockPos controllerPos, Level level){
-        if (level == null) return false;
-        var machineStructure = getStructure(level, controllerPos);
+    default void validateStructure(BlockPos masterPos, Level level){
+        if (level == null) return;
+        var machineStructure = getStructure(level, masterPos);
 
-        Direction facing = level.getBlockState(controllerPos).getValue(BaseMachineBlock.FACING);
-        int height = machineStructure.shapeList.size();
-        int rows = machineStructure.shapeList.get(0).length;
-        int cols = machineStructure.shapeList.get(0)[0].length();
-        for (int layer = 0; layer < height; layer++) {
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
+        int y = machineStructure.shapeList.size();
+        int z = machineStructure.shapeList.get(0).length;
+        int x = machineStructure.shapeList.get(0)[0].length();
 
-                    Rotation rotation = switch (facing) {
-                        case EAST -> Rotation.CLOCKWISE_90;
-                        case SOUTH -> Rotation.CLOCKWISE_180;
-                        case WEST -> Rotation.COUNTERCLOCKWISE_90;
-                        default -> Rotation.NONE;
-                    };
+        Direction facing = level.getBlockState(masterPos).getValue(BaseMachineBlock.FACING);
 
-                    BlockPos structurePos = new BlockPos(col, -layer, row);
-                    BlockPos relativePos = structurePos.subtract(machineStructure.rootPos);
-                    BlockPos rotatedPos = relativePos.rotate(rotation);
-                    BlockPos worldPos = controllerPos.offset(rotatedPos);
+        Rotation rotation = switch (facing) {
+            case EAST -> Rotation.CLOCKWISE_90;
+            case SOUTH -> Rotation.CLOCKWISE_180;
+            case WEST -> Rotation.COUNTERCLOCKWISE_90;
+            default -> Rotation.NONE;
+        };
 
-                    Block blockAtPos = level.getBlockState(worldPos).getBlock();
-
-                    char buildKey = machineStructure.shapeList.get(layer)[row].charAt(col);
-                    if (!machineStructure.blockMap.get(buildKey).contains(blockAtPos) && (!machineStructure.blockMap.get(buildKey).get(0).defaultBlockState().isAir())){
-                        getFollowerPositions().clear();
-                        return false;
-                    }
-                    if (blockAtPos instanceof BaseMachineBlock followerBlock){
-                        getFollowerPositions().add(worldPos); // Seems safer than storing block entities that might become invalid
+        for (int layer = 0; layer < y; layer++) {
+            for (int row = 0; row < z; row++) {
+                for (int col = 0; col < x; col++) {
+                    if (!validateBlock(new BlockPos(col, layer, row), machineStructure, level, rotation, masterPos)){
+                        updateStructureValidity(false);
+                        return;
                     }
                 }
             }
         }
-        return true;
+        updateStructureValidity(true);
+    }
+
+    default boolean validateBlock(BlockPos relativeFollowerPos, MultiblockStructure structure, Level level, Rotation rotation, BlockPos masterPos){
+        BlockPos structurePos = new BlockPos(relativeFollowerPos.getX(), -relativeFollowerPos.getY(), relativeFollowerPos.getZ());
+        BlockPos relativePos = structurePos.subtract(structure.rootPos);
+        BlockPos rotatedPos = relativePos.rotate(rotation);
+        BlockPos worldPos = masterPos.offset(rotatedPos);
+        Block blockAtPos = level.getBlockState(worldPos).getBlock();
+
+        char buildKey = structure.shapeList.get(relativeFollowerPos.getY())[relativeFollowerPos.getX()].charAt(relativeFollowerPos.getZ());
+        if (!structure.blockMap.get(buildKey).contains(blockAtPos) && (!structure.blockMap.get(buildKey).get(0).defaultBlockState().isAir())){
+            return false;
+        }
+        if (blockAtPos instanceof BaseMachineBlock followerBlock){
+            return true;
+        }
+        return false;
     }
 
     default MultiblockStructure getStructure(Level level, BlockPos pos){
@@ -83,4 +90,8 @@ public interface IMultiblockMaster {
     default void dropFollower(BaseMachine<? extends IMultiblockFollower> follower, BlockEvent.BreakEvent event){
         getFollowerPositions().remove(follower.getBlockPos());
     }
+
+    void updateStructureValidity(boolean validity);
+
+    boolean isStructureValid();
 }
