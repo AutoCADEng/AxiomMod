@@ -19,7 +19,6 @@ public abstract class BaseFollower<H extends BaseFollower<H>> extends BaseMachin
     public void fireBlockBreak(BlockEvent.BreakEvent event) {
         if (level == null) return;
         if (!(getMaster() instanceof BaseMachine<?> master)) return;
-        getMaster().dropFollower(this, event);
         getMaster().validateStructure(master.getBlockPos(), level);
     }
 
