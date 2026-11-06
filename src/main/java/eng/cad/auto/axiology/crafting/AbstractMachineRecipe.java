@@ -77,7 +77,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                 if (!(machine instanceof ISlotItem itemMachine)) continue;
                 if (itemMachine.getItemSlots() == null) continue;
                 for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
-                    if (itemMachine.getItemSlots().operationAllowed(idx, SlotIORestriction.INPUT)) continue;
+                    if (itemMachine.getItemSlots().operationNotAllowed(idx, SlotIORestriction.OUTPUT)) continue;
                     ItemStack itemStack = itemMachine.getItemSlots().getStackInSlot(idx);
                     if (itemStack.is(recipeOutput.getItem().getItem()) || itemStack.isEmpty()) {
                         if (required <= 0) break;
@@ -100,7 +100,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                 if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                 if (fluidMachine.getFluidSlots() == null) continue;
                 for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
-                    if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.INPUT)) continue;
+                    if (fluidMachine.getFluidSlots().operationNotAllowed(idx, SlotIORestriction.OUTPUT)) continue;
                     FluidStack fluidStack = fluidMachine.getFluidSlots().getFluidInTank(idx);
                     if (fluidStack.isFluidEqual(recipeOutput.getFluid()) || fluidStack.isEmpty()) {
                         if (required <= 0) break;
@@ -133,7 +133,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                     if (!(machine instanceof ISlotItem itemMachine)) continue;
                     if (itemMachine.getItemSlots() == null) continue;
                     for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
-                        if (itemMachine.getItemSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
+                        if (itemMachine.getItemSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                         ItemStack itemStack = itemMachine.getItemSlots().getStackInSlot(idx);
                         if (itemStack.is(target.getItem().getItem())) {
                             if (required <= 0) break;
@@ -152,7 +152,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                     if (!(machine instanceof ISlotItem itemMachine)) continue;
                     if (itemMachine.getItemSlots() == null) continue;
                     for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
-                        if (itemMachine.getItemSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
+                        if (itemMachine.getItemSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                         ItemStack itemStack = itemMachine.getItemSlots().getStackInSlot(idx);
                         if (itemStack.is(target.getItemTag())){
                             if (required <= 0) break;
@@ -171,7 +171,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                     if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                     if (fluidMachine.getFluidSlots() == null) continue;
                     for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
-                        if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
+                        if (fluidMachine.getFluidSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                         FluidStack fluidStack = fluidMachine.getFluidSlots().getFluidInTank(idx);
                         if (fluidStack.isFluidEqual(target.getFluid())) {
                             if (required <= 0) break;
@@ -190,7 +190,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                     if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                     if (fluidMachine.getFluidSlots() == null) continue;
                     for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
-                        if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
+                        if (fluidMachine.getFluidSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                         FluidStack fluidStack = fluidMachine.getFluidSlots().getFluidInTank(idx);
                         if (fluidStack.getFluid().defaultFluidState().is(target.getFluidTag())) {
                             if (required <= 0) break;
@@ -394,7 +394,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         if (machine instanceof ISlotFluid fluidMachine){
             if (fluidMachine.getFluidSlots() != null) {
                 for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
-                    if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.INPUT)) continue;
+                    if (fluidMachine.getFluidSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                     FluidStack stack = fluidMachine.getFluidSlots().getFluidInTank(idx);
                     boolean skipTag = false;
                     if (recipeFluids.containsKey(stack.getFluid())) {
