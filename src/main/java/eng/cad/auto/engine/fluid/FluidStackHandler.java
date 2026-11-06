@@ -202,6 +202,9 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         return slots[slot].operationAllowed(operation);
     }
 
+    public boolean operationNotAllowed(int slot, SlotIORestriction operation){
+        return !slots[slot].operationAllowed(operation);
+    }
     public record FluidStackLimiter(FluidStack stack, SlotConfig config){
 
     }
