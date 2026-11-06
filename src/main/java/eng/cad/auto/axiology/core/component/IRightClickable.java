@@ -1,6 +1,5 @@
 package eng.cad.auto.axiology.core.component;
 
-import eng.cad.auto.axiology.core.machine.BaseMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

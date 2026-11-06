@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.blocks.GuiMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -34,7 +34,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
@@ -247,7 +246,7 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
     }
 
     public static class MachineBlock extends GuiMachineBlock {
-        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
             super(properties, blockEntity);
         }
 

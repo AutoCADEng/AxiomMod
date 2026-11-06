@@ -1,29 +1,21 @@
 package eng.cad.auto.axiology.machines.renderers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
-import net.minecraft.client.Minecraft;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 
-public class ArcanePedestalRenderer implements BlockEntityRenderer<BaseMachine> {
+public class ArcanePedestalRenderer implements BlockEntityRenderer<TickingMachine> {
     public ArcanePedestalRenderer(BlockEntityRendererProvider.Context context) {
 
     }
     @Override
-    public void render(BaseMachine entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+    public void render(TickingMachine entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
 //        if (!entity.machineConfig.name().equals(ArcanePedestal.name)) return;
 //        if (entity.getLevel() == null) return;
 //        if (!entity.getLevel().isClientSide) return;

@@ -3,7 +3,7 @@ package eng.cad.auto.axiology.machines.renderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;
@@ -28,12 +28,12 @@ import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
-public class SoakingDrumRenderer implements BlockEntityRenderer<BaseMachine> {
+public class SoakingDrumRenderer implements BlockEntityRenderer<TickingMachine> {
     public SoakingDrumRenderer(BlockEntityRendererProvider.Context context) {
 
     }
     @Override
-    public void render(@NotNull BaseMachine baseMachine, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
+    public void render(@NotNull TickingMachine baseMachine, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         if (!(baseMachine instanceof SoakingDrum soakingDrum)) return;
         if (soakingDrum.getLevel() == null) return;
         if (!soakingDrum.getLevel().isClientSide) return;

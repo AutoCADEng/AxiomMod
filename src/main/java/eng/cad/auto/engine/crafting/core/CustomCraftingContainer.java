@@ -17,9 +17,9 @@ import net.minecraftforge.fluids.FluidStack;
 public class CustomCraftingContainer implements Container {
     public NonNullList<FluidStack> tanks = NonNullList.create();
     public NonNullList<ItemStack> items = NonNullList.create();
-    BaseMachine blockEntity;
+    BaseMachine<?> blockEntity;
 
-    public CustomCraftingContainer(BaseMachine blockEntity){
+    public CustomCraftingContainer(BaseMachine<?> blockEntity){
         this.blockEntity = blockEntity;
     }
 

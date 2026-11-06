@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.component.*;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
@@ -20,7 +20,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class SoakingDrum extends BaseMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
+public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
     public static String name = "soaking_drum";
     int[] dataSync = new int[0];
     long lastSync = 0;
@@ -75,7 +75,7 @@ public class SoakingDrum extends BaseMachine<SoakingDrum> implements IRightClick
     }
 
     @Override
-    public void clientTick(Level level, BlockPos pos, BlockState state, BaseMachine blockEntity) {
+    public void clientTick(Level level, BlockPos pos, BlockState state, TickingMachine blockEntity) {
         if (!level.isClientSide()) return;
         if (getInstance().getDataSlots().get("progress") <= 0) return;
         if (level.random.nextFloat() < 0.33F) {

@@ -1,18 +1,17 @@
 package eng.cad.auto.axiology;
 
 import com.mojang.logging.LogUtils;
+import eng.cad.auto.axiology.core.events.BlockBreakListeners;
+import eng.cad.auto.axiology.core.events.BlockPlaceAreaListeners;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneImbuer;
-import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
 import eng.cad.auto.axiology.machines.SoakingDrum;
-import eng.cad.auto.axiology.machines.renderers.ArcaneImbuerRenderer;
-import eng.cad.auto.axiology.machines.renderers.ArcanePedestalRenderer;
 import eng.cad.auto.axiology.machines.renderers.SoakingDrumRenderer;
 import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.axiology.client.colors.ClientItemColorer;
 import eng.cad.auto.axiology.client.core.ClientSetup;
 import eng.cad.auto.engine.client.render.BeamEffectRenderer;
-import eng.cad.auto.engine.machine.multiblock.MultiblockStructure;
+import eng.cad.auto.axiology.core.machine.MultiblockStructure;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.axiology.registry.*;
 import eng.cad.auto.engine.network.packet.InfusionSyncPacket;
@@ -40,6 +39,8 @@ public class AxiomMod {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::entityRendererSetup);
         modEventBus.addListener(BeamRegistry::createRegistry);
+        modEventBus.addListener(BlockBreakListeners::onBlockBreak);
+        modEventBus.addListener(BlockPlaceAreaListeners::onBlockPlacedArea);
         MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
         //Registries
         FluidRegistry.FLUIDS.register(modEventBus);
@@ -75,8 +76,8 @@ public class AxiomMod {
     }
 
     private void entityRendererSetup(EntityRenderersEvent.RegisterRenderers event) {
-//        event.<BaseMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockEntity.get(), SoakingDrumRenderer::new);
-//        event.<BaseMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(ArcanePedestal.name).blockEntity.get(), ArcanePedestalRenderer::new);
-//        event.<BaseMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(ArcaneImbuer.name).blockEntity.get(), ArcaneImbuerRenderer::new);
+        event.<TickingMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockEntity.get(), SoakingDrumRenderer::new);
+        //event.<BaseMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(ArcanePedestal.name).blockEntity.get(), ArcanePedestalRenderer::new);
+        //event.<BaseMachine>registerBlockEntityRenderer(MachineRegistry.MACHINELIST.get(ArcaneImbuer.name).blockEntity.get(), ArcaneImbuerRenderer::new);
     }
 }

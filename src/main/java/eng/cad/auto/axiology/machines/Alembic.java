@@ -3,10 +3,9 @@ package eng.cad.auto.axiology.machines;
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
-import eng.cad.auto.axiology.core.slot.SlotType;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import eng.cad.auto.engine.fluid.FluidStackHandler;
@@ -27,7 +26,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-public class Alembic extends BaseMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, IRightClickable, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
+public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, IRightClickable, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
     public static final String name = "alembic";
     int[] dataSync = new int[0];
     long lastSync = 0;
@@ -76,7 +75,7 @@ public class Alembic extends BaseMachine<Alembic> implements IHeatedMachine, IMa
 
 
     @Override
-    public void clientTick(Level level, BlockPos pos, BlockState state, BaseMachine blockEntity) {
+    public void clientTick(Level level, BlockPos pos, BlockState state, TickingMachine blockEntity) {
         if (!level.isClientSide()) return;
         if (getProgress(blockEntity) <= 0) return;
         if (level.random.nextFloat() < 0.33F) {
@@ -166,7 +165,7 @@ public class Alembic extends BaseMachine<Alembic> implements IHeatedMachine, IMa
         super.load(tag);
     }
     public static class MachineBlock extends BaseMachineBlock {
-        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
             super(properties, blockEntity);
         }
     }

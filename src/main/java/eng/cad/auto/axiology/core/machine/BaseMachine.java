@@ -19,7 +19,6 @@ import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -42,17 +41,7 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
 
     public abstract String getName();
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, BaseMachine blockEntity){
-        if (blockEntity instanceof ITickable serverTicker) {
-            serverTicker.serverTick(level, blockPos, blockState);
-            if (!(blockEntity instanceof ISlotData data)) return;
-            data.updateDataIfChanged(level, blockPos);
-        }
 
-        if (blockEntity instanceof IClientTickable clientTicker) {
-            clientTicker.clientTick(level, blockPos, blockState, blockEntity);
-        }
-    }
 
     public abstract T getInstance();
 

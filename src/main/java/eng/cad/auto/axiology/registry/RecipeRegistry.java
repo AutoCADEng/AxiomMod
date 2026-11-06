@@ -29,9 +29,9 @@ public class RecipeRegistry {
     public static final RegistryObject<RecipeType<ChemicalReactorRecipe>> CHEMICAL_REACTOR = RecipeRegistry.RECIPE_TYPES.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorType.INSTANCE);
     public static final RegistryObject<RecipeSerializer<ChemicalReactorRecipe>> CHEMICAL_REACTOR_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ChemicalReactor.name, () -> ChemicalReactorRecipe.ChemicalReactorSerializer.INSTANCE);
 
-//    public static final RegistryObject<RecipeType<PyrolyzerRecipe>> PYROLYZER = RecipeRegistry.RECIPE_TYPES.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerType.INSTANCE);
-//    public static final RegistryObject<RecipeSerializer<PyrolyzerRecipe>> PYROLYZER_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerSerializer.INSTANCE);
-//
+    public static final RegistryObject<RecipeType<PyrolyzerRecipe>> PYROLYZER = RecipeRegistry.RECIPE_TYPES.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerType.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<PyrolyzerRecipe>> PYROLYZER_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(Pyrolyzer.name, () -> PyrolyzerRecipe.PyrolyzerSerializer.INSTANCE);
+
 //    public static final RegistryObject<RecipeType<InfusionRecipe>> INFUSION = RecipeRegistry.RECIPE_TYPES.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionType.INSTANCE);
 //    public static final RegistryObject<RecipeSerializer<InfusionRecipe>> INFUSION_SER = RecipeRegistry.RECIPE_SERIALIZERS.register(ArcaneImbuer.name, () -> InfusionRecipe.InfusionSerializer.INSTANCE);
 }

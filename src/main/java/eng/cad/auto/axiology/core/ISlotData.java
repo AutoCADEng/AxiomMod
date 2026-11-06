@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.core;
 
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +20,7 @@ public interface ISlotData {
 
     default void syncWithClients(Level level, BlockPos pos) {
         if (level == null || level.isClientSide) return;
-        if (!(level.getBlockEntity(pos) instanceof BaseMachine baseMachine)) return;
+        if (!(level.getBlockEntity(pos) instanceof TickingMachine baseMachine)) return;
         setChanged();
         BlockState state = baseMachine.getBlockState();
         level.sendBlockUpdated(pos, state, state, Block.UPDATE_CLIENTS);

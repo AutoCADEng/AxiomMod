@@ -7,7 +7,7 @@ import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.MachineUI;
 import eng.cad.auto.axiology.core.blocks.GuiMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -131,7 +131,6 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
         return MenuRegistry.CHEMICAL_REACTOR.createMenu(containerId, inventory, this);
     }
 
-
     @Override
     public void loadMenuSlots(MachineUI.Menu menu) {
         // No item slots on this machine.
@@ -239,7 +238,7 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
     }
 
     public static class MachineBlock extends GuiMachineBlock {
-        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
             super(properties, blockEntity);
         }
 

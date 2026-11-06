@@ -1,141 +1,153 @@
 package eng.cad.auto.axiology.machines.multiblock;
 
-public class Pyrolyzer {
-//    MachineRegistryObject INSTANCE;
-//    public static final String name = "pyrolyzer";
-//    public Pyrolyzer() {
-//        this.INSTANCE = MachineRegistry.registerMachine(new MachineRegistryObject
-//                .Builder(name)
-//                .addDataSlots(2)
-//                .addServerLogic(Logic.Server::new)
-//                .addClientLogic(new Logic.Client())
-//                .isMultiblockController()
-//                .build());
-//    }
-//    public static class Logic {
-//
-//        public static final int Max_Processing_Ticks = 24000/60;
-//        static final int isValid = 0;
-//        static final int progress = 1;
-//        static class Server implements ITickable {
-//            int counter = 0;
-//            @Override
-//            public void serverTick(Level level, BlockPos pos, BlockState state) {
-//                if(level.isClientSide()) return;
-//                if (!(level.getBlockEntity(pos) instanceof BaseMaster blockEntity)) return;
-//                counter++;
-//
-//                if (counter >= 10){
-//                    counter = 0;
-//                    blockEntity.get().metadata.set(isValid, blockEntity.validateStructure(pos)?1:0); // lazy implementation for now, we will look into events when I got more time.
-//                }
-//
-//                if (blockEntity.get().metadata.get(isValid) == 0){
-//                    resetProgress(blockEntity);
-//                    return;
-//                }
-//
-//                if (!(Objects.equals(blockEntity.machineConfig.name(), name))) return;
-//
-//                CustomCraftingContainer inventories = new CustomCraftingContainer(blockEntity);
-//                ArrayList<BaseFollower> followerEntities = new ArrayList<>();
-//
-//                for(BaseFollower follower:blockEntity.getFollowers())
-//                {
-//                    followerEntities.add(follower);
-//                    inventories = inventories.merge(follower.getCraftingContainer(follower));
-//                }
-//
-//                PyrolyzerRecipe activeRecipe = PyrolyzerRecipe.getActiveRecipe(
-//                        inventories,
-//                        RecipeRegistry.PYROLYZER.get(),
-//                        level,
-//                        blockEntity);
-//
-//                if (activeRecipe == null){
-//                    resetProgress(blockEntity);
-//                    return;
-//                }
-//                if (!activeRecipe.hasSpace(blockEntity, followerEntities, activeRecipe)) {
-//                    resetProgress(blockEntity);
-//                    return;
-//                }
-//
-//                if (blockEntity.get().metadata.get(progress) >= Max_Processing_Ticks) {
-//                    if (activeRecipe.validate(blockEntity, followerEntities, activeRecipe)) activeRecipe.craft(blockEntity, followerEntities, activeRecipe);
-//                    resetProgress(blockEntity);
-//                    level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
-//                    return;
-//                }
-//                if (level.random.nextFloat() < 0.025F) level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
-//                incrementProgress(blockEntity, 1);
-//            }
-//
-//            //TODO Test if this machine keeps it inventory
-//            @Override
-//            public void saveInventory(BaseMachine entity, CompoundTag tag) {
-//                if (!(entity instanceof BaseMaster blockEntity)) return;
-//                if (blockEntity.get().inventory != null) {
-//                    tag.put("Inventory", entity.get().inventory.serializeNBT());
-//                }
-//                if (blockEntity.get().tanks != null) {
-//                    tag.put("Tanks", entity.get().tanks.serializeNBT());
-//                }
-//
-//                tag.putInt("isValid", blockEntity.get().metadata.get(isValid));
-//                tag.putInt("progress", blockEntity.get().metadata.get(progress));
-//            }
-//
-//            @Override
-//            public void loadInventory(BaseMachine entity, CompoundTag tag) {
-//                if (!(entity instanceof BaseMaster blockEntity)) return;
-//                if (blockEntity.get().inventory != null && tag.contains("Inventory")) {
-//                    blockEntity.get().inventory.deserializeNBT(tag.getCompound("Inventory"));
-//                }
-//                if (blockEntity.get().tanks != null && tag.contains("Tanks")) {
-//                    blockEntity.get().tanks.deserializeNBT(tag.getCompound("Tanks"));
-//                }
-//
-//                blockEntity.get().metadata.set(isValid, tag.getInt("isValid"));
-//                blockEntity.get().metadata.set(progress, tag.getInt("progress"));
-//            }
-//
-//            @Override
-//            public void resetProgress(BaseMachine blockEntity) {
-//                if (!(blockEntity instanceof BaseMaster machine)) return;
-//                machine.get().metadata.set(progress, 0);
-//            }
-//            @Override
-//            public void incrementProgress(BaseMachine blockEntity, int value) {
-//                if (!(blockEntity instanceof BaseMaster machine)) return;
-//                machine.get().metadata.set(progress, machine.get().metadata.get(progress) + value);
-//            }
-//
-//        }
-//        static class Client {
-//
-//            @Override
-//            public void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, GenericUI.Screen screen) {
-//                //Let's get the menu open first ...
-//            }
-//
-//            @Override
-//            public void clientTick(Level level, BlockPos pos, BlockState state, BaseMachine blockEntity) {
-//                if (!level.isClientSide()) return;
-//                if (blockEntity.get().metadata.get(progress) <= 0) return;
-//                if (level.random.nextFloat() < 0.33F) {
-//
-//                    double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
-//                    double y = pos.above().getY() + 1.0D;
-//                    double z = pos.getZ() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
-//
-//                    double xSpeed = 0.0D;
-//                    double ySpeed = 0.05D;
-//                    double zSpeed = 0.0D;
-//
-//                    level.addParticle(ParticleTypes.SMOKE, x, y, z, xSpeed, ySpeed, zSpeed);
-//                }
-//            }
-//        }
-//    }
+import eng.cad.auto.axiology.core.DataSlotHandler;
+import eng.cad.auto.axiology.core.ISlotData;
+import eng.cad.auto.axiology.core.component.*;
+import eng.cad.auto.axiology.core.machine.*;
+import eng.cad.auto.axiology.crafting.machines.PyrolyzerRecipe;
+import eng.cad.auto.axiology.registry.RecipeRegistry;
+import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.ArrayList;
+
+public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable, ISlotData, ITickable, IMachineProgress, IRecipeMachine<PyrolyzerRecipe> {
+    public static final String name = "pyrolyzer";
+    int[] dataSync = new int[0];
+    long lastSync = 0;
+    int tickCounter = 0;
+
+    public Pyrolyzer(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
+        super(blockEntityType, blockPos, blockState);
+        this.data = new DataSlotHandler("progress", "valid_shape");
+        refreshCapabilities();
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public Pyrolyzer getInstance() {
+        return this;
+    }
+
+    @Override
+    public DataSlotHandler getDataSlots() {
+        return this.data;
+    }
+
+    @Override
+    public int[] getLastSyncedData() {
+        return this.dataSync;
+    }
+
+    @Override
+    public void setLastSyncedData(int[] data) {
+        this.dataSync = data;
+    }
+
+    @Override
+    public long getLastSyncTime() {
+        return this.lastSync;
+    }
+
+    @Override
+    public void setLastSyncTime(long time) {
+        this.lastSync = time;
+    }
+
+    @Override
+    public void serverTick(Level level, BlockPos pos, BlockState state) {
+        if(level.isClientSide()) return;
+        if (!(level.getBlockEntity(pos) instanceof Pyrolyzer pyrolyzer)) return;
+        tickCounter++;
+
+        if (tickCounter >= 10){
+            tickCounter = 0;
+            pyrolyzer.getDataSlots().set("valid_shape", pyrolyzer.validateStructure(pos, level)?1:0); // lazy implementation for now, we will look into events when I got more time.
+        }
+
+        if (pyrolyzer.getDataSlots().get("valid_shape") == 0){
+            resetProgress(pyrolyzer);
+            return;
+        }
+
+        CustomCraftingContainer inventories = new CustomCraftingContainer(pyrolyzer);
+        ArrayList<BaseMachine<? extends IMultiblockFollower>> followerEntities = new ArrayList<>();
+
+        for(BaseMachine<? extends IMultiblockFollower> follower:pyrolyzer.getFollowers(level))
+        {
+            followerEntities.add(follower);
+            if (!(follower instanceof IMultiblockFollower followerEntity)) continue;
+            inventories = inventories.merge(followerEntity.getCraftingContainer());
+        }
+
+        PyrolyzerRecipe activeRecipe = findRecipe(pyrolyzer, level);
+
+        if (activeRecipe == null){
+            resetProgress(pyrolyzer);
+            return;
+        }
+
+        if (!activeRecipe.hasSpace(pyrolyzer, followerEntities, activeRecipe)) {
+            resetProgress(pyrolyzer);
+            return;
+        }
+
+        if (pyrolyzer.progressCompleted(pyrolyzer)) {
+            if (activeRecipe.validate(pyrolyzer, followerEntities, activeRecipe)) activeRecipe.craft(pyrolyzer, followerEntities, activeRecipe);
+            resetProgress(pyrolyzer);
+            level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
+            return;
+        }
+        if (level.random.nextFloat() < 0.025F) level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        incrementProgress(pyrolyzer, 1);
+    }
+
+    @Override
+    public int progressSlot() {
+        return getDataSlots().indexOf("progress");
+    }
+
+    @Override
+    public int maxProgress() {
+        return 24000/60;
+    }
+
+    @Override
+    public RecipeType<PyrolyzerRecipe> recipeType() {
+        return RecipeRegistry.PYROLYZER.get();
+    }
+
+    @Override
+    public void clientTick(Level level, BlockPos pos, BlockState state, TickingMachine blockEntity) {
+        if (!level.isClientSide()) return;
+        if (getDataSlots().get("progress") <= 0) return;
+        if (level.random.nextFloat() < 0.33F) {
+
+            double x = pos.getX() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
+            double y = pos.above().getY() + 1.0D;
+            double z = pos.getZ() + 0.5D + (level.random.nextDouble() - 0.5D) * 0.5D;
+
+            double xSpeed = 0.0D;
+            double ySpeed = 0.05D;
+            double zSpeed = 0.0D;
+
+            level.addParticle(ParticleTypes.SMOKE, x, y, z, xSpeed, ySpeed, zSpeed);
+        }
+    }
+
+    @Override
+    public MultiblockStructure getStructure() {
+        return null;
+    }
 }

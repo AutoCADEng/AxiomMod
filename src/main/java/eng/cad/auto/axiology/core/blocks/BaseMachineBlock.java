@@ -2,10 +2,9 @@ package eng.cad.auto.axiology.core.blocks;
 
 import eng.cad.auto.axiology.core.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.MachineRegistryObject;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -27,10 +26,10 @@ import net.minecraftforge.registries.RegistryObject;
 import javax.annotation.Nullable;
 
 public abstract class BaseMachineBlock extends BaseEntityBlock {
-    protected final RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity;
+    protected final RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    public BaseMachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+    public BaseMachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
         super(properties);
         this.blockEntity = blockEntity;
         registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -64,10 +63,15 @@ public abstract class BaseMachineBlock extends BaseEntityBlock {
                 : defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
 
-
-
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(type, blockEntity.get(), BaseMachine::tick);
+
+        return createTickerHelper(type, this.blockEntity.get(),
+                (lvl, pos, blockState, blockEntityInstance) -> {
+            if (blockEntityInstance instanceof TickingMachine<?> tickingMachine) {
+                TickingMachine.tick(lvl, pos, blockState, tickingMachine);
+            }
+        });
     }
+
 }

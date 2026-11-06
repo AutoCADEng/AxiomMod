@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.core;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.component.IGuiGraphics;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.engine.network.AxiologyNetwork;
 import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
@@ -23,17 +23,16 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.registries.RegistryObject;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 public class MachineUI {
     public final RegistryObject<MenuType<Menu>> MENU_TYPE;
-    public MachineUI(String name, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+    public MachineUI(String name, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
         MENU_TYPE = MenuRegistry.registerMenu(name, Menu::new);
     }
 
-    public Menu createMenu(int containerID, Inventory inventory, BaseMachine blockEntity){
+    public Menu createMenu(int containerID, Inventory inventory, TickingMachine blockEntity){
         return new Menu(containerID, inventory, blockEntity);
     }
 
@@ -42,15 +41,15 @@ public class MachineUI {
     }
 
     public class Menu extends AbstractContainerMenu {
-        public final BaseMachine blockEntity;
+        public final TickingMachine blockEntity;
         public final Level level;
 
 
         public Menu(int containerID, Inventory inventory, FriendlyByteBuf byteBuffer) {
-                this(containerID, inventory, (BaseMachine) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
+                this(containerID, inventory, (TickingMachine) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
         }
 
-        public Menu(int containerID, Inventory inventory, BaseMachine blockEntity) {
+        public Menu(int containerID, Inventory inventory, TickingMachine blockEntity) {
             super(MENU_TYPE.get(), containerID);
             this.level = inventory.player.level();
             this.blockEntity = blockEntity;

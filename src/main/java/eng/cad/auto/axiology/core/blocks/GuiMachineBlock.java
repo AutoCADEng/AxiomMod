@@ -1,8 +1,7 @@
 package eng.cad.auto.axiology.core.blocks;
 
 import eng.cad.auto.axiology.core.machine.GuiMachine;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.MachineRegistryObject;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.component.IGuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -18,7 +17,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 public class GuiMachineBlock extends BaseMachineBlock {
-    public GuiMachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine>> blockEntity) {
+    public GuiMachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends TickingMachine>> blockEntity) {
         super(properties, blockEntity);
     }
 

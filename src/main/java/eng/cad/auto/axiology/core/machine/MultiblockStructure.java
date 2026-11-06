@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.machine.multiblock;
+package eng.cad.auto.axiology.core.machine;
 
 import com.google.gson.*;
 import eng.cad.auto.axiology.AxiomMod;

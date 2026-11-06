@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.core.component;
 
-import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
@@ -8,7 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 
 public interface IMachinePersistable {
 
-    default void saveInventory(BaseMachine blockEntity, CompoundTag tag){
+    default void saveInventory(TickingMachine blockEntity, CompoundTag tag){
         if (blockEntity instanceof ISlotItem inventory){
              tag.put("Inventory", inventory.getItemSlots().serializeNBT());
         }
@@ -24,7 +24,7 @@ public interface IMachinePersistable {
         }
     }
 
-    default void loadInventory(BaseMachine blockEntity, CompoundTag tag){
+    default void loadInventory(TickingMachine blockEntity, CompoundTag tag){
         if (blockEntity instanceof ISlotItem inventory){
             if (tag.contains("Inventory")) inventory.getItemSlots().deserializeNBT(tag.getCompound("Inventory"));
         }

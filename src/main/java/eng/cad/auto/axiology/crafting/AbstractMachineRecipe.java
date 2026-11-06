@@ -2,14 +2,14 @@ package eng.cad.auto.axiology.crafting;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
+import eng.cad.auto.axiology.core.component.IMultiblockFollower;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.engine.crafting.core.AbstractRecipe;
 import eng.cad.auto.engine.crafting.core.BaseRecipe;
 import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
-import eng.cad.auto.engine.machine.multiblock.BaseFollower;
-import eng.cad.auto.engine.machine.multiblock.BaseMaster;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -42,7 +42,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         return true;
     }
 
-    public <F extends BaseMaster, G extends BaseFollower> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
         if (!validate(entity, followers, recipe)) return false;
 
         for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
@@ -55,10 +55,10 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         return true;
     }
 
-    private <G extends BaseFollower> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine blockEntity, BaseRecipe<?, ?>  recipe) {
+    private <G extends BaseMachine<? extends IMultiblockFollower>> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?>  recipe) {
         int required = 0;
 
-        ArrayList<BaseMachine> machines = new ArrayList<>();
+        ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
         if (followers != null){
             machines.addAll(followers);
@@ -66,7 +66,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
         if (recipeOutput.is(UniversalSlot.Kind.ITEM)) {
             required = recipeOutput.getItem().getCount();
-            for (BaseMachine machine : machines) {
+            for (BaseMachine<?> machine : machines) {
                 if (!(machine instanceof ISlotItem itemMachine)) continue;
                 if (itemMachine.getItemSlots() == null) continue;
                 for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
@@ -89,7 +89,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
         if (recipeOutput.is(UniversalSlot.Kind.FLUID)) {
             required = recipeOutput.getFluid().getAmount();
-            for (BaseMachine machine: machines) {
+            for (BaseMachine<?> machine: machines) {
                 if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                 if (fluidMachine.getFluidSlots() == null) continue;
                 for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
@@ -111,9 +111,9 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         }
     }
 
-    private <G extends BaseMachine> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine blockEntity, BaseRecipe<?, ?>  recipe) {
+    private <G extends BaseMachine<?>> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?>  recipe) {
         int required = 0;
-        ArrayList<BaseMachine> machines = new ArrayList<>();
+        ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
         if (followers != null){
@@ -203,18 +203,18 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         return hasSpace(blockEntity, null, recipe);
     }
 
-    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, ArrayList<BaseFollower> followers, BaseRecipe<?, ?>  recipe) {
-        HashMap<BaseMachine, ItemStack[]> recipeItems = new HashMap<>();
-        HashMap<BaseMachine, FluidStack[]> recipeFluids = new HashMap<>();
+    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, ArrayList<BaseMachine<? extends IMultiblockFollower>> followers, BaseRecipe<?, ?>  recipe) {
+        HashMap<BaseMachine<?>, ItemStack[]> recipeItems = new HashMap<>();
+        HashMap<BaseMachine<?>, FluidStack[]> recipeFluids = new HashMap<>();
 
-        ArrayList<BaseMachine> machines = new ArrayList<>();
+        ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
         if (followers != null){
             machines.addAll(followers);
         }
 
-        for (BaseMachine machine: machines) {
+        for (BaseMachine<?> machine: machines) {
             if (machine instanceof ISlotItem itemMachine) {
                 ItemStack[] items = new ItemStack[itemMachine.getItemSlots() == null ? 0 : itemMachine.getItemSlots().getSlots()];
                 for (int idx = 0; idx < items.length; idx++) {
@@ -235,7 +235,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         for (UniversalSlot target: recipe.getCraftingOutput()) {
             int required = 0;
 
-            for (BaseMachine machine: machines) {
+            for (BaseMachine<?> machine: machines) {
                 switch (target.getType()){
                     case ITEM -> {
                         if (machine == machines.get(0)) required = target.getItem().getCount();
@@ -295,7 +295,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         return validate(entity, null, recipe);
     }
 
-    public <G extends BaseMachine, F extends BaseMachine> boolean validate(G blockEntity, List<F> followers, BaseRecipe<?, ?>  recipe){
+    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate(G blockEntity, List<F> followers, BaseRecipe<?, ?>  recipe){
         HashMap<Item, Integer> recipeItems = new HashMap<>();
         HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
         HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
@@ -345,7 +345,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
             }
         }
 
-        for (BaseMachine machine: machines) {
+        for (BaseMachine<?> machine: machines) {
             if (machine instanceof ISlotItem itemMachine) {
                 if (itemMachine.getItemSlots() != null) {
                     for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
@@ -392,7 +392,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                 && recipeFluidTags.values().stream().allMatch(count -> count <= 0);
     }
 
-    public static <T extends AbstractMachineRecipe<T>> T getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<T> type, Level level, BaseMachine blockEntity) {
+    public static <T extends AbstractMachineRecipe<T>> T getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<T> type, Level level, BaseMachine<?> blockEntity) {
         return level.getRecipeManager()
                 .getAllRecipesFor(type)
                 .stream()
