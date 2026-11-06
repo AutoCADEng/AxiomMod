@@ -29,7 +29,14 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         super(craftingRecipe, input, outputs);
     }
 
-    public <G extends BaseMachine> boolean craft(G entity, BaseRecipe<?, ?> recipe){
+    /**
+     * Performs the crafting action in the master/base machine entity. This method will modify the inventory of "entity"!
+     * @param entity
+     * @param recipe
+     * @return
+     * @param <G> an instance of BaseMachine
+     */
+    public <G extends BaseMachine<?>> boolean craft(G entity, BaseRecipe<?, ?> recipe){
         if (!validate(entity, null, recipe)) return false;
 
         for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
@@ -291,114 +298,186 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         return craftingRecipe;
     }
 
+    /**
+     * See documentation for the three-arg variation of validate
+     * @param entity
+     * @param recipe
+     * @return
+     * @param <G>
+     */
     public <G extends BaseMachine> boolean validate(G entity, BaseRecipe<?, ?> recipe){
         return validate(entity, null, recipe);
     }
 
-    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate(G blockEntity, List<F> followers, BaseRecipe<?, ?>  recipe){
-        HashMap<Item, Integer> recipeItems = new HashMap<>();
-        HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
-        HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
-        HashMap<TagKey<Fluid>, Integer> recipeFluidTags = new HashMap<>();
-        ArrayList<BaseMachine> machines = new ArrayList<>();
-        machines.add(blockEntity);
-        if (followers != null){
-            machines.addAll(followers);
+
+    /**
+     * INTERNAL TO CLASS
+     * Sorts an ingredient from a recipe into its respective hashmap
+     * @param ingredient
+     * @param recipeItems
+     * @param recipeFluids
+     * @param recipeItemTags
+     * @param recipeFluidTags
+     */
+    private void populateValidationHashmaps(UniversalSlot ingredient, HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags) {
+        switch (ingredient.getType()){
+            case ITEM -> {
+                ItemStack itemStack = ingredient.getItem();
+                if (recipeItems.containsKey(itemStack.getItem())){
+                    recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
+                } else {
+                    recipeItems.put(itemStack.getItem(), itemStack.getCount());
+                }
+            }
+
+            case FLUID -> {
+                FluidStack fluidStack = ingredient.getFluid();
+                if (recipeFluids.containsKey(fluidStack.getFluid())){
+                    recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
+                } else {
+                    recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+                }
+            }
+
+            case ITEM_TAG -> {
+                var tag = ingredient.getItemTag();
+                if (recipeItemTags.containsKey(tag)){
+                    recipeItemTags.put(tag, recipeItemTags.get(tag) + ingredient.getTag().count());
+                } else {
+                    recipeItemTags.put(tag, ingredient.getTag().count());
+                }
+            }
+
+            case FLUID_TAG -> {
+                var tag = ingredient.getFluidTag();
+                if (recipeFluidTags.containsKey(tag)){
+                    recipeFluidTags.put(tag, recipeFluidTags.get(tag) + ingredient.getTag().count());
+                } else {
+                    recipeFluidTags.put(tag, ingredient.getTag().count());
+                }
+            }
         }
-        for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
-            switch (ingredient.getType()){
-                case ITEM -> {
-                    ItemStack itemStack = ingredient.getItem();
-                    if (recipeItems.containsKey(itemStack.getItem())){
-                        recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
-                    } else {
-                        recipeItems.put(itemStack.getItem(), itemStack.getCount());
-                    }
-                }
+    }
 
-                case FLUID -> {
-                    FluidStack fluidStack = ingredient.getFluid();
-                    if (recipeFluids.containsKey(fluidStack.getFluid())){
-                        recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
-                    } else {
-                        recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+    /**
+     * INTERNAL TO CLASS
+     * Subtracts the machine inventory from the four hashmaps representing the recipe requirements, ignoring OUTPUT slots.
+     * @param machine
+     * @param recipeItems
+     * @param recipeFluids
+     * @param recipeItemTags
+     * @param recipeFluidTags
+     */
+    private void subtractItemCountFromValidationHashmaps(BaseMachine machine, HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags){
+        // Working with an Item/ItemTag
+        if (machine instanceof ISlotItem itemMachine) {
+            if (itemMachine.getItemSlots() != null) {
+                for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
+                    if (itemMachine.getItemSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
+                    ItemStack stack = itemMachine.getItemSlots().getStackInSlot(idx);
+                    boolean skipTag = false;
+                    if (recipeItems.containsKey(stack.getItem())) {
+                        recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
+                        skipTag = true;
                     }
-                }
-
-                case ITEM_TAG -> {
-                    var tag = ingredient.getItemTag();
-                    if (recipeItemTags.containsKey(tag)){
-                        recipeItemTags.put(tag, recipeItemTags.get(tag) + ingredient.getTag().count());
-                    } else {
-                        recipeItemTags.put(tag, ingredient.getTag().count());
-                    }
-                }
-
-                case FLUID_TAG -> {
-                    var tag = ingredient.getFluidTag();
-                    if (recipeFluidTags.containsKey(tag)){
-                        recipeFluidTags.put(tag, recipeFluidTags.get(tag) + ingredient.getTag().count());
-                    } else {
-                        recipeFluidTags.put(tag, ingredient.getTag().count());
+                    if (!skipTag) {
+                        var firstTag = stack.getTags().filter(tag -> recipeItemTags.containsKey(tag)).findFirst();
+                        if (firstTag.isEmpty()) continue;
+                        var tag = firstTag.get();
+                        recipeItemTags.put(tag, recipeItemTags.get(tag) - stack.getCount());
                     }
                 }
             }
         }
 
-        for (BaseMachine<?> machine: machines) {
-            if (machine instanceof ISlotItem itemMachine) {
-                if (itemMachine.getItemSlots() != null) {
-                    for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
-
-                        if (itemMachine.getItemSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
-                        ItemStack stack = itemMachine.getItemSlots().getStackInSlot(idx);
-                        boolean skipTag = false;
-                        if (recipeItems.containsKey(stack.getItem())) {
-                            recipeItems.put(stack.getItem(), recipeItems.get(stack.getItem()) - stack.getCount());
-                            skipTag = true;
-                        }
-                        if (!skipTag) {
-                            var firstTag = stack.getTags().filter(tag -> recipeItemTags.containsKey(tag)).findFirst();
-                            if (firstTag.isEmpty()) continue;
-                            var tag = firstTag.get();
-                            recipeItemTags.put(tag, recipeItemTags.get(tag) - stack.getCount());
-                        }
+        // Working with a Fluid/FluidTag
+        if (machine instanceof ISlotFluid fluidMachine){
+            if (fluidMachine.getFluidSlots() != null) {
+                for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
+                    if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.INPUT)) continue;
+                    FluidStack stack = fluidMachine.getFluidSlots().getFluidInTank(idx);
+                    boolean skipTag = false;
+                    if (recipeFluids.containsKey(stack.getFluid())) {
+                        recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
+                        skipTag = true;
                     }
-                }
-            }
-            if (machine instanceof ISlotFluid fluidMachine){
-                if (fluidMachine.getFluidSlots() != null) {
-                    for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
-                        if (fluidMachine.getFluidSlots().operationAllowed(idx, SlotIORestriction.OUTPUT)) continue;
-                        FluidStack stack = fluidMachine.getFluidSlots().getFluidInTank(idx);
-                        boolean skipTag = false;
-                        if (recipeFluids.containsKey(stack.getFluid())) {
-                            recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
-                            skipTag = true;
-                        }
-                        if (!skipTag){
-                            var firstTag = stack.getFluid().defaultFluidState().getTags().filter(tag -> recipeFluidTags.containsKey(tag)).findFirst();
-                            if (firstTag.isEmpty()) continue;
-                            var tag = firstTag.get();
-                            recipeFluidTags.put(tag, recipeFluidTags.get(tag) - stack.getAmount());
-                        }
+                    if (!skipTag){
+                        var firstTag = stack.getFluid().defaultFluidState().getTags().filter(tag -> recipeFluidTags.containsKey(tag)).findFirst();
+                        if (firstTag.isEmpty()) continue;
+                        var tag = firstTag.get();
+                        recipeFluidTags.put(tag, recipeFluidTags.get(tag) - stack.getAmount());
                     }
                 }
             }
         }
+    }
+
+    /**
+     * INTERNAL TO CLASS
+     * Checks the four hashmaps in validate() to see if all recipe ingredients are satiated (remaining items in recipe <= 0)
+     * @param recipeItems
+     * @param recipeFluids
+     * @param recipeItemTags
+     * @param recipeFluidTags
+     * @return True if all hashmap entries are <= 0, false if not.
+     */
+    private boolean checkHashmapIngredientsFulfilled(HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags){
         return recipeItems.values().stream().allMatch(count -> count <= 0)
                 && recipeFluids.values().stream().allMatch(count -> count <= 0)
                 && recipeItemTags.values().stream().allMatch(count -> count <= 0)
                 && recipeFluidTags.values().stream().allMatch(count -> count <= 0);
     }
 
+    /**
+     * Tests whether a system of machines(Master/Follower/Base) can satiate a crafting recipe
+     * @param blockEntity
+     * @param followers
+     * @param recipe
+     * @param <G> an instance of BaseMachine
+     * @param <F> a list of BaseMachine instances which extends IMultiblockFollower, in practice these will often be BaseFollowers
+     * @return True if the machine inventories contains enough ingredients to satiate the recipes
+     */
+    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate(G blockEntity, List<F> followers, BaseRecipe<?, ?>  recipe){
+        HashMap<Item, Integer> recipeItems = new HashMap<>();
+        HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
+        HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
+        HashMap<TagKey<Fluid>, Integer> recipeFluidTags = new HashMap<>();
+
+        ArrayList<BaseMachine> machines = new ArrayList<>();
+        machines.add(blockEntity);
+
+        if (followers != null){
+            machines.addAll(followers);
+        }
+
+        for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
+            populateValidationHashmaps(ingredient, recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
+        }
+
+        for (BaseMachine<?> machine: machines) {
+            subtractItemCountFromValidationHashmaps(machine, recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
+        }
+
+        return checkHashmapIngredientsFulfilled(recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
+    }
+
+    /**
+     *  Fetches a recipe for a machine RecipeType from the minecraft RecipeManager
+     * @param machineInventory
+     * @param type
+     * @param level
+     * @param blockEntity
+     * @param <T> an instance of AbstractMachineRecipe, in practice this will be a machine specific recipe class (e.g. AlembicRecipe for an Alembic)
+     * @return Returns the first matching recipe, or null if none match.
+     */
     public static <T extends AbstractMachineRecipe<T>> T getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<T> type, Level level, BaseMachine<?> blockEntity) {
-        return level.getRecipeManager()
+        var rec = level.getRecipeManager()
                 .getAllRecipesFor(type)
                 .stream()
                 .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level, recipe))
                 .findFirst()
                 .orElse(null);
+        return rec;
     }
 
     @Override
