@@ -2,6 +2,7 @@ package eng.cad.auto.engine.item;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.ISlotFluid;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
@@ -43,7 +44,7 @@ public class CustomBucket extends BucketItem {
 
     //Move to a dedicated fluid helper class at some point?
 
-    public static boolean fluidToItem(TickingMachine blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidToItem(BaseMachine blockEntity, Player player, InteractionHand interactionHand) {
         if (!(blockEntity instanceof ISlotFluid tank)) return false;
 
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
@@ -63,7 +64,7 @@ public class CustomBucket extends BucketItem {
         return result.isSuccess();
     }
 
-    public static boolean fluidFromItem(TickingMachine blockEntity, Player player, InteractionHand interactionHand) {
+    public static boolean fluidFromItem(BaseMachine blockEntity, Player player, InteractionHand interactionHand) {
         Optional<IFluidHandlerItem> bucketHandler = player.getItemInHand(interactionHand).getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (!(blockEntity instanceof ISlotFluid tank)) return false;
 
