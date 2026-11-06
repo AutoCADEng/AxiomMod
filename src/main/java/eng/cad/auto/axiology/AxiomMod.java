@@ -45,8 +45,8 @@ public class AxiomMod {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::entityRendererSetup);
         modEventBus.addListener(BeamRegistry::createRegistry);
-        modEventBus.addListener(BlockBreakListeners::onBlockBreak);
-        modEventBus.addListener(BlockPlaceAreaListeners::onBlockPlacedArea);
+        MinecraftForge.EVENT_BUS.addListener(BlockBreakListeners::onBlockBreak);
+        MinecraftForge.EVENT_BUS.addListener(BlockPlaceAreaListeners::onBlockPlacedArea);
         MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
         //Registries
         FluidRegistry.FLUIDS.register(modEventBus);

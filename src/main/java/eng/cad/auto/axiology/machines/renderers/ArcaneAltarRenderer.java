@@ -44,4 +44,5 @@ public class ArcaneAltarRenderer implements BlockEntityRenderer<ArcaneAltar> {
         int sLight = level.getBrightness(LightLayer.SKY, pos);
         return LightTexture.pack(bLight, sLight);
     }
+
 }

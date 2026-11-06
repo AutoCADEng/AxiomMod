@@ -4,6 +4,8 @@ import eng.cad.auto.axiology.core.DataSlotHandler;
 import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotItem;
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.machines.multiblock.followers.Hatch;
@@ -11,6 +13,7 @@ import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, ISlotData {
     public static String name = "arcane_pedestal";
@@ -70,5 +73,11 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
     @Override
     public Hatch<ArcanePedestal> getInstance() {
         return this;
+    }
+
+    public static class MachineBlock extends BaseMachineBlock {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
+            super(properties, blockEntity);
+        }
     }
 }

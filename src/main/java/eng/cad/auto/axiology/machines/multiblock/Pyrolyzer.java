@@ -2,6 +2,7 @@ package eng.cad.auto.axiology.machines.multiblock;
 
 import eng.cad.auto.axiology.core.DataSlotHandler;
 import eng.cad.auto.axiology.core.ISlotData;
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.*;
 import eng.cad.auto.axiology.core.machine.*;
 import eng.cad.auto.axiology.crafting.machines.PyrolyzerRecipe;
@@ -15,6 +16,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.ArrayList;
 
@@ -152,5 +154,11 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IClientTickable,
     @Override
     public boolean isStructureValid() {
         return getDataSlots().get("valid_shape") == 1;
+    }
+
+    public static class MachineBlock extends BaseMachineBlock {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
+            super(properties, blockEntity);
+        }
     }
 }

@@ -4,8 +4,10 @@ import eng.cad.auto.axiology.core.DataSlotHandler;
 import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotItem;
+import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.component.IMachineProgress;
 import eng.cad.auto.axiology.core.component.ITickable;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.BaseMaster;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
@@ -14,6 +16,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, ISlotData, IMachineProgress, ITickable {
     public static String name = "arcane_altar";
@@ -104,5 +107,11 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
     @Override
     public int maxProgress() {
         return (24000/60)/4;
+    }
+
+    public static class MachineBlock extends BaseMachineBlock {
+        public MachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
+            super(properties, blockEntity);
+        }
     }
 }
