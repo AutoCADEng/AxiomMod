@@ -31,6 +31,14 @@ public class InfusionRecipe extends AbstractMachineRecipe<InfusionRecipe> {
         return InfusionType.INSTANCE;
     }
 
+    /**
+     * Modified version of matchesTypeAndQuantity that forces the first item in the recipe to be the first item in the container.
+     * This is how we enforce the altar pedestal target item being present on the altar and not a pedestal.
+     * @param machineInventory
+     * @param level
+     * @param recipe
+     * @return
+     */
     @Override
     public boolean matchesTypeAndQuantity(CustomCraftingContainer machineInventory, Level level, InfusionRecipe recipe) {
         if (!(super.matchesTypeAndQuantity(machineInventory, level, recipe))) return false;

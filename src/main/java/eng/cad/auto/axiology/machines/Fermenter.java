@@ -41,7 +41,7 @@ import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2i;
 
-public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress, IRecipeMachine<FermenterRecipe>, IRightClickable, ISlotFluid, ISlotItem, ISlotData, IMachinePersistable, ITickable, IGuiGraphics {
+public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress, IRecipeMachine<FermenterRecipe>, IRightClickable, ISlotFluid, ISlotItem, ISlotData, IMachinePersistable, ITickable {
 
     public static final String name = "fermenter";
 
@@ -80,7 +80,7 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (!(validateMachine(level, pos, getName()) instanceof Fermenter blockEntity)) return;
 
-        FermenterRecipe activeRecipe = findRecipe(blockEntity, level);
+        FermenterRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
         if (activeRecipe == null || !activeRecipe.hasSpace(blockEntity, activeRecipe)) {
             resetProgress(blockEntity);

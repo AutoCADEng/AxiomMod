@@ -74,7 +74,7 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(!(validateMachine(level, pos, getName()) instanceof ChemicalReactor blockEntity)) return;
 
-        ChemicalReactorRecipe activeRecipe = findRecipe(blockEntity, level);
+        ChemicalReactorRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
         if (activeRecipe == null || !activeRecipe.hasSpace(blockEntity, activeRecipe)) {
             resetProgress(blockEntity);

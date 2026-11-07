@@ -103,7 +103,7 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if (!(validateMachine(level, pos, getName()) instanceof SoakingDrum blockEntity)) return;
 
-        SoakerRecipe activeRecipe = findRecipe(blockEntity, level);
+        SoakerRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
         if (activeRecipe == null) {
             resetProgress(blockEntity);

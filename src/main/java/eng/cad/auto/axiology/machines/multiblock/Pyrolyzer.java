@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable, ISlotData, IClientTickable, ITickable, IMachineProgress, IRecipeMachine<PyrolyzerRecipe> {
@@ -104,7 +105,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
             inventories = inventories.merge(followerEntity.getCraftingContainer());
         }
 
-        PyrolyzerRecipe activeRecipe = findRecipe(pyrolyzer, level);
+        PyrolyzerRecipe activeRecipe = findRecipe(pyrolyzer, level, inventories);
 
         if (activeRecipe == null){
             resetProgress(pyrolyzer);
@@ -124,6 +125,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
         }
         if (level.random.nextFloat() < 0.025F) level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
         incrementProgress(pyrolyzer, 1);
+        syncWithClients(level,getBlockPos());
     }
 
     @Override

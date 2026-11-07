@@ -10,6 +10,8 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;
 
+import javax.annotation.Nullable;
+
 public interface IRecipeMachine<T extends AbstractMachineRecipe<T>> {
     RecipeType<T> recipeType();
 
@@ -31,8 +33,7 @@ public interface IRecipeMachine<T extends AbstractMachineRecipe<T>> {
         return contents;
     }
 
-    default T findRecipe(TickingMachine<?> machine, Level level) {
-        return AbstractMachineRecipe.getActiveRecipe(
-                buildContainer(machine), recipeType(), level, machine);
+    default T findRecipe(TickingMachine<?> machine, Level level, @Nullable CustomCraftingContainer overwriteDefaultContainer) {
+        return AbstractMachineRecipe.getActiveRecipe(overwriteDefaultContainer == null ? buildContainer(machine) : overwriteDefaultContainer, recipeType(), level, machine);
     }
 }

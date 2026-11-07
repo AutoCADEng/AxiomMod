@@ -51,7 +51,7 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(!(validateMachine(level, pos, getName()) instanceof Alembic blockEntity)) return;
         updateHeatState(level, pos, blockEntity);
-        AlembicRecipe activeRecipe = findRecipe(blockEntity, level);
+        AlembicRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
         if (activeRecipe == null || !isHeated(blockEntity)){
             resetProgress(blockEntity);
