@@ -102,9 +102,10 @@ public class UniversalSlot {
                     ingredient = new UniversalSlot(item);
                 }
             }
-            case("module") ->{
+            case("module") -> {
+                ResourceLocation id = name.contains(":") ? ResourceLocation.parse(name) : ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, name);
                 ModularToolAugment ability = AugmentsRegistry.MODULES.getEntries().stream()
-                        .filter(entry -> entry.getId().getPath().equals(name))
+                        .filter(entry -> entry.getId().equals(id))
                         .map(RegistryObject::get)
                         .findFirst()
                         .orElse(null);
