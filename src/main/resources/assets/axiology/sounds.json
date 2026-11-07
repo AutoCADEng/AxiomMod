@@ -7,7 +7,7 @@
     "sounds": ["axiology:infuser_hum"],
     "subtitle": "Infuser Humming"
   },
-  "infuser_success": {
+  "infuser_consume": {
     "sounds": ["axiology:infuser_consume"],
     "subtitle": "Infuser Succeeded"
   },

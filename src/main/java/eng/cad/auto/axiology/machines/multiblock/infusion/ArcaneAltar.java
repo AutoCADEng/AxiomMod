@@ -16,16 +16,19 @@ import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
 import eng.cad.auto.axiology.magic.rebounds.Rebounds;
 import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
 import eng.cad.auto.axiology.magic.rebounds.core.InfusionContext;
-import eng.cad.auto.axiology.modulartools.ModularTool;
+import eng.cad.auto.axiology.modulartools.components.IModularTool;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiology.core.network.AxiologyNetwork;
 import eng.cad.auto.axiology.core.network.packet.InfusionSyncPacket;
 import eng.cad.auto.axiology.core.network.packet.KillBeamPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -98,6 +101,14 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
             if (progressCompleted(this) && pedestal.getDataSlots().get("isItemHidden") == 0 && !pedestal.getItemSlots().getStackInSlot(0).isEmpty()){
                 resetProgress(this);
                 pedestal.getDataSlots().set("isItemHidden", 1);
+                level.playSound(
+                        null,
+                        getBlockPos(),
+                        SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("axiology", "infuser_consume")),
+                        SoundSource.BLOCKS,
+                        0.1F,
+                        1.1F + level.getRandom().nextFloat()*0.2f
+                );
                 pedestal.setChanged();
                 level.sendBlockUpdated(pedestalPos, pedestal.getBlockState(), pedestal.getBlockState(), 3);
             }
@@ -114,20 +125,34 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         var followers = getFollowers(level);
         if (activeRecipe != null && activeRecipe.validate(entity, followers, activeRecipe)) {
             ArrayList<BaseMachine<? extends IMultiblockFollower>> followerList = new ArrayList<>(followers);
-
+            boolean failed = false;
             ItemStack copyOfItem = entity.getItemSlots().getStackInSlot(0).copy();
             activeRecipe.consumeIngredients(entity, followerList, activeRecipe);
             if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)){
-                if (copyOfItem.getItem() instanceof ModularTool moddableTool){
-                    if (!moddableTool.addModule(copyOfItem, activeRecipe.getCraftingOutput().get(0).getModule())) applyRebound(entity);
-                    ItemStack newItem = new ItemStack(moddableTool,1);
-                    if (copyOfItem.hasTag()){
-                        newItem.setTag(copyOfItem.getTag().copy());
+                if (copyOfItem.getItem() instanceof IModularTool moddableTool){
+                    if (!IModularTool.addModule(copyOfItem, activeRecipe.getCraftingOutput().get(0).getModule())) {
+                        failed = true;
+                        applyRebound(entity);
                     }
-                    copyOfItem = newItem;
                 }
             }
 
+            if (!failed){
+
+                if (level instanceof ServerLevel serverLevel){
+                    serverLevel.playSound(
+                            null,
+                            entity.getBlockPos(),
+                            SoundEvents.GENERIC_EXPLODE,
+                            SoundSource.BLOCKS,
+                            0.5F,
+                            0.9F + level.getRandom().nextFloat()*0.2f
+                    );
+                    serverLevel.sendParticles(ParticleTypes.EXPLOSION, getBlockPos().getX() + 0.5f, getBlockPos().getY() + 1.0f, getBlockPos().getZ() + 0.5f, 1, 0, 0, 0, 0);
+                    serverLevel.sendParticles(ParticleTypes.POOF, getBlockPos().getX() + 0.5f, getBlockPos().getY()+ 1.0f, getBlockPos().getZ() + 0.5f, 20, 0.3, 0.3, 0.3, 0.05);
+                }
+
+            }
             entity.getItemSlots().setStackInSlot(0, copyOfItem);
 
             for(BaseMachine<? extends IMultiblockFollower> follower:followers){
@@ -147,15 +172,6 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
                 level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
             }
         }
-
-        level.playSound(
-                null,
-                entity.getBlockPos(),
-                SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("axiology", "infuser_fail")),
-                SoundSource.BLOCKS,
-                0.5F,
-                0.9F
-        );
 
         entity.getDataSlots().set("isActive", 0);
     }
@@ -217,6 +233,14 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         for(ServerPlayer player:level.getEntitiesOfClass(ServerPlayer.class, new AABB(entity.getBlockPos()).inflate(MAX_PEDESTAL_RADIUS*2))) {
             effect.apply(new InfusionContext(level, entity.getBlockPos(), player));
         }
+        level.playSound(
+                null,
+                entity.getBlockPos(),
+                SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath("axiology", "infuser_fail")),
+                SoundSource.BLOCKS,
+                0.5F,
+                0.9F
+        );
     }
     public void resetPedestals() {
         for (BaseMachine<? extends IMultiblockFollower> follower : getFollowers(level)) {
@@ -286,7 +310,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
 
     @Override
     public int maxProgress() {
-        return (24000/60)/4;
+        return (24000/60)/16;
     }
 
     @Override
