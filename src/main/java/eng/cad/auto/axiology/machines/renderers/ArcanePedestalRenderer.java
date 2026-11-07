@@ -34,7 +34,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t)), 0.5f);
         poseStack.scale(0.75f,0.75f,0.75f);
         poseStack.mulPose(Axis.YP.rotationDegrees(t));
-        if (entity.getDataSlots().get("isItemVisible") == 1) poseStack.scale(0.25f, 0.25f ,0.25f);
+        if (entity.getDataSlots().get("isItemHidden") == 1) poseStack.scale(0.25f, 0.25f ,0.25f);
         itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
         poseStack.popPose();
     }

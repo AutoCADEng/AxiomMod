@@ -23,7 +23,7 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
 
     public ArcanePedestal(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
-        this.data = new DataSlotHandler("isItemVisible");
+        this.data = new DataSlotHandler("isItemHidden");
         this.items = new ExtendedItemStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.INPUT, 1)
             }
@@ -58,12 +58,12 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
 
     @Override
     public ExtendedItemStackHandler getItemSlots() {
-        return null;
+        return this.items;
     }
 
     @Override
     public CustomCraftingContainer getCraftingContainer() {
-        return null;
+        return new CustomCraftingContainer(this).addSlot(getItemSlots().getStackInSlot(0));
     }
 
     @Override
