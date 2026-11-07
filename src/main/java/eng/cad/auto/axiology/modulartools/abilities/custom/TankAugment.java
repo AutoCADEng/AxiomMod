@@ -1,15 +1,13 @@
 package eng.cad.auto.axiology.modulartools.abilities.custom;
 
-import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.modulartools.components.IModularFluidInventory;
-import eng.cad.auto.axiology.modulartools.components.IModularItemInventory;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
 
-public class TankAugment extends ModularToolAbility implements IModularFluidInventory {
+public class TankAugment extends ModularToolAugment implements IModularFluidInventory {
     FluidStackHandler fluidInventory = new FluidStackHandler(new SlotConfig[]{new SlotConfig(SlotIORestriction.IN_OUT,8000)}, this::fluidChanged);
 
     @Override

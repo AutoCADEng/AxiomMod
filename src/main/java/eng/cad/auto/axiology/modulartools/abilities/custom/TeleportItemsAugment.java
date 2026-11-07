@@ -3,7 +3,7 @@ package eng.cad.auto.axiology.modulartools.abilities.custom;
 import eng.cad.auto.axiology.core.events.BlockDropEvent;
 import eng.cad.auto.axiology.modulartools.components.IModularDigAbility;
 import eng.cad.auto.axiology.modulartools.components.IModularHitAbility;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
@@ -18,7 +18,7 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.Objects;
 
-public class TeleportItemsAugment extends ModularToolAbility implements IModularDigAbility, IModularHitAbility {
+public class TeleportItemsAugment extends ModularToolAugment implements IModularDigAbility, IModularHitAbility {
     @Override
     public Component getDisplayName() {
         return Component.translatable("axiology.modulartools.teleport_items");

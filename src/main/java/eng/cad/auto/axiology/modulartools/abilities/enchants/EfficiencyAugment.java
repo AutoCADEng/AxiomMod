@@ -2,14 +2,14 @@ package eng.cad.auto.axiology.modulartools.abilities.enchants;
 
 import eng.cad.auto.axiology.modulartools.ItemEnchantment;
 import eng.cad.auto.axiology.modulartools.components.IModularEnchantment;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class EfficiencyAugment extends ModularToolAbility implements IModularEnchantment {
+public class EfficiencyAugment extends ModularToolAugment implements IModularEnchantment {
 
     @Override
     public Component getDisplayName() {

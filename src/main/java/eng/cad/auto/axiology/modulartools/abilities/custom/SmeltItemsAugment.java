@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.modulartools.abilities.custom;
 
 import eng.cad.auto.axiology.core.events.BlockDropEvent;
 import eng.cad.auto.axiology.modulartools.components.IModularDigAbility;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleContainer;
@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.Optional;
 
-public class SmeltItemsAugment extends ModularToolAbility implements IModularDigAbility {
+public class SmeltItemsAugment extends ModularToolAugment implements IModularDigAbility {
     @Override
     public Component getDisplayName() {
         return Component.translatable("axiology.modulartools.smelting");

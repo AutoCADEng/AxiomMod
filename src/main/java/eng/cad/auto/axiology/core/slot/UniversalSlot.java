@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
+import eng.cad.auto.axiology.registry.AugmentsRegistry;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 import java.util.Objects;
 
@@ -26,11 +29,11 @@ import java.util.Objects;
  */
 // Warning: Do not convert into a record, or it will become possible to have both an Item and a Fluid active at the same time.
 public class UniversalSlot {
-
-    public enum Kind { EMPTY, ITEM, FLUID, FLUID_TAG, ITEM_TAG}
+    public enum Kind { EMPTY, ITEM, FLUID, FLUID_TAG, ITEM_TAG, MODULE}
     public record SmartTag(TagKey<?> tag, int count){};
     private final FluidStack fluid;
     private final ItemStack item;
+    private final ModularToolAugment modularToolAbility;
     private SmartTag tag = new SmartTag(null, 0);
     public static final UniversalSlot EMPTY = new UniversalSlot();
     Kind type = Kind.EMPTY;
@@ -39,17 +42,20 @@ public class UniversalSlot {
         type = Kind.EMPTY;
         fluid = FluidStack.EMPTY;
         item = ItemStack.EMPTY;
+        modularToolAbility = null;
     }
     public UniversalSlot(FluidStack fluid) {
         this.item = ItemStack.EMPTY;
         this.fluid = fluid;
         type = Kind.FLUID;
+        modularToolAbility = null;
     }
 
     public UniversalSlot(ItemStack item) {
         this.item = item;
         this.fluid = FluidStack.EMPTY;
         this.type = Kind.ITEM;
+        modularToolAbility = null;
     }
 
     public UniversalSlot(SmartTag tag, Kind kind) {
@@ -57,8 +63,15 @@ public class UniversalSlot {
         this.fluid = FluidStack.EMPTY;
         this.type = kind;
         this.tag = tag;
+        modularToolAbility = null;
     }
 
+    public UniversalSlot(ModularToolAugment module) {
+        this.item = ItemStack.EMPTY;
+        this.fluid = FluidStack.EMPTY;
+        this.type = Kind.MODULE;
+        this.modularToolAbility = module;
+    }
     /**
      * The fromJson method is used to parse individual ingredients from axiom GenericRecipes.
      * @param ingredientJSON the JsonObject being parsed from.
@@ -70,15 +83,17 @@ public class UniversalSlot {
         int count = ingredientJSON.get("count").getAsInt();
 
         UniversalSlot ingredient;
-        if (Objects.equals(type, "fluid")) {
-            if (name.startsWith("#")) {
-                TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryParse(name.substring(1)));
-                ingredient = new UniversalSlot(new SmartTag(fluidTag,  count), Kind.FLUID_TAG);
-            } else {
-                FluidStack fluid = new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(name))), count);
-                ingredient = new UniversalSlot(fluid);
+        switch(type){
+            case("fluid") ->{
+                if (name.startsWith("#")) {
+                    TagKey<Fluid> fluidTag = TagKey.create(ForgeRegistries.FLUIDS.getRegistryKey(), ResourceLocation.tryParse(name.substring(1)));
+                    ingredient = new UniversalSlot(new SmartTag(fluidTag,  count), Kind.FLUID_TAG);
+                } else {
+                    FluidStack fluid = new FluidStack(Objects.requireNonNull(ForgeRegistries.FLUIDS.getValue(ResourceLocation.parse(name))), count);
+                    ingredient = new UniversalSlot(fluid);
+                }
             }
-        } else if (Objects.equals(type, "item")) {
+            case("item") -> {
                 if (name.startsWith("#")) {
                     TagKey<Item> itemTag = TagKey.create(ForgeRegistries.ITEMS.getRegistryKey(), ResourceLocation.tryParse(name.substring(1)));
                     ingredient = new UniversalSlot(new SmartTag(itemTag, count), Kind.ITEM_TAG);
@@ -86,11 +101,21 @@ public class UniversalSlot {
                     ItemStack item = new ItemStack(Objects.requireNonNull(ForgeRegistries.ITEMS.getValue(ResourceLocation.parse(name))), count);
                     ingredient = new UniversalSlot(item);
                 }
-            } else {
-                AxiomMod.LOGGER.error("JSON ERROR: {} is not a valid UniversalSlot type (item, fluid)", type);
+            }
+            case("module") ->{
+                ModularToolAugment ability = AugmentsRegistry.MODULES.getEntries().stream()
+                        .filter(entry -> entry.getId().getPath().equals(name))
+                        .map(RegistryObject::get)
+                        .findFirst()
+                        .orElse(null);
+                ingredient = new UniversalSlot(ability);
+            }
+            default ->{
+                AxiomMod.LOGGER.error("JSON ERROR: {} is not a valid UniversalSlot type (item, fluid, module)", type);
                 return UniversalSlot.EMPTY;
             }
-            return ingredient;
+        }
+        return ingredient;
         }
     /**
      * The arrayFromJson method is intended to parse entire lists of ingredients from an axiom GenericRecipe,
@@ -191,6 +216,9 @@ public class UniversalSlot {
         return fluid == null?FluidStack.EMPTY : fluid;
     }
 
+    public ModularToolAugment getModule(){
+        return modularToolAbility == null ? ModularToolAugment.EMPTY : modularToolAbility;
+    }
     /**
      * Writes a FluidStack or ItemStack to the network
      * @param byteBuffer The network byte buffer being written to

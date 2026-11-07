@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+    "axiology:etched_iron_pickaxe",
+    "axiology:etched_iron_axe",
+    "axiology:etched_iron_shovel",
+    "axiology:etched_iron_hoe",
+    "axiology:etched_iron_sword",
+    "axiology:etched_iron_shears"
+  ]
+}

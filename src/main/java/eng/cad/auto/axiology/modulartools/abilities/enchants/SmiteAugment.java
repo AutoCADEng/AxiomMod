@@ -2,14 +2,14 @@ package eng.cad.auto.axiology.modulartools.abilities.enchants;
 
 import eng.cad.auto.axiology.modulartools.ItemEnchantment;
 import eng.cad.auto.axiology.modulartools.components.IModularEnchantment;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.List;
 
-public class SmiteAugment extends ModularToolAbility implements IModularEnchantment {
+public class SmiteAugment extends ModularToolAugment implements IModularEnchantment {
 
     @Override
     public Component getDisplayName() {
@@ -23,7 +23,7 @@ public class SmiteAugment extends ModularToolAbility implements IModularEnchantm
     }
 
     @Override
-    public boolean isCompatible(ModularToolAbility ability) {
+    public boolean isCompatible(ModularToolAugment ability) {
         if (ability instanceof SharpnessAugment) return false;
         if (ability instanceof BaneOfArthropodsAugment) return false;
         return true;

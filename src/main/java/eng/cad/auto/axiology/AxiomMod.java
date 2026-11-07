@@ -57,6 +57,7 @@ public class AxiomMod {
         MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
 
         //Registries
+        AugmentsRegistry.init(modEventBus);
         FluidRegistry.FLUIDS.register(modEventBus);
         FluidRegistry.init();
         FluidRegistry.FLUIDTYPES.register(modEventBus);

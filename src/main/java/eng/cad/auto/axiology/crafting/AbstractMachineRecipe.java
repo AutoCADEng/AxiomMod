@@ -19,6 +19,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,18 +50,30 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
      * @return True if the recipe is valid, false if not
      */
     public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
+        consumeIngredients(entity,followers,recipe);
+        produceOutputs(entity, followers, recipe);
+        return true;
+    }
+
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean consumeIngredients(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
         if (!validate(entity, followers, recipe)) return false; //Candidate for deletion, we always check at the machine level anyway.
 
         for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
             consume(ingredient, followers, entity, recipe);
         }
 
-        for (UniversalSlot output: recipe.getCraftingOutput()){
-            produce(output, followers, entity, recipe);
-        }
         return true;
     }
 
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean produceOutputs(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
+        if (!validate(entity, followers, recipe)) return false; //Candidate for deletion, we always check at the machine level anyway.
+
+        for (UniversalSlot output: recipe.getCraftingOutput()){
+            produce(output, followers, entity, recipe);
+        }
+
+        return true;
+    }
     private <G extends BaseMachine<? extends IMultiblockFollower>> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?>  recipe) {
         int required = 0;
 
@@ -436,7 +449,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
      * @param <F> a list of BaseMachine instances which extends IMultiblockFollower, in practice these will often be BaseFollowers
      * @return True if the machine inventories contains enough ingredients to satiate the recipes
      */
-    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate(G blockEntity, List<F> followers, BaseRecipe<?, ?>  recipe){
+    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate( G blockEntity, @Nullable List<F> followers, BaseRecipe<?, ?>  recipe){
         HashMap<Item, Integer> recipeItems = new HashMap<>();
         HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
         HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
@@ -449,6 +462,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
             machines.addAll(followers);
         }
 
+        if (blockEntity==null && followers == null) return false;
         for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
             populateValidationHashmaps(ingredient, recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
         }

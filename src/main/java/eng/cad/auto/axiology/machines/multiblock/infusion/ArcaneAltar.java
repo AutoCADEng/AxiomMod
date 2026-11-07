@@ -11,10 +11,12 @@ import eng.cad.auto.axiology.core.machine.BaseMaster;
 import eng.cad.auto.axiology.core.machine.component.*;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
 import eng.cad.auto.axiology.magic.rebounds.Rebounds;
 import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
 import eng.cad.auto.axiology.magic.rebounds.core.InfusionContext;
+import eng.cad.auto.axiology.modulartools.ModularTool;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiology.core.network.AxiologyNetwork;
@@ -112,7 +114,22 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         var followers = getFollowers(level);
         if (activeRecipe != null && activeRecipe.validate(entity, followers, activeRecipe)) {
             ArrayList<BaseMachine<? extends IMultiblockFollower>> followerList = new ArrayList<>(followers);
-            activeRecipe.craft(entity, followerList, activeRecipe);
+
+            ItemStack copyOfItem = entity.getItemSlots().getStackInSlot(0).copy();
+            activeRecipe.consumeIngredients(entity, followerList, activeRecipe);
+            if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)){
+                if (copyOfItem.getItem() instanceof ModularTool moddableTool){
+                    if (!moddableTool.addModule(copyOfItem, activeRecipe.getCraftingOutput().get(0).getModule())) applyRebound(entity);
+                    ItemStack newItem = new ItemStack(moddableTool,1);
+                    if (copyOfItem.hasTag()){
+                        newItem.setTag(copyOfItem.getTag().copy());
+                    }
+                    copyOfItem = newItem;
+                }
+            }
+
+            entity.getItemSlots().setStackInSlot(0, copyOfItem);
+
             for(BaseMachine<? extends IMultiblockFollower> follower:followers){
                 if (!(follower instanceof ArcanePedestal pedestal)) continue;
                 pedestal.setChanged();
@@ -120,11 +137,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
             }
             entity.syncWithClients(level, entity.getBlockPos());
         } else {
-            AbstractRebound effect = Rebounds.randomEffect();
-            AxiomMod.LOGGER.warn("FAILED A RECIPE FOR INFUSER applying {}", effect.toString());
-            for(ServerPlayer player:level.getEntitiesOfClass(ServerPlayer.class, new AABB(entity.getBlockPos()).inflate(MAX_PEDESTAL_RADIUS*2))) {
-                effect.apply(new InfusionContext(level, entity.getBlockPos(), player));
-            }
+            applyRebound(entity);
 
             for(BaseMachine<? extends IMultiblockFollower> follower:followers){
                 if (!(follower instanceof ArcanePedestal pedestal)) continue;
@@ -198,6 +211,13 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         return pedestals;
     }
 
+    public void applyRebound(ArcaneAltar entity){
+        AbstractRebound effect = Rebounds.randomEffect();
+        AxiomMod.LOGGER.warn("FAILED A RECIPE FOR INFUSER applying {}", effect.toString());
+        for(ServerPlayer player:level.getEntitiesOfClass(ServerPlayer.class, new AABB(entity.getBlockPos()).inflate(MAX_PEDESTAL_RADIUS*2))) {
+            effect.apply(new InfusionContext(level, entity.getBlockPos(), player));
+        }
+    }
     public void resetPedestals() {
         for (BaseMachine<? extends IMultiblockFollower> follower : getFollowers(level)) {
             if (follower instanceof ArcanePedestal pedestal) {

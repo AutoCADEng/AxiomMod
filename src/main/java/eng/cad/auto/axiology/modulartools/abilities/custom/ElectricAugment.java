@@ -3,15 +3,10 @@ package eng.cad.auto.axiology.modulartools.abilities.custom;
 import eng.cad.auto.axiology.modulartools.ModularTool;
 import eng.cad.auto.axiology.modulartools.components.IModularBattery;
 import eng.cad.auto.axiology.modulartools.components.IModularDurability;
-import eng.cad.auto.axiology.modulartools.components.IModularFluidInventory;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
-import net.minecraft.core.registries.Registries;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.material.Fluid;
 
-public class IElectricAugment extends ModularToolAbility implements IModularDurability {
+public class ElectricAugment extends ModularToolAugment implements IModularDurability {
     @Override
     public Component getDisplayName() {
         return Component.translatable("axiology.modulartools.fuel.electric");

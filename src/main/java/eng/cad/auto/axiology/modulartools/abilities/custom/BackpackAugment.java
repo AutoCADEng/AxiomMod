@@ -4,10 +4,10 @@ import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.modulartools.components.IModularItemInventory;
-import eng.cad.auto.axiology.modulartools.components.ModularToolAbility;
+import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
 
-public class BackpackAugment extends ModularToolAbility implements IModularItemInventory {
+public class BackpackAugment extends ModularToolAugment implements IModularItemInventory {
     ExtendedItemStackHandler itemInventory = new ExtendedItemStackHandler(new SlotConfig[]{
             new SlotConfig(SlotIORestriction.IN_OUT,64),
             new SlotConfig(SlotIORestriction.IN_OUT,64),
