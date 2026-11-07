@@ -12,7 +12,7 @@ import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
 import eng.cad.auto.axiology.machines.renderers.ArcaneAltarRenderer;
 import eng.cad.auto.axiology.machines.renderers.ArcanePedestalRenderer;
 import eng.cad.auto.axiology.machines.renderers.SoakingDrumRenderer;
-import eng.cad.auto.axiology.modulartools.ModularTool;
+import eng.cad.auto.axiology.modulartools.components.IModularTool;
 import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.axiology.client.colors.ClientItemColorer;
 import eng.cad.auto.axiology.client.core.ClientSetup;
@@ -47,8 +47,8 @@ public class AxiomMod {
         modEventBus.addListener(this::entityRendererSetup);
         modEventBus.addListener(BeamRegistry::createRegistry);
 
-        MinecraftForge.EVENT_BUS.addListener(ModularTool::onBlockDrop);
-        MinecraftForge.EVENT_BUS.addListener(ModularTool::onLivingDrops);
+        MinecraftForge.EVENT_BUS.addListener(IModularTool::onBlockDrop);
+        MinecraftForge.EVENT_BUS.addListener(IModularTool::onLivingDrops);
         MinecraftForge.EVENT_BUS.addListener(FluxedTools::onBlockDrop);
         MinecraftForge.EVENT_BUS.addListener(FluxedTools::onLivingDrops);
         MinecraftForge.EVENT_BUS.addListener(BlazingTools::onBlockDrop);
