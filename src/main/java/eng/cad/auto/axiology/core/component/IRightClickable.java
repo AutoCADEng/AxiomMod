@@ -1,7 +1,9 @@
 package eng.cad.auto.axiology.core.component;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
+import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.machines.util.CommonRightClickBehaviour;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -16,12 +18,17 @@ public interface IRightClickable {
       if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
       if (hand == InteractionHand.OFF_HAND) return InteractionResult.CONSUME;
       if (!(level.getBlockEntity(blockPos) instanceof BaseMachine machine)) return InteractionResult.CONSUME;
-      if (machine instanceof ISlotFluid fluid) {
-         if (CommonRightClickBehaviour.bucketInHand(fluid.getFluidSlots().getFluidInTank(0).getAmount(), machine, blockState, level, blockPos, player, hand, result)) return InteractionResult.PASS;
+
+      if (level.getBlockEntity(blockPos) instanceof GuiMachine<?> guiMachine) {
+         if (guiMachine.openScreen(guiMachine, blockState, level, blockPos, player, hand, result) == InteractionResult.SUCCESS) return InteractionResult.SUCCESS;
       }
-      if (machine instanceof ISlotFluid) {
+
+      if (machine instanceof ISlotFluid fluid) {
+         if (CommonRightClickBehaviour.bucketInHand(fluid.getFluidSlots().getFluidInTank(0).getAmount(), machine, blockState, level, blockPos, player, hand, result)) return InteractionResult.SUCCESS;
+      }
+      if (machine instanceof ISlotItem) {
          if (CommonRightClickBehaviour.itemInHand(0, machine, blockState, level, blockPos, player, hand, result))
-            return InteractionResult.PASS;
+            return InteractionResult.SUCCESS;
       }
       return InteractionResult.CONSUME;
    }

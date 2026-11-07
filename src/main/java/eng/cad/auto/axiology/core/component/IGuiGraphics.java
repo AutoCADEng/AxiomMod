@@ -18,11 +18,11 @@ public interface IGuiGraphics {
 
     default <T extends GuiMachine> InteractionResult openScreen(T machine, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result){
         if (machine == null) return InteractionResult.CONSUME;
-        if (level.isClientSide()) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.CONSUME;
         if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;
         if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
         NetworkHooks.openScreen(serverPlayer, machine, blockPos);
-        return InteractionResult.CONSUME;
+        return InteractionResult.SUCCESS;
     }
 
     String getScreenName();
