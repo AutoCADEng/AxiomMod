@@ -1,7 +1,10 @@
 package eng.cad.auto.axiology.core.machine;
 
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
-import eng.cad.auto.axiology.core.component.*;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockFollower;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockMaster;
+import eng.cad.auto.axiology.core.machine.component.ISubscribeBlockBreak;
+import eng.cad.auto.axiology.core.machine.component.ISubscribeBlockPlacedInArea;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;

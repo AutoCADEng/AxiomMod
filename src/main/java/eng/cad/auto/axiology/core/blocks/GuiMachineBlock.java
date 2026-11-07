@@ -2,8 +2,7 @@ package eng.cad.auto.axiology.core.blocks;
 
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
-import eng.cad.auto.axiology.core.component.IGuiGraphics;
+import eng.cad.auto.axiology.core.machine.component.IGuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

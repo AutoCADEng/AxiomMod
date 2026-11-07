@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.core.events;
 
-import eng.cad.auto.axiology.core.component.ISubscribeBlockPlacedInArea;
+import eng.cad.auto.axiology.core.machine.component.ISubscribeBlockPlacedInArea;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.event.level.BlockEvent;

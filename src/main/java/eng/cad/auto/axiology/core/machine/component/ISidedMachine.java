@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.core.component;
+package eng.cad.auto.axiology.core.machine.component;
 
 import net.minecraft.core.Direction;
 

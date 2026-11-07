@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.machines.multiblock.followers;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
-import eng.cad.auto.axiology.core.component.IRightClickable;
+import eng.cad.auto.axiology.core.machine.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;

@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.core.machine;
 
-import eng.cad.auto.axiology.core.component.IGuiGraphics;
+import eng.cad.auto.axiology.core.machine.component.IGuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.level.block.entity.BlockEntityType;

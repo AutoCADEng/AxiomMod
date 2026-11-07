@@ -6,5 +6,10 @@
   "curse.blindness": "The infusion violently destabilizes, wisps of magic cover your eyes",
   "curse.none": "The infusion violently destabilizes, but nothing has happened",
   "curse.pain": "The infusion violently destabilizes, shards of dissolved matter pierce your body and you barely escape with your life",
-  "curse.wither": "The infusion violently destabilizes, wisps of magic cling onto your body and wither it away"
+  "curse.wither": "The infusion violently destabilizes, wisps of magic cling onto your body and wither it away",
+  "tooltip.axiology.cursed_tool.vampire": "Vampiric: %s%% chance to mend %s durability on hit",
+  "tooltip.axiology.cursed_tool.curse": "Cursed: Applies wither %s for %s seconds on target",
+  "tooltip.axiology.blazing_tools.smelt": "Molten Core: Automatically smelts drops",
+  "tooltip.axiology.blazing_tools.burn": "Piping Hot: Ignites enemies for %s seconds on hit",
+  "tooltip.axiology.fluxed_tools.auto_collect": "Arcane Grasp: Teleports block and item drops to your inventory"
 }

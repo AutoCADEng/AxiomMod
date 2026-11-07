@@ -3,6 +3,8 @@ package eng.cad.auto.axiology;
 import com.mojang.logging.LogUtils;
 import eng.cad.auto.axiology.core.events.BlockBreakListeners;
 import eng.cad.auto.axiology.core.events.BlockPlaceAreaListeners;
+import eng.cad.auto.axiology.items.toolsets.BlazingTools;
+import eng.cad.auto.axiology.items.toolsets.FluxedTools;
 import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneAltar;
@@ -10,6 +12,7 @@ import eng.cad.auto.axiology.machines.multiblock.infusion.ArcanePedestal;
 import eng.cad.auto.axiology.machines.renderers.ArcaneAltarRenderer;
 import eng.cad.auto.axiology.machines.renderers.ArcanePedestalRenderer;
 import eng.cad.auto.axiology.machines.renderers.SoakingDrumRenderer;
+import eng.cad.auto.axiology.modulartools.ModularTool;
 import eng.cad.auto.axiology.registry.render.BeamRegistry;
 import eng.cad.auto.axiology.client.colors.ClientItemColorer;
 import eng.cad.auto.axiology.client.core.ClientSetup;
@@ -43,9 +46,16 @@ public class AxiomMod {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::entityRendererSetup);
         modEventBus.addListener(BeamRegistry::createRegistry);
+
+        MinecraftForge.EVENT_BUS.addListener(ModularTool::onBlockDrop);
+        MinecraftForge.EVENT_BUS.addListener(ModularTool::onLivingDrops);
+        MinecraftForge.EVENT_BUS.addListener(FluxedTools::onBlockDrop);
+        MinecraftForge.EVENT_BUS.addListener(FluxedTools::onLivingDrops);
+        MinecraftForge.EVENT_BUS.addListener(BlazingTools::onBlockDrop);
         MinecraftForge.EVENT_BUS.addListener(BlockBreakListeners::onBlockBreak);
         MinecraftForge.EVENT_BUS.addListener(BlockPlaceAreaListeners::onBlockPlacedArea);
         MinecraftForge.EVENT_BUS.addListener(AxiomMod::onAddReloadListeners);
+
         //Registries
         FluidRegistry.FLUIDS.register(modEventBus);
         FluidRegistry.init();

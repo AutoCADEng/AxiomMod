@@ -5,7 +5,7 @@ import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
-import eng.cad.auto.axiology.core.component.IRightClickable;
+import eng.cad.auto.axiology.core.machine.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;

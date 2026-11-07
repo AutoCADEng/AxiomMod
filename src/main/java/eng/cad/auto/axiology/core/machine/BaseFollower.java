@@ -1,8 +1,8 @@
 package eng.cad.auto.axiology.core.machine;
 
-import eng.cad.auto.axiology.core.component.IMultiblockFollower;
-import eng.cad.auto.axiology.core.component.IMultiblockMaster;
-import eng.cad.auto.axiology.core.component.ISubscribeBlockBreak;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockFollower;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockMaster;
+import eng.cad.auto.axiology.core.machine.component.ISubscribeBlockBreak;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;

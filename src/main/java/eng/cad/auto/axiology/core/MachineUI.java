@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.core;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.core.component.IGuiGraphics;
+import eng.cad.auto.axiology.core.machine.component.IGuiGraphics;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.core.network.AxiologyNetwork;

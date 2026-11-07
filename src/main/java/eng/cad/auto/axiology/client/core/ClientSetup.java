@@ -50,6 +50,36 @@ public class ClientSetup {
             event.accept(ItemRegistry.MUNDANE_MACHINE_FRAME);
             event.accept(ItemRegistry.CURSED_INGOT);
 
+            event.accept(ItemRegistry.SUPER_SOAKER);
+
+            event.accept(ItemRegistry.CURSED_PICKAXE);
+            event.accept(ItemRegistry.CURSED_AXE);
+            event.accept(ItemRegistry.CURSED_SHOVEL);
+            event.accept(ItemRegistry.CURSED_HOE);
+            event.accept(ItemRegistry.CURSED_SWORD);
+            event.accept(ItemRegistry.CURSED_SHEARS);
+
+            event.accept(ItemRegistry.FLUXED_PICKAXE);
+            event.accept(ItemRegistry.FLUXED_AXE);
+            event.accept(ItemRegistry.FLUXED_SHOVEL);
+            event.accept(ItemRegistry.FLUXED_HOE);
+            event.accept(ItemRegistry.FLUXED_SWORD);
+            event.accept(ItemRegistry.FLUXED_SHEARS);
+
+            event.accept(ItemRegistry.BLAZING_PICKAXE);
+            event.accept(ItemRegistry.BLAZING_AXE);
+            event.accept(ItemRegistry.BLAZING_SHOVEL);
+            event.accept(ItemRegistry.BLAZING_HOE);
+            event.accept(ItemRegistry.BLAZING_SWORD);
+            event.accept(ItemRegistry.BLAZING_SHEARS);
+
+            event.accept(ItemRegistry.ETCHED_PICKAXE);
+            event.accept(ItemRegistry.ETCHED_AXE);
+            event.accept(ItemRegistry.ETCHED_SHOVEL);
+            event.accept(ItemRegistry.ETCHED_HOE);
+            event.accept(ItemRegistry.ETCHED_SWORD);
+            event.accept(ItemRegistry.ETCHED_SHEARS);
+
             //Machine Blocks
             for (MachineRegistryObject machine: MachineRegistry.MACHINELIST.values()){
                 event.accept(machine.blockItem);

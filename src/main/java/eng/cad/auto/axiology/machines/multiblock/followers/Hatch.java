@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.machines.multiblock.followers;
 
-import eng.cad.auto.axiology.core.component.IMachinePersistable;
+import eng.cad.auto.axiology.core.machine.component.IMachinePersistable;
 import eng.cad.auto.axiology.core.machine.BaseFollower;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;

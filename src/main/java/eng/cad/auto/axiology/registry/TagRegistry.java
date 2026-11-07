@@ -19,8 +19,14 @@ public class TagRegistry {
                     Registries.FLUID,
                     ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "hot_fluids")
             );
+    public static final TagKey<Fluid> TOOL_FUEL_FLUIDS =
+            TagKey.create(
+                    Registries.FLUID,
+                    ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "tool_fuel_fluids")
+            );
     public static void register(IEventBus modEventBus){
         modEventBus.register(HOT_BLOCKS);
         modEventBus.register(HOT_FLUIDS);
+        modEventBus.register(TOOL_FUEL_FLUIDS);
     }
 }

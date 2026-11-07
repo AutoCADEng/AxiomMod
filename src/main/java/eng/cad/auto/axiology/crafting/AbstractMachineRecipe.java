@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.crafting;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
-import eng.cad.auto.axiology.core.component.IMultiblockFollower;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockFollower;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.crafting.core.AbstractRecipe;
 import eng.cad.auto.axiology.crafting.core.BaseRecipe;

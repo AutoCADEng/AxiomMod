@@ -2,9 +2,9 @@ package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
-import eng.cad.auto.axiology.core.component.*;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
+import eng.cad.auto.axiology.core.machine.component.*;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;

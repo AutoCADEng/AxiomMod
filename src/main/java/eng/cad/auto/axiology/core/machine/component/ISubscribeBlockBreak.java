@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.core.component;
+package eng.cad.auto.axiology.core.machine.component;
 
 import eng.cad.auto.axiology.core.events.BlockBreakListeners;
 import eng.cad.auto.axiology.core.machine.TickingMachine;

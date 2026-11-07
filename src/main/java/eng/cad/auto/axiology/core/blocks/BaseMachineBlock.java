@@ -1,6 +1,6 @@
 package eng.cad.auto.axiology.core.blocks;
 
-import eng.cad.auto.axiology.core.component.IRightClickable;
+import eng.cad.auto.axiology.core.machine.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.core.BlockPos;
