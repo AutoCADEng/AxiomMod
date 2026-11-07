@@ -1,13 +1,14 @@
 package eng.cad.auto.axiology.modulartools.abilities.custom;
 
-import eng.cad.auto.axiology.modulartools.ModularTool;
 import eng.cad.auto.axiology.modulartools.components.IModularDurability;
 import eng.cad.auto.axiology.modulartools.components.IModularFluidInventory;
+import eng.cad.auto.axiology.modulartools.components.IModularTool;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 
 public class FluidFueledAugment extends ModularToolAugment implements IModularDurability {
@@ -21,14 +22,14 @@ public class FluidFueledAugment extends ModularToolAugment implements IModularDu
      * Filter for IModularFluidInventories
      * Excludes fluids that are not tagged by "tool_fuel_fluid"
      * Sum up all valid fuel per tank per IModularFluidInventory
-     * @param tool the modular tool being checked
+     * @param ItemStack of the modular tool being checked
      * @return returns the total burnable fuel in a modular tool
      */
     @Override
-    public int getDurability(ModularTool tool) {
+    public int getDurability(ItemStack stack) {
         TagKey<Fluid> valid_fuels = TagKey.create(Registries.FLUID, ResourceLocation.parse("axiology:tool_fuel_fluids"));
 
-        int fuel = tool.getModules().keySet().stream()
+        int fuel = IModularTool.getAugments(stack).keySet().stream()
             .filter(key-> key instanceof IModularFluidInventory fluidTank)
             .map(key-> (IModularFluidInventory) key)
             .mapToInt(fluidModule -> {
