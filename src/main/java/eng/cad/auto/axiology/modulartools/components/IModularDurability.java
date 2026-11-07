@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.modulartools.components;
 
-import eng.cad.auto.axiology.modulartools.ModularTool;
+import net.minecraft.world.item.ItemStack;
 
 public interface IModularDurability {
-    int getDurability(ModularTool tool);
+    int getDurability(ItemStack toolStack);
 }
