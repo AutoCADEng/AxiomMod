@@ -19,6 +19,8 @@ public class AugmentsRegistry {
     public static final DeferredRegister<ModularToolAugment> MODULES = DeferredRegister.create(REGISTRY_KEY, AxiomMod.MODID);
     public static final Supplier<IForgeRegistry<ModularToolAugment>> REGISTRY = MODULES.makeRegistry(RegistryBuilder::new);
 
+    public static final RegistryObject<ModularToolAugment> EFFICIENCY = MODULES.register("efficiency", EfficiencyAugment::new);
+    public static final RegistryObject<ModularToolAugment> UNBREAKING = MODULES.register("unbreaking", UnbreakingAugment::new);
     public static final RegistryObject<ModularToolAugment> FORTUNE = MODULES.register("fortune", FortuneAugment::new);
     public static final RegistryObject<ModularToolAugment> SHARPNESS = MODULES.register("sharpness", SharpnessAugment::new);
     public static final RegistryObject<ModularToolAugment> SILK_TOUCH = MODULES.register("silk_touch", SilktouchAugment::new);
