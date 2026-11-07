@@ -1,0 +1,57 @@
+{
+  "type": "axiology:arcane_altar",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "#axiology:modular_tool",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:blazing_ingot",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "type": "module",
+      "input": "axiology:efficiency",
+      "count": 1
+    }
+  ]
+}
