@@ -9,7 +9,7 @@ import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
-import eng.cad.auto.engine.fluid.FluidStackHandler;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;

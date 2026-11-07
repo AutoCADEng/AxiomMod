@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.network.packet;
+package eng.cad.auto.axiology.core.network.packet;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent;

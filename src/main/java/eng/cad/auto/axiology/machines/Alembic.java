@@ -8,7 +8,7 @@ import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
-import eng.cad.auto.engine.fluid.FluidStackHandler;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

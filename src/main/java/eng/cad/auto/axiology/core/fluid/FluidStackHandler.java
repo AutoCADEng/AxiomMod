@@ -1,6 +1,5 @@
-package eng.cad.auto.engine.fluid;
+package eng.cad.auto.axiology.core.fluid;
 
-import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import net.minecraft.core.NonNullList;

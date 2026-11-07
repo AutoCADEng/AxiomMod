@@ -1,8 +1,8 @@
 package eng.cad.auto.axiology.client.colors;
 
 import eng.cad.auto.axiology.registry.FluidRegistry;
-import eng.cad.auto.engine.item.CustomBucket;
-import eng.cad.auto.engine.fluid.FluidHolder;
+import eng.cad.auto.axiology.core.item.CustomBucket;
+import eng.cad.auto.axiology.core.fluid.FluidHolder;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.IEventBus;

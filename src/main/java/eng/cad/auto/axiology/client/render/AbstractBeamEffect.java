@@ -1,6 +1,5 @@
-package eng.cad.auto.engine.client.render;
+package eng.cad.auto.axiology.client.render;
 
-import eng.cad.auto.axiology.client.effects.FluidBeamEffect;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;

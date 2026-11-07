@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.client.render;
+package eng.cad.auto.axiology.client.render;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;

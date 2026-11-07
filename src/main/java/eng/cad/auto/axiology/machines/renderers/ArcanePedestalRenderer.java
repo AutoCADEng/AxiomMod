@@ -31,7 +31,7 @@ public class ArcanePedestalRenderer implements BlockEntityRenderer<ArcanePedesta
         if (item.isEmpty()) return;
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         poseStack.pushPose();
-        poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t)), 0.5f);
+        poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t/100)), 0.5f);
         poseStack.scale(0.75f,0.75f,0.75f);
         poseStack.mulPose(Axis.YP.rotationDegrees(t));
         if (entity.getDataSlots().get("isItemHidden") == 1) poseStack.scale(0.25f, 0.25f ,0.25f);

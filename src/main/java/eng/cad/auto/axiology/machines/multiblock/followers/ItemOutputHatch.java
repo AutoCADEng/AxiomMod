@@ -7,7 +7,7 @@ import eng.cad.auto.axiology.core.component.IRightClickable;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
-import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;

@@ -10,10 +10,15 @@ import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.machines.multiblock.followers.Hatch;
-import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.registries.RegistryObject;
 
 public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, ISlotData, IRightClickable {
@@ -29,6 +34,12 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
             }
         );
         refreshCapabilities();
+    }
+
+    @Override
+    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+        getDataSlots().set("isItemHidden", 0);
+        return IRightClickable.super.rightClick(blockState, level, blockPos, player, hand, result);
     }
 
     @Override

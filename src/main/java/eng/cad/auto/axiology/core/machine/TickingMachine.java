@@ -3,7 +3,7 @@ package eng.cad.auto.axiology.core.machine;
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.component.IClientTickable;
 import eng.cad.auto.axiology.core.component.ITickable;
-import eng.cad.auto.engine.fluid.FluidStackHandler;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;

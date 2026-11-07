@@ -1,8 +1,8 @@
 package eng.cad.auto.axiology.core;
 
-import eng.cad.auto.engine.fluid.FluidStackHandler;
-import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.packet.MachineFluidSyncPacket;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
+import eng.cad.auto.axiology.core.network.AxiologyNetwork;
+import eng.cad.auto.axiology.core.network.packet.MachineFluidSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;

@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.item;
+package eng.cad.auto.axiology.core.item;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.ISlotFluid;

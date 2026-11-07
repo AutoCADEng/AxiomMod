@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.crafting.core;
+package eng.cad.auto.axiology.crafting.core;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;

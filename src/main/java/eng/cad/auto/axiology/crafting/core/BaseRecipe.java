@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.crafting.core;
+package eng.cad.auto.axiology.crafting.core;
 
 import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import net.minecraft.core.NonNullList;

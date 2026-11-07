@@ -31,7 +31,7 @@ public class ArcaneAltarRenderer implements BlockEntityRenderer<ArcaneAltar> {
         if (!item.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             poseStack.pushPose();
-            poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t)), 0.5f);
+            poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t/100)), 0.5f);
             poseStack.scale(0.75f,0.75f,0.75f);
             poseStack.mulPose(Axis.YP.rotationDegrees(t));
             itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);

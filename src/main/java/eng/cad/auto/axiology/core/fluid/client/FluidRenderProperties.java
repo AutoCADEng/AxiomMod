@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.fluid.client;
+package eng.cad.auto.axiology.core.fluid.client;
 
 import eng.cad.auto.axiology.AxiomMod;
 import net.minecraft.resources.ResourceLocation;

@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.fluid;
+package eng.cad.auto.axiology.core.fluid;
 
 import net.minecraftforge.fluids.FluidStack;
 import org.jetbrains.annotations.NotNull;

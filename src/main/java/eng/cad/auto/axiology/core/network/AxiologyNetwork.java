@@ -1,7 +1,7 @@
-package eng.cad.auto.engine.network;
+package eng.cad.auto.axiology.core.network;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.engine.network.packet.AxiologyBasePacket;
+import eng.cad.auto.axiology.core.network.packet.AxiologyBasePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

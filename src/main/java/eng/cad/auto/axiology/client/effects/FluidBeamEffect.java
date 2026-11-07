@@ -1,14 +1,13 @@
 package eng.cad.auto.axiology.client.effects;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import eng.cad.auto.engine.client.render.AbstractBeamEffect;
-import eng.cad.auto.engine.client.render.Wave;
+import eng.cad.auto.axiology.client.render.AbstractBeamEffect;
+import eng.cad.auto.axiology.client.render.Wave;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.joml.Vector3f;

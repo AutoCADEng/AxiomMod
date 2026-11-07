@@ -1,6 +1,6 @@
-package eng.cad.auto.engine.fluid;
+package eng.cad.auto.axiology.core.fluid;
 
-import eng.cad.auto.engine.fluid.client.FluidRenderProperties;
+import eng.cad.auto.axiology.core.fluid.client.FluidRenderProperties;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraftforge.fluids.ForgeFlowingFluid;

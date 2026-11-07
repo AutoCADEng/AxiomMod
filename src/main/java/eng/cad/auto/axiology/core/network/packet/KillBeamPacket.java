@@ -1,6 +1,6 @@
-package eng.cad.auto.engine.network.packet;
+package eng.cad.auto.axiology.core.network.packet;
 
-import eng.cad.auto.engine.client.render.BeamEffectRenderer;
+import eng.cad.auto.axiology.client.render.BeamEffectRenderer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;

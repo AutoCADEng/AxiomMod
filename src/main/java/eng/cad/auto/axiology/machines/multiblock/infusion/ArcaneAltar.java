@@ -16,15 +16,18 @@ import eng.cad.auto.axiology.magic.rebounds.Rebounds;
 import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
 import eng.cad.auto.axiology.magic.rebounds.core.InfusionContext;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
-import eng.cad.auto.engine.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.engine.network.AxiologyNetwork;
-import eng.cad.auto.engine.network.packet.InfusionSyncPacket;
-import eng.cad.auto.engine.network.packet.KillBeamPacket;
+import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
+import eng.cad.auto.axiology.core.network.AxiologyNetwork;
+import eng.cad.auto.axiology.core.network.packet.InfusionSyncPacket;
+import eng.cad.auto.axiology.core.network.packet.KillBeamPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
@@ -32,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -42,7 +46,6 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
     public static int MAX_PEDESTAL_RADIUS = 5;
     int[] lastSyncData;
     long lastSyncTime;
-    boolean firstRun = true;
     HashMap<BlockPos, UUID> beamUUIDs = new HashMap<>();
 
     public ArcaneAltar(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
@@ -59,37 +62,15 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
     public void serverTick(Level level, BlockPos pos, BlockState state) {
         if(level.isClientSide()) return;
         if (!(level.getBlockEntity(pos) instanceof ArcaneAltar altar)) return;
-        if (firstRun) {
-            validateStructure(pos, level);
-        }
+        if (level.getGameTime()%20 == 0) validateStructure(pos, level);
 
         if (getDataSlots().get("isActive") == 0){
+            for(BlockPos beamPos:new ArrayList<>(beamUUIDs.keySet())){
+                removePedestalBeam(beamPos, getBlockPos(), level);
+            }
             resetProgress(this);
-            syncWithClients(level, pos);
             resetPedestals();
             return;
-        }
-
-        for (BaseMachine<? extends IMultiblockFollower> pedestalMachine:getFollowers(level)){
-            if (beamUUIDs.containsKey(pedestalMachine.getBlockPos())){
-                if (!(pedestalMachine instanceof ArcanePedestal pedestal)) continue;
-                if (pedestal.getItemSlots().getStackInSlot(0).isEmpty() || getDataSlots().get("isActive") == 0 || pedestal.getDataSlots().get("isItemHidden") == 1) {
-                    if (!removePedestalBeam(pedestal.getBlockPos(), pos, level)) continue;
-                    if (pedestal.getDataSlots().get("isItemHidden") == 1) {
-                        pedestal.setChanged();
-                        level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
-                    }
-                }
-            }else {
-                addPedestalBeam(pedestalMachine.getBlockPos(), getBlockPos(), level);
-            }
-        }
-
-        if(!progressCompleted(this)){
-            incrementProgress(this, 1);
-            syncWithClients(level, pos);
-            if (level.getGameTime()%40 == 0){
-            }
         }
 
         if (checkPedestalCompletion(level)) {
@@ -102,13 +83,42 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
             }
             InfusionRecipe activeRecipe = findRecipe(this, level, infusionContainers);
             performRitual(activeRecipe, this, level);
+            getDataSlots().set("isActive", 0);
+            return;
+        }
+
+        incrementProgress(this, 1);
+
+        for (BaseMachine<? extends IMultiblockFollower> pedestalMachine:getFollowers(level)){
+            if (!(pedestalMachine instanceof ArcanePedestal pedestal)) continue;
+            BlockPos pedestalPos = pedestal.getBlockPos();
+
+            if (progressCompleted(this) && pedestal.getDataSlots().get("isItemHidden") == 0 && !pedestal.getItemSlots().getStackInSlot(0).isEmpty()){
+                resetProgress(this);
+                pedestal.getDataSlots().set("isItemHidden", 1);
+                pedestal.setChanged();
+                level.sendBlockUpdated(pedestalPos, pedestal.getBlockState(), pedestal.getBlockState(), 3);
+            }
+
+            if (pedestal.getItemSlots().getStackInSlot(0).isEmpty() || pedestal.getDataSlots().get("isItemHidden") == 1){
+                removePedestalBeam(pedestalPos, pos, level);
+            } else if (!beamUUIDs.containsKey(pedestalPos)){
+                addPedestalBeam(pedestalPos, pos, level);
+            }
         }
     }
 
     private void performRitual(InfusionRecipe activeRecipe, ArcaneAltar entity, Level level) {
         var followers = getFollowers(level);
         if (activeRecipe != null && activeRecipe.validate(entity, followers, activeRecipe)) {
-            activeRecipe.craft(entity, activeRecipe);
+            ArrayList<BaseMachine<? extends IMultiblockFollower>> followerList = new ArrayList<>(followers);
+            activeRecipe.craft(entity, followerList, activeRecipe);
+            for(BaseMachine<? extends IMultiblockFollower> follower:followers){
+                if (!(follower instanceof ArcanePedestal pedestal)) continue;
+                pedestal.setChanged();
+                level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
+            }
+            entity.syncWithClients(level, entity.getBlockPos());
         } else {
             AbstractRebound effect = Rebounds.randomEffect();
             AxiomMod.LOGGER.warn("FAILED A RECIPE FOR INFUSER applying {}", effect.toString());
@@ -120,7 +130,6 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
                 if (!(follower instanceof ArcanePedestal pedestal)) continue;
                 pedestal.getItemSlots().setStackInSlot(0, ItemStack.EMPTY);
                 pedestal.getDataSlots().set("isItemHidden", 0);
-                pedestal.syncWithClients(level, pedestal.getBlockPos());
                 pedestal.setChanged();
                 level.sendBlockUpdated(pedestal.getBlockPos(), pedestal.getBlockState(), pedestal.getBlockState(), 3);
             }
@@ -140,12 +149,13 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
 
     public boolean checkPedestalCompletion(Level level){
         if (getFollowerPositions().isEmpty()) return false;
-        return getFollowers(level).stream()
+        var pedestals = getFollowers(level).stream()
                 .filter(follower -> level.getBlockEntity(follower.getBlockPos()) instanceof ArcanePedestal)
                 .map(follower -> (ArcanePedestal) follower)
                 .filter(Objects::nonNull)
                 .filter(machine -> !machine.getItemSlots().getStackInSlot(0).isEmpty())
-                .allMatch(machine -> machine.getDataSlots().get("isItemHidden") == 1);
+                .toList();
+        return !pedestals.isEmpty() && pedestals.stream().allMatch(machine -> machine.getDataSlots().get("isItemHidden") == 1);
     }
 
     public void addPedestalBeam(BlockPos followerPos, BlockPos pos, Level level){
@@ -183,7 +193,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
                 center.offset(radius, radius, radius))) {
             if (!level.isLoaded(pos)) continue;
             BlockEntity be = level.getBlockEntity(pos);
-            if (be != null) pedestals.add(pos);
+            if (be instanceof ArcanePedestal) pedestals.add(pos.immutable());
         }
         return pedestals;
     }
@@ -262,6 +272,20 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
     @Override
     public RecipeType<InfusionRecipe> recipeType() {
         return RecipeRegistry.INFUSION.get();
+    }
+
+    @Override
+    public InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+        if (player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
+            if (!level.isClientSide() && getDataSlots().get("isActive") == 0) {
+                validateStructure(blockPos, level);
+                getDataSlots().set("isActive", 1);
+                setChanged();
+                syncWithClients(level, blockPos);
+            }
+            return InteractionResult.SUCCESS;
+        }
+        return IRightClickable.super.rightClick(blockState, level, blockPos, player, hand, result);
     }
 
     public static class MachineBlock extends BaseMachineBlock {

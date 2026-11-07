@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.client.render;
+package eng.cad.auto.axiology.client.render;
 
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;

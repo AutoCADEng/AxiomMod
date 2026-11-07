@@ -2,8 +2,7 @@ package eng.cad.auto.axiology.machines.util;
 
 import eng.cad.auto.axiology.core.ISlotItem;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
-import eng.cad.auto.engine.item.CustomBucket;
+import eng.cad.auto.axiology.core.item.CustomBucket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

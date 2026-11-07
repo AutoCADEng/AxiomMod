@@ -1,4 +1,4 @@
-package eng.cad.auto.engine.network.packet;
+package eng.cad.auto.axiology.core.network.packet;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.machine.TickingMachine;

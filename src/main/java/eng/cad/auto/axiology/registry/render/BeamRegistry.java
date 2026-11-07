@@ -3,7 +3,7 @@ package eng.cad.auto.axiology.registry.render;
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.client.effects.FluidBeamEffect;
 import eng.cad.auto.axiology.client.effects.InfusionBeamEffect;
-import eng.cad.auto.engine.client.render.AbstractBeamEffect;
+import eng.cad.auto.axiology.client.render.AbstractBeamEffect;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
