@@ -58,12 +58,22 @@ public class AugmentsRegistry {
                     .setColor(ChatFormatting.GREEN)
             );
 
+    public static final RegistryObject<ModularToolAugment> SILK_TOUCH =
+            MODULES.register("silk_touch", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.silk_touch"))
+                    .addEnchantment(Enchantments.SILK_TOUCH)
+                    .setMaxStack(1)
+                    .setColor(ChatFormatting.GOLD)
+                    .setCost(8)
+                    .incompatible("fortune")
+            );
+
     public static final RegistryObject<ModularToolAugment> FORTUNE =
             MODULES.register("fortune", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.fortune"))
                     .addEnchantment(Enchantments.BLOCK_FORTUNE)
                     .setMaxStack(5)
                     .setColor(ChatFormatting.DARK_PURPLE)
                     .setCost(4)
+                    .incompatible("silk_touch")
             );
 
     public static final RegistryObject<ModularToolAugment> SHARPNESS =
@@ -71,27 +81,29 @@ public class AugmentsRegistry {
                     .addEnchantment(Enchantments.SHARPNESS)
                     .setMaxStack(9)
                     .setColor(ChatFormatting.DARK_RED)
+                    .incompatible("smite")
+                    .incompatible("bane_of_arthropods")
             );
 
-    public static final RegistryObject<ModularToolAugment> SILK_TOUCH =
-            MODULES.register("silk_touch", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.silk_touch"))
-                    .addEnchantment(Enchantments.SILK_TOUCH)
-                    .setMaxStack(1)
-                    .setColor(ChatFormatting.GOLD)
-                    .setCost(8)
-            );
+
     public static final RegistryObject<ModularToolAugment> SMITE =
-            MODULES.register("silk_touch", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.smite"))
+            MODULES.register("smite", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.smite"))
                     .addEnchantment(Enchantments.SMITE)
                     .setMaxStack(9)
                     .setColor(ChatFormatting.YELLOW)
+                    .incompatible("sharpness")
+                    .incompatible("bane_of_arthropods")
             );
+
     public static final RegistryObject<ModularToolAugment> BANE_OF_ARTHROPODS =
             MODULES.register("bane_of_arthropods", () -> new EnchantmentAugment(Component.translatable("axiology.modulartools.arthropods"))
                     .addEnchantment(Enchantments.BANE_OF_ARTHROPODS)
                     .setMaxStack(9)
                     .setColor(ChatFormatting.DARK_BLUE)
+                    .incompatible("smite")
+                    .incompatible("sharpness")
             );
+
     private static RegistryObject<ModularToolAugment> registerMaterialModule(String name, Tier tier) {
         return MODULES.register(name, () -> new MaterialAugment(Component.translatable("axiology.modulartools.plating." + name), tier));
     }

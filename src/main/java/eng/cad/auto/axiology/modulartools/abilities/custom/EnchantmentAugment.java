@@ -1,13 +1,15 @@
 package eng.cad.auto.axiology.modulartools.abilities.custom;
 
+import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.modulartools.components.IModularEnchantment;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
+import eng.cad.auto.axiology.registry.AugmentsRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 import java.util.HashSet;
-import java.util.function.Supplier;
 
 public class EnchantmentAugment extends ModularToolAugment implements IModularEnchantment{
     HashSet<Enchantment> enchantments = new HashSet<>();
@@ -15,7 +17,7 @@ public class EnchantmentAugment extends ModularToolAugment implements IModularEn
     int maxStack = 9;
     Component displayName = Component.empty();
     ChatFormatting color = ChatFormatting.WHITE;
-    HashSet<ModularToolAugment> incompatibleWith = new HashSet<>();
+    HashSet<ResourceLocation> incompatibleWith = new HashSet<>();
 
     public EnchantmentAugment(Component component){
         displayName = component;
@@ -45,10 +47,17 @@ public class EnchantmentAugment extends ModularToolAugment implements IModularEn
         this.maxStack = max;
         return this;
     }
-    public EnchantmentAugment incompatible(Supplier<ModularToolAugment> augment){
-        incompatibleWith.add(augment.get());
+
+    public EnchantmentAugment incompatible(ResourceLocation augment){
+        incompatibleWith.add(augment);
         return this;
     }
+
+    public EnchantmentAugment incompatible(String augmentName){
+        incompatibleWith.add(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, augmentName));
+        return this;
+    }
+
     public EnchantmentAugment setColor(ChatFormatting color){
         this.color = color;
         return this;
@@ -61,7 +70,7 @@ public class EnchantmentAugment extends ModularToolAugment implements IModularEn
 
     @Override
     public boolean isCompatible(ModularToolAugment ability) {
-        return incompatibleWith.stream().anyMatch(x -> x.equals(ability));
+        return !incompatibleWith.contains(AugmentsRegistry.REGISTRY.get().getKey(ability));
     }
 
     @Override
