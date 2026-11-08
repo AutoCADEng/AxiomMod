@@ -19,12 +19,13 @@ public class CustomCraftingContainer implements Container {
     public NonNullList<ItemStack> items = NonNullList.create();
     BaseMachine<?> blockEntity;
 
-    public CustomCraftingContainer(BaseMachine<?> blockEntity){
+    public CustomCraftingContainer(BaseMachine<?> blockEntity) {
         this.blockEntity = blockEntity;
     }
 
     /**
      * Gets the container size.
+     *
      * @return The number of tanks + number of item slots
      */
     @Override
@@ -34,6 +35,7 @@ public class CustomCraftingContainer implements Container {
 
     /**
      * Checks isEmpty() for item slots and tanks
+     *
      * @return True, if both item slots and tanks are empty
      */
     @Override
@@ -66,7 +68,7 @@ public class CustomCraftingContainer implements Container {
 
     @Override
     public void setItem(int slot, ItemStack item) {
-        items.set(slot,item);
+        items.set(slot, item);
         setChanged();
     }
 
@@ -92,31 +94,32 @@ public class CustomCraftingContainer implements Container {
 
     /**
      * Scans the inventory to find out if there is a crafting ingredient present
+     *
      * @param ingredient
      * @return true if the ingredient is present and the amount stored in the tank is >= the amount the ingredient holds
      */
     public boolean containsIngredient(UniversalSlot ingredient) {
-        switch(ingredient.getType()){
+        switch (ingredient.getType()) {
             case FLUID -> {
-                for (FluidStack fluid:tanks){
+                for (FluidStack fluid : tanks) {
                     if (!fluid.getFluid().isSame(ingredient.getFluid().getFluid())) continue;
                     return fluid.getAmount() >= ingredient.getFluid().getAmount();
                 }
             }
             case ITEM -> {
-                for (ItemStack item:items){
+                for (ItemStack item : items) {
                     if (!item.is(ingredient.getItem().getItem())) continue;
                     return item.getCount() >= ingredient.getItem().getCount();
                 }
             }
             case FLUID_TAG -> {
-                for (FluidStack fluid:tanks){
+                for (FluidStack fluid : tanks) {
                     if (!fluid.getFluid().defaultFluidState().is(ingredient.getFluidTag())) continue;
                     return fluid.getAmount() >= ingredient.getTag().count();
                 }
             }
             case ITEM_TAG -> {
-                for (ItemStack item:items){
+                for (ItemStack item : items) {
                     if (!item.is(ingredient.getItemTag())) continue;
                     return item.getCount() >= ingredient.getTag().count();
                 }
@@ -127,6 +130,7 @@ public class CustomCraftingContainer implements Container {
 
     /**
      * Builder method for making a new CustomCraftingContainer, should be implemented at the machine level.
+     *
      * @param tank The tank to be added to the container
      * @return A CustomCraftingContainer with the tank added to it.
      */
@@ -134,8 +138,10 @@ public class CustomCraftingContainer implements Container {
         this.tanks.add(tank);
         return this;
     }
+
     /**
      * Builder method for making a new CustomCraftingContainer, should be implemented at the machine level.
+     *
      * @param stack The stack to be added to the container
      * @return A CustomCraftingContainer with the stack added to it.
      */
@@ -145,10 +151,10 @@ public class CustomCraftingContainer implements Container {
     }
 
     public CustomCraftingContainer merge(CustomCraftingContainer craftingContainer) {
-        for(ItemStack stack:craftingContainer.items){
+        for (ItemStack stack : craftingContainer.items) {
             addSlot(stack);
         }
-        for(FluidStack tank:craftingContainer.tanks){
+        for (FluidStack tank : craftingContainer.tanks) {
             addTank(tank);
         }
         return this;

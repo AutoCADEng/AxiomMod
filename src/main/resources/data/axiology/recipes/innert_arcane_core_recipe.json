@@ -1,21 +1,25 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["ABC", "DED", "CBA"],
+  "pattern": [
+    "ABC",
+    "DED",
+    "CBA"
+  ],
   "key": {
     "A": {
-      "item" : "axiology:cursed_ingot"
+      "item": "axiology:cursed_ingot"
     },
-    "B" : {
-      "item" : "axiology:blazing_ingot"
+    "B": {
+      "item": "axiology:blazing_ingot"
     },
-    "C" : {
-      "item" : "axiology:fluxed_ingot"
+    "C": {
+      "item": "axiology:fluxed_ingot"
     },
-    "D" : {
-      "item" : "axiology:etched_iron_ingot"
+    "D": {
+      "item": "axiology:etched_iron_ingot"
     },
-    "E" : {
-      "item" : "axiology:mundane_core"
+    "E": {
+      "item": "axiology:mundane_core"
     }
   },
   "result": {

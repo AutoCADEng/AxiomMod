@@ -8,7 +8,7 @@ import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
 
 public class TankAugment extends ModularToolAugment implements IModularFluidInventory {
-    FluidStackHandler fluidInventory = new FluidStackHandler(new SlotConfig[]{new SlotConfig(SlotIORestriction.IN_OUT,8000)}, this::fluidChanged);
+    FluidStackHandler fluidInventory = new FluidStackHandler(new SlotConfig[]{new SlotConfig(SlotIORestriction.IN_OUT, 8000)}, this::fluidChanged);
 
     @Override
     public Component getDisplayName() {

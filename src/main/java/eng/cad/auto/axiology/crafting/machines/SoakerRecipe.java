@@ -24,16 +24,16 @@ public class SoakerRecipe extends AbstractMachineRecipe<SoakerRecipe> {
         return SoakerType.INSTANCE;
     }
 
-    public static class SoakerType extends AbstractMachineRecipe.MachineType<SoakerRecipe>{
+    public static class SoakerType extends AbstractMachineRecipe.MachineType<SoakerRecipe> {
         public static SoakerType INSTANCE = new SoakerType();
     }
 
-    public static class SoakerSerializer extends AbstractMachineRecipe.MachineSerializer<SoakerRecipe>{
+    public static class SoakerSerializer extends AbstractMachineRecipe.MachineSerializer<SoakerRecipe> {
         public static SoakerSerializer INSTANCE = new SoakerSerializer();
 
         @Override
         protected SoakerRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
-            return new SoakerRecipe(inputs,outputs, recipeId);
+            return new SoakerRecipe(inputs, outputs, recipeId);
         }
     }
 }

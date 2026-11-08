@@ -17,7 +17,7 @@ public class UnbreakingAugment extends ModularToolAugment implements IModularEnc
 
     @Override
     public List<ItemEnchantment> getEnchantments() {
-        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:unbreaking")),1);
+        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:unbreaking")), 1);
         return List.of(enchantment);
     }
 }

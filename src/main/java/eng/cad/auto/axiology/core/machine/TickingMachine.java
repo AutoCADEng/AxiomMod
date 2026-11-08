@@ -22,7 +22,7 @@ public abstract class TickingMachine<T extends TickingMachine<T>> extends BaseMa
         refreshCapabilities();
     }
 
-    public static void tick(Level level, BlockPos blockPos, BlockState blockState, TickingMachine<?> blockEntity){
+    public static void tick(Level level, BlockPos blockPos, BlockState blockState, TickingMachine<?> blockEntity) {
         if (blockEntity instanceof ITickable serverTicker) {
             serverTicker.serverTick(level, blockPos, blockState);
             if (!(blockEntity instanceof ISlotData data)) return;

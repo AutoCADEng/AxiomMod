@@ -1,17 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["BLB", "LAL", "BHB"],
+  "pattern": [
+    "BLB",
+    "LAL",
+    "BHB"
+  ],
   "key": {
     "B": {
       "tag": "forge:chests"
     },
-    "L" : {
-      "item" : "axiology:blazing_ingot"
+    "L": {
+      "item": "axiology:blazing_ingot"
     },
-    "H" : {
+    "H": {
       "item": "minecraft:hopper"
     },
-    "A" : {
+    "A": {
       "item": "axiology:mundane_machine_frame"
     }
   },

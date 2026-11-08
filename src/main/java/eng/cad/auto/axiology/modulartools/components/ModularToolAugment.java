@@ -12,18 +12,20 @@ public abstract class ModularToolAugment {
     };
 
     abstract public Component getDisplayName();
-    public int maxStackable(){
+
+    public int maxStackable() {
         return 3;
     }
-    public boolean isCompatible(ModularToolAugment ability){
+
+    public boolean isCompatible(ModularToolAugment ability) {
         return true;
     }
 
-    public int getCost(){
+    public int getCost() {
         return 1;
     }
 
-    public ChatFormatting getColor(){
+    public ChatFormatting getColor() {
         return ChatFormatting.GREEN;
     }
 }

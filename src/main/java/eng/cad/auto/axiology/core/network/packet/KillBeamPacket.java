@@ -11,11 +11,12 @@ import java.util.function.Supplier;
 
 public class KillBeamPacket extends AxiologyBasePacket<KillBeamPacket> {
     UUID id;
+
     public KillBeamPacket() {
         super();
     }
 
-    public KillBeamPacket(UUID id){
+    public KillBeamPacket(UUID id) {
         this.id = id;
     }
 

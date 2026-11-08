@@ -24,16 +24,16 @@ public class CommonRightClickBehaviour {
         Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (bucketHandler.isPresent()) {
             if (bucketHandler.get().getFluidInTank(slot).isEmpty()) {
-                return insertFluid(slot,blockEntity,blockState,level,blockPos,player,interactionHand,result);
+                return insertFluid(slot, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             } else {
-                return extractFluid(slot,blockEntity,blockState,level,blockPos,player,interactionHand,result);
+                return extractFluid(slot, blockEntity, blockState, level, blockPos, player, interactionHand, result);
             }
         }
         return false;
     }
 
     //TODO find a way to make slot useful, this is probably the makings of a bug!
-    public static boolean insertFluid(int slot, BaseMachine blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result){
+    public static boolean insertFluid(int slot, BaseMachine blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
         ItemStack playerHand = player.getItemInHand(interactionHand);
         Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (bucketHandler.isPresent()) {
@@ -42,7 +42,7 @@ public class CommonRightClickBehaviour {
         return false;
     }
 
-    public static boolean extractFluid(int slot, BaseMachine blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result){
+    public static boolean extractFluid(int slot, BaseMachine blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
         ItemStack playerHand = player.getItemInHand(interactionHand);
         Optional<IFluidHandlerItem> bucketHandler = playerHand.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM).resolve();
         if (bucketHandler.isPresent()) {
@@ -55,8 +55,9 @@ public class CommonRightClickBehaviour {
         if (!(blockEntity instanceof ISlotItem items)) return false;
         ItemStack playerHand = player.getItemInHand(interactionHand);
         ItemStack machineItem = items.getItemSlots().getStackInSlot(item_slot);
-        if (insertItem(item_slot,blockEntity,blockState,level,blockPos,player,interactionHand,result)) return true;
-        return extractItem(item_slot,blockEntity,blockState,level,blockPos,player,interactionHand,result);
+        if (insertItem(item_slot, blockEntity, blockState, level, blockPos, player, interactionHand, result))
+            return true;
+        return extractItem(item_slot, blockEntity, blockState, level, blockPos, player, interactionHand, result);
     }
 
     public static boolean insertItem(int item_slot, BaseMachine blockEntity, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {

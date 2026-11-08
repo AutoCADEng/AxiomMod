@@ -23,19 +23,19 @@ public class ClientSetup {
 
     private static void clientSetup(final FMLClientSetupEvent event) {
         //Machine UIs
-        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.CHEMICAL_REACTOR.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.CHEMICAL_REACTOR.createScreen(ChemicalReactor.name, menu, inv, title)));
-        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.FERMENTER.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.FERMENTER.createScreen(Fermenter.name, menu, inv, title)));
+        event.enqueueWork(() -> MenuScreens.register(MenuRegistry.CHEMICAL_REACTOR.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.CHEMICAL_REACTOR.createScreen(ChemicalReactor.name, menu, inv, title)));
+        event.enqueueWork(() -> MenuScreens.register(MenuRegistry.FERMENTER.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.FERMENTER.createScreen(Fermenter.name, menu, inv, title)));
 
         // Fluid Renderers
-        for (RegistryObject<? extends Fluid> fluid:FluidRegistry.FLUIDLIST.values()) {
+        for (RegistryObject<? extends Fluid> fluid : FluidRegistry.FLUIDLIST.values()) {
             event.enqueueWork(() ->
                     ItemBlockRenderTypes.setRenderLayer(fluid.get(), RenderType.translucent())
             );
         }
     }
 
-    private static void creativeTabSetup(final BuildCreativeModeTabContentsEvent event){
-        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_TAB.get()){
+    private static void creativeTabSetup(final BuildCreativeModeTabContentsEvent event) {
+        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_TAB.get()) {
             //Crafting items
             event.accept(ItemRegistry.BLAZING_INGOT);
             event.accept(ItemRegistry.FLUXED_INGOT);
@@ -81,12 +81,12 @@ public class ClientSetup {
             event.accept(ItemRegistry.ETCHED_SHEARS);
 
             //Machine Blocks
-            for (MachineRegistryObject machine: MachineRegistry.MACHINELIST.values()){
+            for (MachineRegistryObject machine : MachineRegistry.MACHINELIST.values()) {
                 event.accept(machine.blockItem);
             }
         }
 
-        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_BUCKETS.get()){
+        if (event.getTab() == CreativeTabRegistry.AXIOLOGY_BUCKETS.get()) {
             //Buckets
             event.accept(FluidRegistry.Fluid_Holders.get(Blazewater.name).BUCKET);
             event.accept(FluidRegistry.Fluid_Holders.get(Fluxfluid.name).BUCKET);

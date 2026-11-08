@@ -1,11 +1,11 @@
 {
   "type": "minecraft:crafting_shapeless",
-  "ingredients" : [
+  "ingredients": [
     {
       "item": "axiology:item_input_hatch"
     }
   ],
   "result": {
-    "item":"axiology:item_output_hatch"
+    "item": "axiology:item_output_hatch"
   }
 }

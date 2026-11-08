@@ -1,17 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["BIB", "SHS", "BIB"],
+  "pattern": [
+    "BIB",
+    "SHS",
+    "BIB"
+  ],
   "key": {
     "B": {
-      "item" : "axiology:blazing_ingot"
+      "item": "axiology:blazing_ingot"
     },
-    "H" : {
+    "H": {
       "item": "minecraft:comparator"
     },
-    "S" : {
-      "item":"axiology:soaking_drum"
+    "S": {
+      "item": "axiology:soaking_drum"
     },
-    "I" : {
+    "I": {
       "item": "axiology:etched_iron_block"
     }
   },

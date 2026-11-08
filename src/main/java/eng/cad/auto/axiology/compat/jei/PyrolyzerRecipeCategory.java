@@ -27,8 +27,8 @@ public class PyrolyzerRecipeCategory implements IRecipeCategory<PyrolyzerRecipe>
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/soaking_drum_menu.png");
 
     private static final int TRIM = 4;
-    private static final int WIDTH = 176-TRIM*2;
-    private static final int HEIGHT = 80-TRIM;
+    private static final int WIDTH = 176 - TRIM * 2;
+    private static final int HEIGHT = 80 - TRIM;
 
     private static final Vector2i TANK_0 = new Vector2i(59, 27).sub(TRIM, TRIM);
     private static final Vector2i TANK_1 = new Vector2i(98, 27).sub(TRIM, TRIM);
@@ -54,7 +54,7 @@ public class PyrolyzerRecipeCategory implements IRecipeCategory<PyrolyzerRecipe>
         NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
         NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
-        switch (inputs.get(0).getType()){
+        switch (inputs.get(0).getType()) {
             case ITEM -> builder.addInputSlot(SLOT_0.x, SLOT_0.y).addItemStack(inputs.get(0).getItem());
             case ITEM_TAG -> {
                 List<ItemStack> stacks = ForgeRegistries.ITEMS.tags().getTag(inputs.get(0).getItemTag()).stream()
@@ -83,9 +83,28 @@ public class PyrolyzerRecipeCategory implements IRecipeCategory<PyrolyzerRecipe>
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<PyrolyzerRecipe> getRecipeType() { return AxiologyJEI.PYROLYZER_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.pyrolyzer"); }
-    @Override public IDrawable getIcon() { return icon; }
-    @Override public int getWidth() { return WIDTH; }
-    @Override public int getHeight() { return HEIGHT; }
+    @Override
+    public RecipeType<PyrolyzerRecipe> getRecipeType() {
+        return AxiologyJEI.PYROLYZER_RECIPE_TYPE;
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.translatable("axiology.jei.pyrolyzer");
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 }

@@ -17,9 +17,11 @@ import java.util.HashSet;
 
 public abstract class BaseMaster<H extends BaseMaster<H>> extends TickingMachine<H> implements ISubscribeBlockBreak, ISubscribeBlockPlacedInArea, IMultiblockMaster {
     HashSet<BlockPos> followers = new HashSet<>();
+
     public BaseMaster(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
     }
+
     @Override
     public void fireBlockBreak(BlockEvent.BreakEvent event) {
         if (level == null) return;
@@ -44,8 +46,8 @@ public abstract class BaseMaster<H extends BaseMaster<H>> extends TickingMachine
         int z = structure.shapeList.get(0).length;
         Vec3i offset = structure.rootPos;
 
-        Vec3i positive = new Vec3i(x,y,z).subtract(offset);
-        Vec3i negative = new Vec3i(x,y,z).subtract(offset.multiply(-1));
+        Vec3i positive = new Vec3i(x, y, z).subtract(offset);
+        Vec3i negative = new Vec3i(x, y, z).subtract(offset.multiply(-1));
 
         Vec3i eventPos = event.getPos();
 
@@ -53,7 +55,7 @@ public abstract class BaseMaster<H extends BaseMaster<H>> extends TickingMachine
         if (eventPos.getY() > positive.getY() || eventPos.getY() < negative.getY()) return;
         if (eventPos.getZ() > positive.getZ() || eventPos.getZ() < negative.getZ()) return;
 
-        if(!(level.getBlockEntity(event.getPos()) instanceof BaseFollower<?> follower)) return;
+        if (!(level.getBlockEntity(event.getPos()) instanceof BaseFollower<?> follower)) return;
         if (follower.getMaster() != null) return;
         Direction facing = level.getBlockState(this.getBlockPos()).getValue(BaseMachineBlock.FACING);
 

@@ -23,8 +23,8 @@ public class AlembicRecipeCategory implements IRecipeCategory<AlembicRecipe> {
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/alembic_menu.png");
 
     private static final int TRIM = 4;
-    private static final int WIDTH = 176-TRIM*2;
-    private static final int HEIGHT = 80-TRIM;
+    private static final int WIDTH = 176 - TRIM * 2;
+    private static final int HEIGHT = 80 - TRIM;
 
     private static final Vector2i TANK_0 = new Vector2i(59, 27).sub(TRIM, TRIM);
     private static final Vector2i TANK_1 = new Vector2i(98, 27).sub(TRIM, TRIM);
@@ -49,14 +49,14 @@ public class AlembicRecipeCategory implements IRecipeCategory<AlembicRecipe> {
         NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         builder.addInputSlot(TANK_0.x, TANK_0.y)
-            .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
-            .setOverlay(glassOverlay, 0, 0)
-            .addFluidStack(inputs.get(0).getFluid().getFluid(), inputs.get(0).getFluid().getAmount());
+                .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
+                .setOverlay(glassOverlay, 0, 0)
+                .addFluidStack(inputs.get(0).getFluid().getFluid(), inputs.get(0).getFluid().getAmount());
 
         builder.addOutputSlot(TANK_1.x, TANK_1.y)
-            .setFluidRenderer(outputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
-            .setOverlay(glassOverlay, 0, 0)
-            .addFluidStack(outputs.get(0).getFluid().getFluid(), outputs.get(0).getFluid().getAmount());
+                .setFluidRenderer(outputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
+                .setOverlay(glassOverlay, 0, 0)
+                .addFluidStack(outputs.get(0).getFluid().getFluid(), outputs.get(0).getFluid().getAmount());
 
     }
 
@@ -65,9 +65,28 @@ public class AlembicRecipeCategory implements IRecipeCategory<AlembicRecipe> {
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<AlembicRecipe> getRecipeType() { return AxiologyJEI.ALEMBIC_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.alembic"); }
-    @Override public IDrawable getIcon() { return icon; }
-    @Override public int getWidth() { return WIDTH; }
-    @Override public int getHeight() { return HEIGHT; }
+    @Override
+    public RecipeType<AlembicRecipe> getRecipeType() {
+        return AxiologyJEI.ALEMBIC_RECIPE_TYPE;
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.translatable("axiology.jei.alembic");
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 }

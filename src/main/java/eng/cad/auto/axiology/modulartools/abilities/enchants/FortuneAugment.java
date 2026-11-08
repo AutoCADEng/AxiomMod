@@ -18,14 +18,13 @@ public class FortuneAugment extends ModularToolAugment implements IModularEnchan
 
     @Override
     public List<ItemEnchantment> getEnchantments() {
-        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:fortune")),1);
+        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:fortune")), 1);
         return List.of(enchantment);
     }
 
     @Override
     public boolean isCompatible(ModularToolAugment ability) {
-        if (ability instanceof SilktouchAugment) return false;
-        return true;
+        return !(ability instanceof SilktouchAugment);
     }
 
     @Override

@@ -25,12 +25,13 @@ public class TeleportItemsAugment extends ModularToolAugment implements IModular
     }
 
     @Override
-    public void onHit(ItemStack item, LivingEntity target, LivingEntity player, Integer integer) {}
+    public void onHit(ItemStack item, LivingEntity target, LivingEntity player, Integer integer) {
+    }
 
     @Override
     public void killDropsEvent(LivingDropsEvent event) {
         for (ItemEntity drop : event.getDrops()) {
-            if (!(event.getSource().getEntity() instanceof Player player)){
+            if (!(event.getSource().getEntity() instanceof Player player)) {
                 drop.setPos(Objects.requireNonNull(event.getSource().getSourcePosition()));
                 drop.setDeltaMovement(Vec3.ZERO);
                 continue;
@@ -47,5 +48,6 @@ public class TeleportItemsAugment extends ModularToolAugment implements IModular
     }
 
     @Override
-    public void onDig(ItemStack item, Level level, BlockState blockState, BlockPos blockPos, LivingEntity player, Integer integer) {}
+    public void onDig(ItemStack item, Level level, BlockState blockState, BlockPos blockPos, LivingEntity player, Integer integer) {
+    }
 }

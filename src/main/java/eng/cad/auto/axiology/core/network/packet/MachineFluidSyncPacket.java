@@ -22,12 +22,14 @@ public class MachineFluidSyncPacket extends AxiologyBasePacket<MachineFluidSyncP
     private final ResourceLocation fluidResource;
     private final int slot;
     private final int amount;
-    public MachineFluidSyncPacket(){
+
+    public MachineFluidSyncPacket() {
         this.pos = new BlockPos(0, 0, 0);
         this.fluidResource = null;
         this.slot = 0;
         this.amount = 0;
-    };
+    }
+
     public MachineFluidSyncPacket(BlockPos pos, int tank, FluidStack stack) {
         this.pos = pos;
         this.fluidResource = stack.isEmpty() ? null : ForgeRegistries.FLUIDS.getKey(stack.getFluid());
@@ -46,6 +48,7 @@ public class MachineFluidSyncPacket extends AxiologyBasePacket<MachineFluidSyncP
             byteBuf.writeFluidStack(new FluidStack(fluid, amount));
         }
     }
+
     @Override
     public MachineFluidSyncPacket decode(FriendlyByteBuf byteBuf) {
         return new MachineFluidSyncPacket(

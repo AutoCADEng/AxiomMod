@@ -24,11 +24,10 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
     protected ExtendedItemStackHandler items;
     protected FluidStackHandler fluids;
     protected DataSlotHandler data;
-
+    MachineFactory factory;
     private LazyOptional<IItemHandler> itemCapability;
     private LazyOptional<IFluidHandler> fluidCapability;
 
-    MachineFactory factory;
     public BaseMachine(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         items = new ExtendedItemStackHandler();
@@ -40,20 +39,19 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
     public abstract String getName();
 
 
-
     public abstract T getInstance();
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag){
+    protected void saveAdditional(@NotNull CompoundTag tag) {
         super.saveAdditional(tag);
-        if(!(getInstance() instanceof IMachinePersistable persistable)) return;
+        if (!(getInstance() instanceof IMachinePersistable persistable)) return;
         persistable.saveInventory(getInstance(), tag);
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag){
+    public void load(@NotNull CompoundTag tag) {
         super.load(tag);
-        if(!(getInstance() instanceof IMachinePersistable persistable)) return;
+        if (!(getInstance() instanceof IMachinePersistable persistable)) return;
         persistable.loadInventory(getInstance(), tag);
     }
 
@@ -93,7 +91,7 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
     @Override
     public CompoundTag getUpdateTag() {
         CompoundTag tag = saveWithoutMetadata();
-        if (getInstance() instanceof ISlotData datastore && getInstance() instanceof IMachinePersistable persistable){
+        if (getInstance() instanceof ISlotData datastore && getInstance() instanceof IMachinePersistable persistable) {
             if (datastore.getDataSlots() != null) {
                 int[] data = new int[datastore.getDataSlots().getCount()];
                 for (int i = 0; i < data.length; i++) data[i] = datastore.getDataSlots().get(i);
@@ -120,6 +118,7 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
+
     public void refreshCapabilities() {
         if (getInstance() instanceof ISlotItem item) {
             itemCapability = item.getItemSlots().getSlots() > 0
@@ -132,6 +131,7 @@ public abstract class BaseMachine<T extends BaseMachine<T>> extends BlockEntity 
                     : LazyOptional.empty();
         }
     }
+
     @FunctionalInterface
     public interface MachineFactory {
         BaseMachine<?> create(BlockEntityType<?> type, BlockPos pos, BlockState state);

@@ -28,10 +28,10 @@ public class FluxedTools {
         if (killer.level().isClientSide) return;
 
         if ((!(killer.getMainHandItem().getItem() instanceof FluxedTools.Sword))
-            && (!(killer.getMainHandItem().getItem() instanceof FluxedTools.Axe))) return;
+                && (!(killer.getMainHandItem().getItem() instanceof FluxedTools.Axe))) return;
 
         for (ItemEntity drop : event.getDrops()) {
-            if (!(event.getSource().getEntity() instanceof Player player)){
+            if (!(event.getSource().getEntity() instanceof Player player)) {
                 drop.setPos(killer.position());
                 drop.setDeltaMovement(Vec3.ZERO);
                 continue;
@@ -46,14 +46,14 @@ public class FluxedTools {
         if (drop.level().isClientSide) return;
         Player miner = event.getMiner();
         if ((!(miner.getMainHandItem().getItem() instanceof FluxedTools.Sword))
-            && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Shears))
-            && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Shovel))
-            && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Hoe))
-            && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Pickaxe))
-            && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Axe))) return;
+                && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Shears))
+                && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Shovel))
+                && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Hoe))
+                && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Pickaxe))
+                && (!(miner.getMainHandItem().getItem() instanceof FluxedTools.Axe))) return;
 
-            ItemHandlerHelper.giveItemToPlayer(miner, drop.getItem());
-            drop.remove(Entity.RemovalReason.DISCARDED);
+        ItemHandlerHelper.giveItemToPlayer(miner, drop.getItem());
+        drop.remove(Entity.RemovalReason.DISCARDED);
     }
 
     public static void addFluxedTooltip(List<Component> tooltip) {
@@ -108,7 +108,7 @@ public class FluxedTools {
         }
     }
 
-    public static class Shovel extends CustomShovel{
+    public static class Shovel extends CustomShovel {
         public Shovel(Tier tier, int attackDamageModifier, float attackSpeedModifier, Properties properties) {
             super(tier, attackDamageModifier, attackSpeedModifier, properties);
         }
@@ -120,7 +120,7 @@ public class FluxedTools {
         }
     }
 
-    public static class Shears extends CustomShears{
+    public static class Shears extends CustomShears {
         public Shears(Properties properties) {
             super(properties);
         }

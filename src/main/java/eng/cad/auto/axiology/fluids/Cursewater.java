@@ -18,7 +18,7 @@ public class Cursewater {
         }
 
         @Override
-        public void applyAsProjectile(Level level, Entity entity){
+        public void applyAsProjectile(Level level, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 living.hurt(level.damageSources().magic(), 5.0F);
             }

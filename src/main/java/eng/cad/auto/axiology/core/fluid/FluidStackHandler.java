@@ -10,16 +10,16 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.function.Consumer;
 
 public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable, INBTSerializable<CompoundTag> {
+    private final Consumer<Integer> onContentsChanged;
     protected NonNullList<FluidStackLimiter> stacks = NonNullList.create();
     SlotConfig[] slots;
-    private final Consumer<Integer> onContentsChanged;
 
-    public FluidStackHandler(SlotConfig[] configs, Consumer<Integer> onContentsChanged)
-    {
-        for (int idx = 0; idx<configs.length;idx++){
+    public FluidStackHandler(SlotConfig[] configs, Consumer<Integer> onContentsChanged) {
+        for (int idx = 0; idx < configs.length; idx++) {
             stacks.add(idx, new FluidStackLimiter(FluidStack.EMPTY, configs[idx]));
         }
         slots = configs;
@@ -27,12 +27,12 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     }
 
     public FluidStackHandler() {
-        this.onContentsChanged = slot -> {};
+        this.onContentsChanged = slot -> {
+        };
     }
 
     @Override
-    public void setStackInSlot(int slot, @NotNull FluidStack stack)
-    {
+    public void setStackInSlot(int slot, @NotNull FluidStack stack) {
         validateSlotIndex(slot);
         SlotConfig config = stacks.get(slot).config;
         this.stacks.set(slot, new FluidStackLimiter(stack, config));
@@ -41,10 +41,8 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
     @Override
     public CompoundTag serializeNBT() {
         ListTag nbtTagList = new ListTag();
-        for (int i = 0; i < stacks.size(); i++)
-        {
-            if (!stacks.get(i).stack.isEmpty())
-            {
+        for (int i = 0; i < stacks.size(); i++) {
+            if (!stacks.get(i).stack.isEmpty()) {
                 CompoundTag fluidTag = new CompoundTag();
                 fluidTag.putInt("Slot", i);
                 stacks.get(i).stack.writeToNBT(fluidTag);
@@ -74,20 +72,19 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         onLoad();
     }
 
-    protected void validateSlotIndex(int slot)
-    {
+    protected void validateSlotIndex(int slot) {
         if (slot < 0 || slot >= stacks.size())
             throw new RuntimeException("Slot " + slot + " not in valid range - [0," + stacks.size() + "]");
     }
 
-    protected void onLoad()
-    {
+    protected void onLoad() {
 
     }
 
     protected void onContentsChanged(int slot) {
         onContentsChanged.accept(slot);
     }
+
     @Override
     public int getTanks() {
         return stacks.size();
@@ -197,14 +194,15 @@ public class FluidStackHandler implements IFluidHandler, IFluidHandlerModifiable
         return FluidStack.EMPTY;
     }
 
-    public boolean operationAllowed(int slot, SlotIORestriction operation){
+    public boolean operationAllowed(int slot, SlotIORestriction operation) {
         return slots[slot].operationAllowed(operation);
     }
 
-    public boolean operationNotAllowed(int slot, SlotIORestriction operation){
+    public boolean operationNotAllowed(int slot, SlotIORestriction operation) {
         return !slots[slot].operationAllowed(operation);
     }
-    public record FluidStackLimiter(FluidStack stack, SlotConfig config){
+
+    public record FluidStackLimiter(FluidStack stack, SlotConfig config) {
 
     }
 }

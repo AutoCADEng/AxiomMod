@@ -16,6 +16,6 @@ public class CurseOfBlindness extends AbstractRebound {
         context.player.sendSystemMessage(
                 Component.translatable("curse.blindness").withStyle(ChatFormatting.DARK_PURPLE)
         );
-        context.player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS,300,1));
+        context.player.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 300, 1));
     }
 }

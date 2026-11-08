@@ -6,8 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 public interface IModularFluidInventory {
     FluidStackHandler getTanks();
 
-    default void saveInventory(CompoundTag tag){
-            tag.put("Tanks", getTanks().serializeNBT());
+    default void saveInventory(CompoundTag tag) {
+        tag.put("Tanks", getTanks().serializeNBT());
     }
 
     default void loadInventory(CompoundTag tag) {

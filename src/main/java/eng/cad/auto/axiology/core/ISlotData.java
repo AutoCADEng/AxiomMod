@@ -7,15 +7,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface ISlotData {
-    default int getSyncInterval(){
+    default int getSyncInterval() {
         return 20;
     }
 
     DataSlotHandler getDataSlots();
+
     void setChanged();
+
     int[] getLastSyncedData();
+
     void setLastSyncedData(int[] data);
+
     long getLastSyncTime();
+
     void setLastSyncTime(long time);
 
     default void syncWithClients(Level level, BlockPos pos) {

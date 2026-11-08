@@ -31,6 +31,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
     int[] dataSync = new int[0];
     long lastSync = 0;
     boolean firstInit = true;
+
     public Pyrolyzer(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.data = new DataSlotHandler("progress", "validShape");
@@ -82,16 +83,16 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        if(level.isClientSide()) return;
+        if (level.isClientSide()) return;
         if (!(level.getBlockEntity(pos) instanceof Pyrolyzer pyrolyzer)) return;
 
-        if (firstInit){
+        if (firstInit) {
             validateStructure(getBlockPos(), level);
             syncWithClients(level, getBlockPos());
             firstInit = false;
         }
 
-        if (!isStructureValid()){
+        if (!isStructureValid()) {
             resetProgress(pyrolyzer);
             return;
         }
@@ -99,8 +100,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
         CustomCraftingContainer inventories = new CustomCraftingContainer(pyrolyzer);
         ArrayList<BaseMachine<? extends IMultiblockFollower>> followerEntities = new ArrayList<>();
 
-        for(BaseMachine<? extends IMultiblockFollower> follower:pyrolyzer.getFollowers(level))
-        {
+        for (BaseMachine<? extends IMultiblockFollower> follower : pyrolyzer.getFollowers(level)) {
             followerEntities.add(follower);
             if (!(follower instanceof IMultiblockFollower followerEntity)) continue;
             inventories = inventories.merge(followerEntity.getCraftingContainer());
@@ -108,7 +108,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
 
         PyrolyzerRecipe activeRecipe = findRecipe(pyrolyzer, level, inventories);
 
-        if (activeRecipe == null){
+        if (activeRecipe == null) {
             resetProgress(pyrolyzer);
             return;
         }
@@ -119,14 +119,16 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
         }
 
         if (pyrolyzer.progressCompleted(pyrolyzer)) {
-            if (activeRecipe.validate(pyrolyzer, followerEntities, activeRecipe)) activeRecipe.craft(pyrolyzer, followerEntities, activeRecipe);
+            if (activeRecipe.validate(pyrolyzer, followerEntities, activeRecipe))
+                activeRecipe.craft(pyrolyzer, followerEntities, activeRecipe);
             resetProgress(pyrolyzer);
             level.playSound(null, pos, SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 1.0F, 1.0F);
             return;
         }
-        if (level.random.nextFloat() < 0.025F) level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (level.random.nextFloat() < 0.025F)
+            level.playSound(null, pos, SoundEvents.BLASTFURNACE_FIRE_CRACKLE, SoundSource.BLOCKS, 1.0F, 1.0F);
         incrementProgress(pyrolyzer, 1);
-        syncWithClients(level,getBlockPos());
+        syncWithClients(level, getBlockPos());
     }
 
     @Override
@@ -136,7 +138,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
 
     @Override
     public int maxProgress() {
-        return 24000/60;
+        return 24000 / 60;
     }
 
     @Override
@@ -165,7 +167,7 @@ public class Pyrolyzer extends BaseMaster<Pyrolyzer> implements IRightClickable,
 
     @Override
     public void updateStructureValidity(boolean validity) {
-        getDataSlots().set("validShape", validity?1:0);
+        getDataSlots().set("validShape", validity ? 1 : 0);
         syncWithClients(level, getBlockPos());
         setChanged();
     }

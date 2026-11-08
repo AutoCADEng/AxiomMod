@@ -26,6 +26,7 @@ public class BlazingTools {
     public static void addSmeltingTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("tooltip.axiology.blazing_tools.smelt").withStyle(ChatFormatting.RED));
     }
+
     public static void addBurningTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("tooltip.axiology.blazing_tools.burn", BURN_TIME).withStyle(ChatFormatting.GOLD));
     }
@@ -43,9 +44,11 @@ public class BlazingTools {
         ItemStack smeltedItem = smelt(event.getLevel(), drop.getItem());
         drop.setItem(smeltedItem);
     }
-    public static void burnEffect(LivingEntity target){
+
+    public static void burnEffect(LivingEntity target) {
         target.setSecondsOnFire(BURN_TIME);
     }
+
     private static ItemStack smelt(Level level, ItemStack stack) {
         Optional<SmeltingRecipe> recipe = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level);
         if (recipe.isEmpty()) return stack;
@@ -130,7 +133,7 @@ public class BlazingTools {
         }
     }
 
-    public static class Shovel extends CustomShovel{
+    public static class Shovel extends CustomShovel {
         public Shovel(Tier tier, int attackDamageModifier, float attackSpeedModifier, Properties properties) {
             super(tier, attackDamageModifier, attackSpeedModifier, properties);
         }
@@ -149,7 +152,7 @@ public class BlazingTools {
         }
     }
 
-    public static class Shears extends CustomShears{
+    public static class Shears extends CustomShears {
         public Shears(Properties properties) {
             super(properties);
         }

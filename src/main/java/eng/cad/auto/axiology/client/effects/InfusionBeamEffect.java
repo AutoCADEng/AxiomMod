@@ -16,40 +16,8 @@ import org.joml.Vector3f;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect>{
+public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect> {
     static final HashMap<ResourceLocation, Integer> ItemColorCache = new HashMap<>();
-    @Override
-    public InfusionBeamEffect createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
-        return new InfusionBeamEffect()
-            .setUUID(id)
-            .addPos(castFrom)
-            .addPos(new Vec3(castFrom).add(0,1,0))
-            .addPos(new Vec3(castTo).add(0,5,0))
-            .addPos(castTo)
-            .setWidth(1.5f)
-            .setTexture(texture)
-            .minSegments(10)
-            .maxSegments(50)
-            .setLifespan(9999)
-            .setSpeed(0.005f)
-            .setTime(level.getGameTime())
-            .addWave(new Wave()
-                .setAmplitude(0.35f)
-                .setWavelength(0.7f)
-                .setOffset(0.0f))
-            .addWave(new Wave()
-                    .setAmplitude(0.09f)
-                    .setWavelength(0.33f)
-                    .setOffset(0.1f))
-            .addWave(new Wave()
-                    .setAmplitude(0.05f)
-                    .setWavelength(0.44f)
-                    .setOffset(1.0f));
-    }
-    public InfusionBeamEffect setTexture(ResourceLocation var){
-        setTint(getAverageColour(var));
-        return this;
-    }
 
     private static int getAverageColour(ResourceLocation texture) {
         if (ItemColorCache.containsKey(texture)) return ItemColorCache.get(texture);
@@ -66,8 +34,8 @@ public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect>{
             for (int y = 0; y < image.getHeight(); y++) {
                 int color = image.getPixelRGBA(x, y);
 
-                r += (color >> 0)  & 0xFF;
-                g += (color >> 8)  & 0xFF;
+                r += (color >> 0) & 0xFF;
+                g += (color >> 8) & 0xFF;
                 b += (color >> 16) & 0xFF;
                 a += (color >> 24) & 0xFF;
             }
@@ -75,8 +43,42 @@ public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect>{
         int color = 0xAA000000
                 | ((int) (r / pixels) << 16)
                 | ((int) (g / pixels) << 8)
-                |  (int) (b / pixels);
+                | (int) (b / pixels);
         ItemColorCache.put(texture, color);
         return color;
+    }
+
+    @Override
+    public InfusionBeamEffect createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
+        return new InfusionBeamEffect()
+                .setUUID(id)
+                .addPos(castFrom)
+                .addPos(new Vec3(castFrom).add(0, 1, 0))
+                .addPos(new Vec3(castTo).add(0, 5, 0))
+                .addPos(castTo)
+                .setWidth(1.5f)
+                .setTexture(texture)
+                .minSegments(10)
+                .maxSegments(50)
+                .setLifespan(9999)
+                .setSpeed(0.005f)
+                .setTime(level.getGameTime())
+                .addWave(new Wave()
+                        .setAmplitude(0.35f)
+                        .setWavelength(0.7f)
+                        .setOffset(0.0f))
+                .addWave(new Wave()
+                        .setAmplitude(0.09f)
+                        .setWavelength(0.33f)
+                        .setOffset(0.1f))
+                .addWave(new Wave()
+                        .setAmplitude(0.05f)
+                        .setWavelength(0.44f)
+                        .setOffset(1.0f));
+    }
+
+    public InfusionBeamEffect setTexture(ResourceLocation var) {
+        setTint(getAverageColour(var));
+        return this;
     }
 }

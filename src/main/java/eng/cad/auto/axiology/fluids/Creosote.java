@@ -11,18 +11,20 @@ import net.minecraft.world.level.Level;
 public class Creosote {
     public static final String name = "creosote";
     public static int color = 0xFF783F04;
+
     public static class CustomFluidBehaviour extends AbstractFluidBehaviour {
         @Override
         public void onEntityInside(Level level, BlockPos pos, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
-                living.addEffect(new MobEffectInstance(MobEffects.POISON,50,1));
+                living.addEffect(new MobEffectInstance(MobEffects.POISON, 50, 1));
             }
         }
+
         @Override
-        public void applyAsProjectile(Level level, Entity entity){
+        public void applyAsProjectile(Level level, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 living.hurt(level.damageSources().magic(), 1.0F);
-                living.addEffect(new MobEffectInstance(MobEffects.POISON,50,1));
+                living.addEffect(new MobEffectInstance(MobEffects.POISON, 50, 1));
             }
         }
     }

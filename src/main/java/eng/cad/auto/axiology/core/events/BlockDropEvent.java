@@ -20,8 +20,19 @@ public class BlockDropEvent extends Event {
         this.miner = miner;
     }
 
-    public Level getLevel() { return level; }
-    public BlockPos getPos() { return pos; }
-    public Entity getEntity() { return entity; }
-    public Player getMiner() { return miner; }
+    public Level getLevel() {
+        return level;
+    }
+
+    public BlockPos getPos() {
+        return pos;
+    }
+
+    public Entity getEntity() {
+        return entity;
+    }
+
+    public Player getMiner() {
+        return miner;
+    }
 }

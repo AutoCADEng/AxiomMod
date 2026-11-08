@@ -18,14 +18,13 @@ public class SmiteAugment extends ModularToolAugment implements IModularEnchantm
 
     @Override
     public List<ItemEnchantment> getEnchantments() {
-        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:smite")),1);
+        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:smite")), 1);
         return List.of(enchantment);
     }
 
     @Override
     public boolean isCompatible(ModularToolAugment ability) {
         if (ability instanceof SharpnessAugment) return false;
-        if (ability instanceof BaneOfArthropodsAugment) return false;
-        return true;
+        return !(ability instanceof BaneOfArthropodsAugment);
     }
 }

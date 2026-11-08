@@ -13,17 +13,17 @@ import java.util.function.Supplier;
 public class BlockRegistry {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, AxiomMod.MODID);
 
-    public static final RegistryObject<Block> ETCHED_IRON_BLOCK = registerBlock("etched_iron_block", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistryObject<Block> ARCANE_MACHINE_BLOCK = registerBlock("arcane_machine_block", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
-    public static final RegistryObject<Block> MUNDANE_MACHINE_BLOCK = registerBlock("mundane_machine_block", ()-> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
+    public static final RegistryObject<Block> ETCHED_IRON_BLOCK = registerBlock("etched_iron_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
+    public static final RegistryObject<Block> ARCANE_MACHINE_BLOCK = registerBlock("arcane_machine_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
+    public static final RegistryObject<Block> MUNDANE_MACHINE_BLOCK = registerBlock("mundane_machine_block", () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
 
-    public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block){
+    public static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {
         RegistryObject<T> blockObject = BLOCKS.register(name, block);
         ItemRegistry.registerBlockItem(name, blockObject);
         return blockObject;
     }
 
-    public static <T extends Block> RegistryObject<T> registerMachineBlock(String name, Supplier<T> block){
+    public static <T extends Block> RegistryObject<T> registerMachineBlock(String name, Supplier<T> block) {
         RegistryObject<T> blockObject = BLOCKS.register(name, block);
         return blockObject;
     }

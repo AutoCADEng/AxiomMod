@@ -21,5 +21,6 @@ public interface ISlotFluid {
         if (level != null && !level.isClientSide) {
             syncWithClient(slot, level, blockEntity.getBlockPos(), this);
         }
-    };
+    }
+
 }

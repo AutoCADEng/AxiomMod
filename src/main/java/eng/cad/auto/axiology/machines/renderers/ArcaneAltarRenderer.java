@@ -21,6 +21,7 @@ public class ArcaneAltarRenderer implements BlockEntityRenderer<ArcaneAltar> {
     public ArcaneAltarRenderer(BlockEntityRendererProvider.Context context) {
 
     }
+
     @Override
     public void render(ArcaneAltar entity, float pTick, PoseStack poseStack, MultiBufferSource bufferSource, int light, int overlay) {
         if (entity.getLevel() == null) return;
@@ -30,10 +31,10 @@ public class ArcaneAltarRenderer implements BlockEntityRenderer<ArcaneAltar> {
         if (!item.isEmpty()) {
             ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
             poseStack.pushPose();
-            poseStack.translate(0.5f, 1.3f + 0.1f* Mth.sin(2*Mth.PI*(t/100)), 0.5f);
-            poseStack.scale(0.75f,0.75f,0.75f);
+            poseStack.translate(0.5f, 1.3f + 0.1f * Mth.sin(2 * Mth.PI * (t / 100)), 0.5f);
+            poseStack.scale(0.75f, 0.75f, 0.75f);
             poseStack.mulPose(Axis.YP.rotationDegrees(t));
-            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY,poseStack,bufferSource, entity.getLevel(), 1);
+            itemRenderer.renderStatic(item, ItemDisplayContext.FIXED, getLightLevel(entity.getLevel(), entity.getBlockPos().above()), OverlayTexture.NO_OVERLAY, poseStack, bufferSource, entity.getLevel(), 1);
             poseStack.popPose();
         }
     }

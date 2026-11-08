@@ -24,16 +24,16 @@ public class ChemicalReactorRecipe extends AbstractMachineRecipe<ChemicalReactor
         return ChemicalReactorType.INSTANCE;
     }
 
-    public static class ChemicalReactorType extends AbstractMachineRecipe.MachineType<ChemicalReactorRecipe>{
+    public static class ChemicalReactorType extends AbstractMachineRecipe.MachineType<ChemicalReactorRecipe> {
         public static ChemicalReactorType INSTANCE = new ChemicalReactorType();
     }
 
-    public static class ChemicalReactorSerializer extends AbstractMachineRecipe.MachineSerializer<ChemicalReactorRecipe>{
+    public static class ChemicalReactorSerializer extends AbstractMachineRecipe.MachineSerializer<ChemicalReactorRecipe> {
         public static ChemicalReactorSerializer INSTANCE = new ChemicalReactorSerializer();
 
         @Override
         protected ChemicalReactorRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
-            return new ChemicalReactorRecipe(inputs,outputs, recipeId);
+            return new ChemicalReactorRecipe(inputs, outputs, recipeId);
         }
     }
 }

@@ -1,15 +1,19 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["BAB", "ACA", "BAB"],
+  "pattern": [
+    "BAB",
+    "ACA",
+    "BAB"
+  ],
   "key": {
     "A": {
-      "item" : "minecraft:iron_ingot"
+      "item": "minecraft:iron_ingot"
     },
-    "B" : {
+    "B": {
       "tag": "forge:glass"
     },
-    "C" : {
-      "item" : "minecraft:furnace"
+    "C": {
+      "item": "minecraft:furnace"
     }
   },
   "result": {

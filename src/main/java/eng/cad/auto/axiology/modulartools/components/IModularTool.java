@@ -13,12 +13,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public interface IModularTool {
-    static final String NBT_KEY = "Augments";
-    static int getMaxAugments(ItemStack tool){
+    String NBT_KEY = "Augments";
+
+    static int getMaxAugments(ItemStack tool) {
         return 16;
     }
 
@@ -58,9 +60,9 @@ public interface IModularTool {
     static void refreshTool(ItemStack stack) {
         stack.removeTagKey("Enchantments");
         stack.removeTagKey("StoredEnchantments");
-        for (ModularToolAugment augment : getAugments(stack).keySet()){
+        for (ModularToolAugment augment : getAugments(stack).keySet()) {
             if (!(augment instanceof IModularEnchantment modularEnchantment)) return;
-            for (ItemEnchantment enchant:modularEnchantment.getEnchantments()){
+            for (ItemEnchantment enchant : modularEnchantment.getEnchantments()) {
                 stack.enchant(enchant.enchantment(), getAugments(stack).get(modularEnchantment));
             }
         }
@@ -68,7 +70,7 @@ public interface IModularTool {
 
 
     static int getAugmentCount(ItemStack tool) {
-        return getAugments(tool).entrySet().stream().mapToInt(set-> set.getKey().getCost()*set.getValue()).sum();
+        return getAugments(tool).entrySet().stream().mapToInt(set -> set.getKey().getCost() * set.getValue()).sum();
     }
 
     static boolean addModule(ItemStack tool, ModularToolAugment augment) {

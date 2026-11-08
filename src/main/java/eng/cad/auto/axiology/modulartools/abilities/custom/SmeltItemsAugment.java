@@ -18,6 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Optional;
 
 public class SmeltItemsAugment extends ModularToolAugment implements IModularDigAbility {
+    private static ItemStack smelt(Level level, ItemStack stack) {
+        Optional<SmeltingRecipe> recipe = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level);
+        if (recipe.isEmpty()) return stack;
+        ItemStack result = recipe.get().getResultItem(level.registryAccess()).copy();
+        result.setCount(result.getCount() * stack.getCount());
+        return result;
+    }
+
     @Override
     public Component getDisplayName() {
         return Component.translatable("axiology.modulartools.smelting");
@@ -31,14 +39,7 @@ public class SmeltItemsAugment extends ModularToolAugment implements IModularDig
         drop.setItem(smeltedItem);
     }
 
-    private static ItemStack smelt(Level level, ItemStack stack) {
-        Optional<SmeltingRecipe> recipe = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(stack), level);
-        if (recipe.isEmpty()) return stack;
-        ItemStack result = recipe.get().getResultItem(level.registryAccess()).copy();
-        result.setCount(result.getCount() * stack.getCount());
-        return result;
-    }
-
     @Override
-    public void onDig(ItemStack item, Level level, BlockState blockState, BlockPos blockPos, LivingEntity player, Integer integer) {}
+    public void onDig(ItemStack item, Level level, BlockState blockState, BlockPos blockPos, LivingEntity player, Integer integer) {
+    }
 }

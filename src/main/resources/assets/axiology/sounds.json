@@ -1,18 +1,26 @@
 {
   "super_soaker_fire": {
-    "sounds": ["axiology:super_soaker_fire"],
+    "sounds": [
+      "axiology:super_soaker_fire"
+    ],
     "subtitle": "Super soaker fired"
   },
   "infuser_hum": {
-    "sounds": ["axiology:infuser_hum"],
+    "sounds": [
+      "axiology:infuser_hum"
+    ],
     "subtitle": "Infuser Humming"
   },
   "infuser_consume": {
-    "sounds": ["axiology:infuser_consume"],
+    "sounds": [
+      "axiology:infuser_consume"
+    ],
     "subtitle": "Infuser Succeeded"
   },
   "infuser_fail": {
-    "sounds": ["axiology:infuser_fail"],
+    "sounds": [
+      "axiology:infuser_fail"
+    ],
     "subtitle": "Infuser Failed"
   }
 }

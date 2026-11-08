@@ -7,6 +7,7 @@ import net.minecraftforge.energy.EnergyStorage;
 
 public class BatteryAugment extends ModularToolAugment implements IModularEnergyInventory {
     EnergyStorage battery = new EnergyStorage(100000);
+
     @Override
     public Component getDisplayName() {
         return Component.translatable("axiology.modulartools.battery");

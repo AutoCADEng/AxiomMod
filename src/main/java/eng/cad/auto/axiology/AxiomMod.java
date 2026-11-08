@@ -92,8 +92,8 @@ public class AxiomMod {
 
     @SuppressWarnings("unchecked")
     private void entityRendererSetup(EntityRenderersEvent.RegisterRenderers event) {
-        event.<SoakingDrum>registerBlockEntityRenderer((BlockEntityType<SoakingDrum>) MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockEntity.get(), SoakingDrumRenderer::new);
-        event.<ArcanePedestal>registerBlockEntityRenderer((BlockEntityType<ArcanePedestal>) MachineRegistry.MACHINELIST.get(ArcanePedestal.name).blockEntity.get(), ArcanePedestalRenderer::new);
-        event.<ArcaneAltar>registerBlockEntityRenderer((BlockEntityType<ArcaneAltar>) MachineRegistry.MACHINELIST.get(ArcaneAltar.name).blockEntity.get(), ArcaneAltarRenderer::new);
+        event.registerBlockEntityRenderer((BlockEntityType<SoakingDrum>) MachineRegistry.MACHINELIST.get(SoakingDrum.name).blockEntity.get(), SoakingDrumRenderer::new);
+        event.registerBlockEntityRenderer((BlockEntityType<ArcanePedestal>) MachineRegistry.MACHINELIST.get(ArcanePedestal.name).blockEntity.get(), ArcanePedestalRenderer::new);
+        event.registerBlockEntityRenderer((BlockEntityType<ArcaneAltar>) MachineRegistry.MACHINELIST.get(ArcaneAltar.name).blockEntity.get(), ArcaneAltarRenderer::new);
     }
 }

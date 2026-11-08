@@ -9,16 +9,17 @@ public class FluidRenderProperties implements IClientFluidTypeExtensions {
     private final ResourceLocation fluidFlowing;
     private final int color;
 
-    public FluidRenderProperties(String sourcePath, String flowingPath){
+    public FluidRenderProperties(String sourcePath, String flowingPath) {
         this(sourcePath, flowingPath, 0xFFFFFF);
     }
-    public FluidRenderProperties(String sourcePath, String flowingPath, int color){
+
+    public FluidRenderProperties(String sourcePath, String flowingPath, int color) {
         this.fluidSource = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "block/fluid/" + sourcePath);
         this.fluidFlowing = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "block/fluid/" + flowingPath);
         this.color = color;
     }
 
-    public FluidRenderProperties(int color){
+    public FluidRenderProperties(int color) {
         this.fluidSource = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "block/fluid/generic_flow");
         this.fluidFlowing = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "block/fluid/generic_still");
         this.color = color;

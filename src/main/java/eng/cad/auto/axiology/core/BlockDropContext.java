@@ -7,10 +7,11 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 
 public class BlockDropContext {
-    public record Context(Player miner, ItemStack tool) {}
-
     private static final ThreadLocal<Deque<Context>> CONTEXT =
             ThreadLocal.withInitial(ArrayDeque::new);
+
+    private BlockDropContext() {
+    }
 
     public static void push(Player miner, ItemStack tool) {
         CONTEXT.get().push(new Context(miner, tool));
@@ -33,5 +34,6 @@ public class BlockDropContext {
         }
     }
 
-    private BlockDropContext() {}
+    public record Context(Player miner, ItemStack tool) {
+    }
 }

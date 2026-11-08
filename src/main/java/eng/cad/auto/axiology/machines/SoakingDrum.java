@@ -20,10 +20,11 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.RegistryObject;
 
-public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
+public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightClickable, IMachineProgress, IRecipeMachine<SoakerRecipe>, ISlotItem, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable {
     public static String name = "soaking_drum";
     int[] dataSync = new int[0];
     long lastSync = 0;
+
     public SoakingDrum(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.fluids = new FluidStackHandler(new SlotConfig[]{
@@ -119,8 +120,9 @@ public class SoakingDrum extends TickingMachine<SoakingDrum> implements IRightCl
             return;
         }
 
-        if (level.random.nextFloat() < 0.1F) level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
-        incrementProgress(blockEntity,1);
+        if (level.random.nextFloat() < 0.1F)
+            level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
+        incrementProgress(blockEntity, 1);
     }
 
     @Override

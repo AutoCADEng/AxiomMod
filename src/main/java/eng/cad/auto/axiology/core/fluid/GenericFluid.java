@@ -17,8 +17,8 @@ public class GenericFluid {
     }
 
 
-    public static class Block extends LiquidBlock{
-        public Block (Supplier<? extends FlowingFluid> fluid, Properties properties) {
+    public static class Block extends LiquidBlock {
+        public Block(Supplier<? extends FlowingFluid> fluid, Properties properties) {
             super(fluid, properties);
         }
     }

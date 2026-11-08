@@ -23,14 +23,14 @@ import java.util.function.Consumer;
 @Mixin(Block.class)
 public class BlockMixin {
     @Redirect(method = "dropResources(Lnet/minecraft/world/level/block/state/BlockState;" +
-                    "Lnet/minecraft/world/level/Level;" +
-                    "Lnet/minecraft/core/BlockPos;" +
-                    "Lnet/minecraft/world/level/block/entity/BlockEntity;" +
-                    "Lnet/minecraft/world/entity/Entity;" +
-                    "Lnet/minecraft/world/item/ItemStack;Z)V",
+            "Lnet/minecraft/world/level/Level;" +
+            "Lnet/minecraft/core/BlockPos;" +
+            "Lnet/minecraft/world/level/block/entity/BlockEntity;" +
+            "Lnet/minecraft/world/entity/Entity;" +
+            "Lnet/minecraft/world/item/ItemStack;Z)V",
             at = @At(value = "INVOKE",
                     target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V"))
-    private static void axiology$dropResources(List<ItemStack> drops, Consumer<ItemStack> consumer, BlockState state,Level level, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack tool, boolean dropXp) {
+    private static void axiology$dropResources(List<ItemStack> drops, Consumer<ItemStack> consumer, BlockState state, Level level, BlockPos pos, @Nullable BlockEntity blockEntity, @Nullable Entity entity, ItemStack tool, boolean dropXp) {
         if (entity instanceof Player player) BlockDropContext.push(player, tool);
         try {
             drops.forEach(consumer);
@@ -40,8 +40,8 @@ public class BlockMixin {
     }
 
     @Redirect(method = "popResource(Lnet/minecraft/world/level/Level;" +
-                    "Ljava/util/function/Supplier;" +
-                    "Lnet/minecraft/world/item/ItemStack;)V",
+            "Ljava/util/function/Supplier;" +
+            "Lnet/minecraft/world/item/ItemStack;)V",
             at = @At(value = "INVOKE",
                     target = "Lnet/minecraft/world/level/Level;" +
                             "addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z"))

@@ -6,8 +6,8 @@ import net.minecraft.nbt.CompoundTag;
 public interface IModularItemInventory {
     ExtendedItemStackHandler getInventory();
 
-    default void saveInventory(CompoundTag tag){
-            tag.put("Inventory", getInventory().serializeNBT());
+    default void saveInventory(CompoundTag tag) {
+        tag.put("Inventory", getInventory().serializeNBT());
     }
 
     default void loadInventory(CompoundTag tag) {

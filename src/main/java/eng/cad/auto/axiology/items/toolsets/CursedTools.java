@@ -14,24 +14,28 @@ import net.minecraft.world.level.Level;
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class CursedTools{
+public class CursedTools {
     // Effective Hit Points (Base Durability of 1000) (95CI) = (1731, 2269)
     public static int CHANCE = 10;
     public static int REPAIR_AMOUNT = 5;
     public static int DURATION = 5;
     public static int LEVEL = 1;
     public static String name = "cursed";
-    public static void vampireEffect(Level level, ItemStack stack){
-        if(level.getRandom().nextIntBetweenInclusive(0,100)>CHANCE) return;
+
+    public static void vampireEffect(Level level, ItemStack stack) {
+        if (level.getRandom().nextIntBetweenInclusive(0, 100) > CHANCE) return;
         if (stack.getDamageValue() <= 0) return;
         stack.setDamageValue(Math.max(stack.getDamageValue() - REPAIR_AMOUNT, 0));
     }
-    public static void cursedEffect(Level level, LivingEntity target){
-        target.addEffect(new MobEffectInstance(MobEffects.WITHER, DURATION,LEVEL));
+
+    public static void cursedEffect(Level level, LivingEntity target) {
+        target.addEffect(new MobEffectInstance(MobEffects.WITHER, DURATION, LEVEL));
     }
+
     public static void addVampireTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("tooltip.axiology.cursed_tool.vampire", CHANCE, REPAIR_AMOUNT).withStyle(ChatFormatting.DARK_RED));
     }
+
     public static void addCursedTooltip(List<Component> tooltip) {
         tooltip.add(Component.translatable("tooltip.axiology.cursed_tool.curse", DURATION, LEVEL).withStyle(ChatFormatting.RED));
     }
@@ -116,7 +120,7 @@ public class CursedTools{
         }
     }
 
-    public static class Shovel extends CustomShovel{
+    public static class Shovel extends CustomShovel {
         public Shovel(Tier tier, int attackDamageModifier, float attackSpeedModifier, Properties properties) {
             super(tier, attackDamageModifier, attackSpeedModifier, properties);
         }
@@ -136,7 +140,7 @@ public class CursedTools{
         }
     }
 
-    public static class Shears extends CustomShears{
+    public static class Shears extends CustomShears {
         public Shears(Properties properties) {
             super(properties);
         }

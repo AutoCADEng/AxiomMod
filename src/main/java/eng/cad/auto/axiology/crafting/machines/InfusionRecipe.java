@@ -34,6 +34,7 @@ public class InfusionRecipe extends AbstractMachineRecipe<InfusionRecipe> {
     /**
      * Modified version of matchesTypeAndQuantity that forces the first item in the recipe to be the first item in the container.
      * This is how we enforce the altar pedestal target item being present on the altar and not a pedestal.
+     *
      * @param machineInventory
      * @param level
      * @param recipe
@@ -45,7 +46,7 @@ public class InfusionRecipe extends AbstractMachineRecipe<InfusionRecipe> {
         ItemStack stack = machineInventory.getItem(0);
         if (stack.isEmpty()) return false;
         if (stack.getCount() < targetItem.getItem().getCount()) return false;
-        switch(targetItem.getType()){
+        switch (targetItem.getType()) {
             case ITEM -> {
                 return stack.is(targetItem.getItem().getItem());
             }
@@ -56,16 +57,16 @@ public class InfusionRecipe extends AbstractMachineRecipe<InfusionRecipe> {
         return false;
     }
 
-    public static class InfusionType extends AbstractMachineRecipe.MachineType<InfusionRecipe>{
+    public static class InfusionType extends AbstractMachineRecipe.MachineType<InfusionRecipe> {
         public static InfusionType INSTANCE = new InfusionType();
     }
 
-    public static class InfusionSerializer extends AbstractMachineRecipe.MachineSerializer<InfusionRecipe>{
+    public static class InfusionSerializer extends AbstractMachineRecipe.MachineSerializer<InfusionRecipe> {
         public static InfusionSerializer INSTANCE = new InfusionSerializer();
 
         @Override
         protected InfusionRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
-            return new InfusionRecipe(inputs,outputs, recipeId);
+            return new InfusionRecipe(inputs, outputs, recipeId);
         }
     }
 }

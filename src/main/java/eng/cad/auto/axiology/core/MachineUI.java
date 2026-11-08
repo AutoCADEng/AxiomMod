@@ -30,15 +30,16 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 public class MachineUI {
     public final RegistryObject<MenuType<Menu>> MENU_TYPE;
+
     public MachineUI(String name, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
         MENU_TYPE = MenuRegistry.registerMenu(name, Menu::new);
     }
 
-    public Menu createMenu(int containerID, Inventory inventory, BaseMachine<?> blockEntity){
+    public Menu createMenu(int containerID, Inventory inventory, BaseMachine<?> blockEntity) {
         return new Menu(containerID, inventory, blockEntity);
     }
 
-    public Screen createScreen(String name, Menu menu, Inventory inventory, Component component){
+    public Screen createScreen(String name, Menu menu, Inventory inventory, Component component) {
         return new Screen(name, menu, inventory, component);
     }
 
@@ -48,7 +49,7 @@ public class MachineUI {
 
 
         public Menu(int containerID, Inventory inventory, FriendlyByteBuf byteBuffer) {
-                this(containerID, inventory, (BaseMachine<?>) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
+            this(containerID, inventory, (BaseMachine<?>) inventory.player.level().getBlockEntity(byteBuffer.readBlockPos()));
         }
 
         public Menu(int containerID, Inventory inventory, BaseMachine<?> blockEntity) {
@@ -62,7 +63,7 @@ public class MachineUI {
                 graphics.loadMenuSlots(this);
             }
 
-            if (blockEntity instanceof ISlotFluid tankEntity){
+            if (blockEntity instanceof ISlotFluid tankEntity) {
                 if (inventory.player instanceof ServerPlayer player) {
                     for (int idx = 0; idx < tankEntity.getFluidSlots().getTanks(); idx++) {
                         AxiologyNetwork.sendToClient(player, new MachineFluidSyncPacket(blockEntity.getBlockPos(), idx, tankEntity.getFluidSlots().getFluidInTank(idx)));
@@ -70,7 +71,7 @@ public class MachineUI {
                 }
             }
             if (blockEntity instanceof ISlotData dataEntity) {
-                if (dataEntity.getDataSlots().getCount()>0){
+                if (dataEntity.getDataSlots().getCount() > 0) {
                     addDataSlots(dataEntity.getDataSlots());
                 }
             }
@@ -96,29 +97,29 @@ public class MachineUI {
             return player.level().getBlockEntity(pos) == guiMachine && player.distanceToSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0;
         }
 
-        private void AddPlayerInventory(Inventory playerInventory){
+        private void AddPlayerInventory(Inventory playerInventory) {
             int row_len = 9;
             int col_len = 3;
             int inventory_start_pos_x = 8;
             int inventory_start_pos_y = 84;
             int grid_size = 18;
 
-            for (int row = 0; row<col_len; row++){
-                for (int column=0; column<row_len;column++){
+            for (int row = 0; row < col_len; row++) {
+                for (int column = 0; column < row_len; column++) {
                     this.addSlot(new Slot(playerInventory,
-                            column+row*row_len + row_len,
+                            column + row * row_len + row_len,
                             inventory_start_pos_x + column * grid_size,
                             inventory_start_pos_y + row * grid_size));
                 }
             }
         }
 
-        private void AddPlayerHotbar(Inventory playerInventory){
+        private void AddPlayerHotbar(Inventory playerInventory) {
             int row_len = 9;
             int hotbar_start_pos_x = 8;
             int hotbar_start_pos_y = 142;
             int grid_size = 18;
-            for (int col = 0; col<row_len; col++){
+            for (int col = 0; col < row_len; col++) {
                 this.addSlot(new Slot(playerInventory,
                         col,
                         hotbar_start_pos_x + col * grid_size,
@@ -134,9 +135,10 @@ public class MachineUI {
     @OnlyIn(Dist.CLIENT)
     public class Screen extends AbstractContainerScreen<Menu> {
         public final ResourceLocation GUI;
+
         public Screen(String name, Menu menu, Inventory inventory, Component component) {
             super(menu, inventory, component);
-            GUI = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/"+name+"_menu.png");
+            GUI = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/" + name + "_menu.png");
         }
 
         @Override
@@ -146,12 +148,14 @@ public class MachineUI {
             guiMachine.UIRenderLogic(guiGraphics, tick, mouse_x, mouse_y, this);
         }
 
-        @Override @ParametersAreNonnullByDefault
+        @Override
+        @ParametersAreNonnullByDefault
         public void render(GuiGraphics guiGraphics, int mouse_x, int mouse_y, float tick) {
             renderBackground(guiGraphics);
             super.render(guiGraphics, mouse_x, mouse_y, tick);
             renderTooltip(guiGraphics, mouse_x, mouse_y);
         }
+
         @Override
         protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
             guiGraphics.drawString(
@@ -163,8 +167,9 @@ public class MachineUI {
                     false
             );
         }
+
         @Override
-        public void init(){
+        public void init() {
             super.init();
         }
     }

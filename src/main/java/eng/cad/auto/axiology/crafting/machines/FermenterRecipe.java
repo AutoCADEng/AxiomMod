@@ -25,11 +25,11 @@ public class FermenterRecipe extends AbstractMachineRecipe<FermenterRecipe> {
         return FermenterType.INSTANCE;
     }
 
-    public static class FermenterType extends AbstractMachineRecipe.MachineType<FermenterRecipe>{
+    public static class FermenterType extends AbstractMachineRecipe.MachineType<FermenterRecipe> {
         public static FermenterType INSTANCE = new FermenterType();
     }
 
-    public static class FermenterSerializer extends AbstractMachineRecipe.MachineSerializer<FermenterRecipe>{
+    public static class FermenterSerializer extends AbstractMachineRecipe.MachineSerializer<FermenterRecipe> {
         public static FermenterSerializer INSTANCE = new FermenterSerializer();
 
         @Override

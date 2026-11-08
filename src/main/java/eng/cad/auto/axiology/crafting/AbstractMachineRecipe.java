@@ -2,19 +2,20 @@ package eng.cad.auto.axiology.crafting;
 
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
-import eng.cad.auto.axiology.core.machine.component.IMultiblockFollower;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
+import eng.cad.auto.axiology.core.machine.component.IMultiblockFollower;
+import eng.cad.auto.axiology.core.slot.SlotIORestriction;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import eng.cad.auto.axiology.crafting.core.AbstractRecipe;
 import eng.cad.auto.axiology.crafting.core.BaseRecipe;
-import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
@@ -24,62 +25,87 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> extends AbstractRecipe<CustomCraftingContainer, T>{
+public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> extends AbstractRecipe<CustomCraftingContainer, T> {
     public AbstractMachineRecipe(NonNullList<UniversalSlot> input, NonNullList<UniversalSlot> outputs, ResourceLocation craftingRecipe) {
         super(craftingRecipe, input, outputs);
     }
 
     /**
+     * Fetches a recipe for a machine RecipeType from the minecraft RecipeManager
+     *
+     * @param machineInventory
+     * @param type
+     * @param level
+     * @param blockEntity
+     * @param <T>              an instance of AbstractMachineRecipe, in practice this will be a machine specific recipe class (e.g. AlembicRecipe for an Alembic)
+     * @return Returns the first matching recipe, or null if none match.
+     */
+    public static <T extends AbstractMachineRecipe<T>> T getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<T> type, Level level, BaseMachine<?> blockEntity) {
+        var rec = level.getRecipeManager()
+                .getAllRecipesFor(type)
+                .stream()
+                .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level, recipe))
+                .findFirst()
+                .orElse(null);
+        return rec;
+    }
+
+    /**
      * See documentation for three-variable variant of craft
+     *
      * @param entity
      * @param recipe
+     * @param <G>    an instance of BaseMachine
      * @return
-     * @param <G> an instance of BaseMachine
      */
-    public <G extends BaseMachine<?>> boolean craft(G entity, BaseRecipe<?, ?> recipe){
+    public <G extends BaseMachine<?>> boolean craft(G entity, BaseRecipe<?, ?> recipe) {
         return craft(entity, null, recipe);
     }
 
     /**
      * Performs the action of crafting within a machine(base/follower/master) network. This method will alter inventories!
+     *
      * @param entity
      * @param followers
      * @param recipe
      * @param <F>
-     * @param <G> an instance of BaseMachine
+     * @param <G>       an instance of BaseMachine
      * @return True if the recipe is valid, false if not
      */
-    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
-        consumeIngredients(entity,followers,recipe);
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean craft(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe) {
+        consumeIngredients(entity, followers, recipe);
         produceOutputs(entity, followers, recipe);
         return true;
     }
 
-    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean consumeIngredients(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
-        if (!validate(entity, followers, recipe)) return false; //Candidate for deletion, we always check at the machine level anyway.
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean consumeIngredients(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe) {
+        if (!validate(entity, followers, recipe))
+            return false; //Candidate for deletion, we always check at the machine level anyway.
 
-        for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
+        for (UniversalSlot ingredient : recipe.getCraftingIngredients()) {
             consume(ingredient, followers, entity, recipe);
         }
 
         return true;
     }
 
-    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean produceOutputs(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe){
-        if (!validate(entity, followers, recipe)) return false; //Candidate for deletion, we always check at the machine level anyway.
+    public <F extends BaseMachine, G extends BaseMachine<? extends IMultiblockFollower>> boolean produceOutputs(F entity, ArrayList<G> followers, BaseRecipe<?, ?> recipe) {
+        if (!validate(entity, followers, recipe))
+            return false; //Candidate for deletion, we always check at the machine level anyway.
 
-        for (UniversalSlot output: recipe.getCraftingOutput()){
+        for (UniversalSlot output : recipe.getCraftingOutput()) {
             produce(output, followers, entity, recipe);
         }
 
         return true;
     }
-    private <G extends BaseMachine<? extends IMultiblockFollower>> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?>  recipe) {
+
+    private <G extends BaseMachine<? extends IMultiblockFollower>> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?> recipe) {
         int required = 0;
 
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
-        if (followers != null){
+        if (followers != null) {
             machines.addAll(followers);
         }
 
@@ -108,7 +134,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
         if (recipeOutput.is(UniversalSlot.Kind.FLUID)) {
             required = recipeOutput.getFluid().getAmount();
-            for (BaseMachine<?> machine: machines) {
+            for (BaseMachine<?> machine : machines) {
                 if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                 if (fluidMachine.getFluidSlots() == null) continue;
                 for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
@@ -130,15 +156,15 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         }
     }
 
-    private <G extends BaseMachine<?>> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?>  recipe) {
+    private <G extends BaseMachine<?>> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?> recipe) {
         int required = 0;
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
-        if (followers != null){
+        if (followers != null) {
             machines.addAll(followers);
         }
-        switch (target.getType()){
+        switch (target.getType()) {
             case ITEM -> {
                 required = target.getItem().getCount();
                 for (BaseMachine machine : machines) {
@@ -166,7 +192,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                     for (int idx = 0; idx < itemMachine.getItemSlots().getSlots(); idx++) {
                         if (itemMachine.getItemSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
                         ItemStack itemStack = itemMachine.getItemSlots().getStackInSlot(idx);
-                        if (itemStack.is(target.getItemTag())){
+                        if (itemStack.is(target.getItemTag())) {
                             if (required <= 0) break;
                             int originalCount = itemStack.getCount();
                             int remainingItems = Math.max(originalCount - Math.min(itemStack.getMaxStackSize(), required), 0);
@@ -179,7 +205,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
             }
             case FLUID -> {
                 required = target.getFluid().getAmount();
-                for (BaseMachine<?> machine: machines) {
+                for (BaseMachine<?> machine : machines) {
                     if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                     if (fluidMachine.getFluidSlots() == null) continue;
                     for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
@@ -198,7 +224,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
             }
             case FLUID_TAG -> {
                 required = target.getFluid().getAmount();
-                for (BaseMachine<?> machine: machines) {
+                for (BaseMachine<?> machine : machines) {
                     if (!(machine instanceof ISlotFluid fluidMachine)) continue;
                     if (fluidMachine.getFluidSlots() == null) continue;
                     for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
@@ -218,22 +244,22 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         }
     }
 
-    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, BaseRecipe<?, ?>  recipe) {
+    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, BaseRecipe<?, ?> recipe) {
         return hasSpace(blockEntity, null, recipe);
     }
 
-    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, ArrayList<BaseMachine<? extends IMultiblockFollower>> followers, BaseRecipe<?, ?>  recipe) {
+    public <G extends BaseMachine<?>> boolean hasSpace(G blockEntity, ArrayList<BaseMachine<? extends IMultiblockFollower>> followers, BaseRecipe<?, ?> recipe) {
         HashMap<BaseMachine<?>, ItemStack[]> recipeItems = new HashMap<>();
         HashMap<BaseMachine<?>, FluidStack[]> recipeFluids = new HashMap<>();
 
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
-        if (followers != null){
+        if (followers != null) {
             machines.addAll(followers);
         }
 
-        for (BaseMachine<?> machine: machines) {
+        for (BaseMachine<?> machine : machines) {
             if (machine instanceof ISlotItem itemMachine) {
                 ItemStack[] items = new ItemStack[itemMachine.getItemSlots() == null ? 0 : itemMachine.getItemSlots().getSlots()];
                 for (int idx = 0; idx < items.length; idx++) {
@@ -251,11 +277,11 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
             }
         }
 
-        for (UniversalSlot target: recipe.getCraftingOutput()) {
+        for (UniversalSlot target : recipe.getCraftingOutput()) {
             int required = 0;
 
-            for (BaseMachine<?> machine: machines) {
-                switch (target.getType()){
+            for (BaseMachine<?> machine : machines) {
+                switch (target.getType()) {
                     case ITEM -> {
                         if (machine == machines.get(0)) required = target.getItem().getCount();
                         ItemStack[] items = recipeItems.get(machine);
@@ -312,19 +338,20 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
     /**
      * See documentation for the three-arg variation of validate
+     *
      * @param entity
      * @param recipe
-     * @return
      * @param <G>
+     * @return
      */
-    public <G extends BaseMachine> boolean validate(G entity, BaseRecipe<?, ?> recipe){
+    public <G extends BaseMachine> boolean validate(G entity, BaseRecipe<?, ?> recipe) {
         return validate(entity, null, recipe);
     }
-
 
     /**
      * INTERNAL TO CLASS
      * Sorts an ingredient from a recipe into its respective hashmap
+     *
      * @param ingredient
      * @param recipeItems
      * @param recipeFluids
@@ -332,10 +359,10 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
      * @param recipeFluidTags
      */
     private void populateValidationHashmaps(UniversalSlot ingredient, HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags) {
-        switch (ingredient.getType()){
+        switch (ingredient.getType()) {
             case ITEM -> {
                 ItemStack itemStack = ingredient.getItem();
-                if (recipeItems.containsKey(itemStack.getItem())){
+                if (recipeItems.containsKey(itemStack.getItem())) {
                     recipeItems.put(itemStack.getItem(), recipeItems.get(itemStack.getItem()) + itemStack.getCount());
                 } else {
                     recipeItems.put(itemStack.getItem(), itemStack.getCount());
@@ -344,16 +371,16 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
             case FLUID -> {
                 FluidStack fluidStack = ingredient.getFluid();
-                if (recipeFluids.containsKey(fluidStack.getFluid())){
+                if (recipeFluids.containsKey(fluidStack.getFluid())) {
                     recipeFluids.put(fluidStack.getFluid(), recipeFluids.get(fluidStack.getFluid()) + fluidStack.getAmount());
                 } else {
-                    recipeFluids.put(fluidStack.getFluid(),  fluidStack.getAmount());
+                    recipeFluids.put(fluidStack.getFluid(), fluidStack.getAmount());
                 }
             }
 
             case ITEM_TAG -> {
                 var tag = ingredient.getItemTag();
-                if (recipeItemTags.containsKey(tag)){
+                if (recipeItemTags.containsKey(tag)) {
                     recipeItemTags.put(tag, recipeItemTags.get(tag) + ingredient.getTag().count());
                 } else {
                     recipeItemTags.put(tag, ingredient.getTag().count());
@@ -362,7 +389,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
             case FLUID_TAG -> {
                 var tag = ingredient.getFluidTag();
-                if (recipeFluidTags.containsKey(tag)){
+                if (recipeFluidTags.containsKey(tag)) {
                     recipeFluidTags.put(tag, recipeFluidTags.get(tag) + ingredient.getTag().count());
                 } else {
                     recipeFluidTags.put(tag, ingredient.getTag().count());
@@ -374,13 +401,14 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     /**
      * INTERNAL TO CLASS
      * Subtracts the machine inventory from the four hashmaps representing the recipe requirements, ignoring OUTPUT slots.
+     *
      * @param machine
      * @param recipeItems
      * @param recipeFluids
      * @param recipeItemTags
      * @param recipeFluidTags
      */
-    private void subtractItemCountFromValidationHashmaps(BaseMachine machine, HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags){
+    private void subtractItemCountFromValidationHashmaps(BaseMachine machine, HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags) {
         // Working with an Item/ItemTag
         if (machine instanceof ISlotItem itemMachine) {
             if (itemMachine.getItemSlots() != null) {
@@ -403,7 +431,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         }
 
         // Working with a Fluid/FluidTag
-        if (machine instanceof ISlotFluid fluidMachine){
+        if (machine instanceof ISlotFluid fluidMachine) {
             if (fluidMachine.getFluidSlots() != null) {
                 for (int idx = 0; idx < fluidMachine.getFluidSlots().getTanks(); idx++) {
                     if (fluidMachine.getFluidSlots().operationNotAllowed(idx, SlotIORestriction.INPUT)) continue;
@@ -413,7 +441,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
                         recipeFluids.put(stack.getFluid(), recipeFluids.get(stack.getFluid()) - stack.getAmount());
                         skipTag = true;
                     }
-                    if (!skipTag){
+                    if (!skipTag) {
                         var firstTag = stack.getFluid().defaultFluidState().getTags().filter(tag -> recipeFluidTags.containsKey(tag)).findFirst();
                         if (firstTag.isEmpty()) continue;
                         var tag = firstTag.get();
@@ -427,13 +455,14 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     /**
      * INTERNAL TO CLASS
      * Checks the four hashmaps in validate() to see if all recipe ingredients are satiated (remaining items in recipe <= 0)
+     *
      * @param recipeItems
      * @param recipeFluids
      * @param recipeItemTags
      * @param recipeFluidTags
      * @return True if all hashmap entries are <= 0, false if not.
      */
-    private boolean checkHashmapIngredientsFulfilled(HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags){
+    private boolean checkHashmapIngredientsFulfilled(HashMap<Item, Integer> recipeItems, HashMap<Fluid, Integer> recipeFluids, HashMap<TagKey<Item>, Integer> recipeItemTags, HashMap<TagKey<Fluid>, Integer> recipeFluidTags) {
         return recipeItems.values().stream().allMatch(count -> count <= 0)
                 && recipeFluids.values().stream().allMatch(count -> count <= 0)
                 && recipeItemTags.values().stream().allMatch(count -> count <= 0)
@@ -442,14 +471,15 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
 
     /**
      * Tests whether a system of machines(Master/Follower/Base) can satiate a crafting recipe
+     *
      * @param blockEntity
      * @param followers
      * @param recipe
-     * @param <G> an instance of BaseMachine
-     * @param <F> a list of BaseMachine instances which extends IMultiblockFollower, in practice these will often be BaseFollowers
+     * @param <G>         an instance of BaseMachine
+     * @param <F>         a list of BaseMachine instances which extends IMultiblockFollower, in practice these will often be BaseFollowers
      * @return True if the machine inventories contains enough ingredients to satiate the recipes
      */
-    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate( G blockEntity, @Nullable List<F> followers, BaseRecipe<?, ?>  recipe){
+    public <G extends BaseMachine<?>, F extends BaseMachine<? extends IMultiblockFollower>> boolean validate(G blockEntity, @Nullable List<F> followers, BaseRecipe<?, ?> recipe) {
         HashMap<Item, Integer> recipeItems = new HashMap<>();
         HashMap<Fluid, Integer> recipeFluids = new HashMap<>();
         HashMap<TagKey<Item>, Integer> recipeItemTags = new HashMap<>();
@@ -458,39 +488,20 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
         ArrayList<BaseMachine> machines = new ArrayList<>();
         machines.add(blockEntity);
 
-        if (followers != null){
+        if (followers != null) {
             machines.addAll(followers);
         }
 
-        if (blockEntity==null && followers == null) return false;
-        for (UniversalSlot ingredient: recipe.getCraftingIngredients()){
+        if (blockEntity == null && followers == null) return false;
+        for (UniversalSlot ingredient : recipe.getCraftingIngredients()) {
             populateValidationHashmaps(ingredient, recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
         }
 
-        for (BaseMachine<?> machine: machines) {
+        for (BaseMachine<?> machine : machines) {
             subtractItemCountFromValidationHashmaps(machine, recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
         }
 
         return checkHashmapIngredientsFulfilled(recipeItems, recipeFluids, recipeItemTags, recipeFluidTags);
-    }
-
-    /**
-     *  Fetches a recipe for a machine RecipeType from the minecraft RecipeManager
-     * @param machineInventory
-     * @param type
-     * @param level
-     * @param blockEntity
-     * @param <T> an instance of AbstractMachineRecipe, in practice this will be a machine specific recipe class (e.g. AlembicRecipe for an Alembic)
-     * @return Returns the first matching recipe, or null if none match.
-     */
-    public static <T extends AbstractMachineRecipe<T>> T getActiveRecipe(CustomCraftingContainer machineInventory, RecipeType<T> type, Level level, BaseMachine<?> blockEntity) {
-        var rec = level.getRecipeManager()
-                .getAllRecipesFor(type)
-                .stream()
-                .filter(recipe -> recipe.matchesTypeAndQuantity(machineInventory, level, recipe))
-                .findFirst()
-                .orElse(null);
-        return rec;
     }
 
     @Override
@@ -499,7 +510,9 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     @Override
     public abstract RecipeType<T> getType();
 
-    public abstract static class MachineType<T extends AbstractMachineRecipe<T>> implements RecipeType<T> { }
+    public abstract static class MachineType<T extends AbstractMachineRecipe<T>> implements RecipeType<T> {
+    }
 
-    public abstract static class MachineSerializer<T extends AbstractMachineRecipe<T>> extends AbstractRecipe.Serializer<CustomCraftingContainer, T> { }
+    public abstract static class MachineSerializer<T extends AbstractMachineRecipe<T>> extends AbstractRecipe.Serializer<CustomCraftingContainer, T> {
+    }
 }

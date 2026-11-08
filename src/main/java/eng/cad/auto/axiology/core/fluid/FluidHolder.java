@@ -24,6 +24,9 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Consumer;
 
 public class FluidHolder {
+    public static final AbstractFluidBehaviour GENERIC_FLUID_BEHAVIOUR = new AbstractFluidBehaviour() {
+    };
+    public final AbstractFluidBehaviour behaviour;
     public RegistryObject<Fluid> SOURCE;
     public RegistryObject<Fluid> FLOWING;
     public RegistryObject<FluidType> FLUIDTYPE;
@@ -31,14 +34,12 @@ public class FluidHolder {
     public RegistryObject<CustomBucket> BUCKET;
     public int color;
     public MapColor mapColor;
-    public final AbstractFluidBehaviour behaviour;
-    public static final AbstractFluidBehaviour GENERIC_FLUID_BEHAVIOUR = new AbstractFluidBehaviour(){};
 
-    public FluidHolder(String name, int color, MapColor mapColor){
+    public FluidHolder(String name, int color, MapColor mapColor) {
         this(name, color, mapColor, GENERIC_FLUID_BEHAVIOUR);
     }
 
-    public FluidHolder(String name, int color, MapColor mapColor, AbstractFluidBehaviour behaviour){
+    public FluidHolder(String name, int color, MapColor mapColor, AbstractFluidBehaviour behaviour) {
         this.color = color;
         this.mapColor = mapColor;
         this.behaviour = behaviour;
@@ -58,6 +59,7 @@ public class FluidHolder {
                 .bucket(BUCKET)
                 .tickRate(2);
     }
+
     private FluidType.Properties fluidTypeProps(int density, int viscosity) {
         return FluidType.Properties.create()
                 .density(density)
@@ -66,19 +68,21 @@ public class FluidHolder {
                 .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
                 .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH);
     }
+
     private LiquidBlock.Properties blockProps(MapColor color) {
         return LiquidBlock.Properties.of().mapColor(color).noCollission().strength(100f).noLootTable().replaceable().liquid().pushReaction(PushReaction.DESTROY);
     }
+
     private RegistryObject<Fluid> registerSource(String name) {
         return FluidRegistry.registerFluid(name, () -> new GenericFluid.Source(fluidProps()));
     }
 
     private RegistryObject<Fluid> registerFlowing(String name) {
-        return FluidRegistry.registerFluid(name+"_flowing", () -> new GenericFluid.Flowing(fluidProps()));
+        return FluidRegistry.registerFluid(name + "_flowing", () -> new GenericFluid.Flowing(fluidProps()));
     }
 
     private RegistryObject<FluidType> registerFluidType(String name) {
-        return FluidRegistry.FLUIDTYPES.register(name, () -> new FluidType(fluidTypeProps(1000,1000)) {
+        return FluidRegistry.FLUIDTYPES.register(name, () -> new FluidType(fluidTypeProps(1000, 1000)) {
             @Override
             public void initializeClient(Consumer<IClientFluidTypeExtensions> consumer) {
                 consumer.accept(GenericFluid.getFluidRenderer(color));
@@ -86,21 +90,20 @@ public class FluidHolder {
         });
     }
 
-    private RegistryObject<LiquidBlock> registerBlock(String name){
-        return FluidRegistry.registerFluidBlock(name, () -> new LiquidBlock(() -> (FlowingFluid) SOURCE.get(), blockProps(mapColor))
-            {
-                @Override
-                public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
-                    super.entityInside(blockState, level, blockPos, entity);
-                    if (behaviour == null) return;
-                    behaviour.onEntityInside(level, blockPos, entity);
+    private RegistryObject<LiquidBlock> registerBlock(String name) {
+        return FluidRegistry.registerFluidBlock(name, () -> new LiquidBlock(() -> (FlowingFluid) SOURCE.get(), blockProps(mapColor)) {
+                    @Override
+                    public void entityInside(BlockState blockState, Level level, BlockPos blockPos, Entity entity) {
+                        super.entityInside(blockState, level, blockPos, entity);
+                        if (behaviour == null) return;
+                        behaviour.onEntityInside(level, blockPos, entity);
+                    }
                 }
-            }
         );
     }
 
-    private RegistryObject<CustomBucket> registerBucket(String name){
-        return ItemRegistry.registerItem(name+"_bucket", ()-> new CustomBucket(SOURCE, new Item.Properties().stacksTo(1), color));
+    private RegistryObject<CustomBucket> registerBucket(String name) {
+        return ItemRegistry.registerItem(name + "_bucket", () -> new CustomBucket(SOURCE, new Item.Properties().stacksTo(1), color));
     }
 
     public RegistryObject<CustomBucket> getBucket() {

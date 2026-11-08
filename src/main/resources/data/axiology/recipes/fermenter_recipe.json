@@ -1,17 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["IHI", "ICI", "IMI"],
+  "pattern": [
+    "IHI",
+    "ICI",
+    "IMI"
+  ],
   "key": {
     "I": {
-      "tag" : "minecraft:logs"
+      "tag": "minecraft:logs"
     },
-    "H" : {
+    "H": {
       "item": "minecraft:hopper"
     },
-    "C" : {
+    "C": {
       "item": "minecraft:composter"
     },
-    "M" : {
+    "M": {
       "item": "axiology:mundane_machine_frame"
     }
   },

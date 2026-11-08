@@ -5,7 +5,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class Blazewater{
+public class Blazewater {
     public static int color = 0xEEFF7500;
     public static String name = "blazewater";
 
@@ -18,7 +18,7 @@ public class Blazewater{
         }
 
         @Override
-        public void applyAsProjectile(Level level, Entity entity){
+        public void applyAsProjectile(Level level, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 living.hurt(level.damageSources().magic(), 1.0F);
                 living.setSecondsOnFire(1);

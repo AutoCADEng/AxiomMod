@@ -11,18 +11,20 @@ import net.minecraft.world.level.Level;
 public class Tar {
     public static final String name = "tar";
     public static int color = 0xFF000000;
+
     public static class CustomFluidBehaviour extends AbstractFluidBehaviour {
         @Override
         public void onEntityInside(Level level, BlockPos pos, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,10, 10));
+                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 10));
             }
         }
+
         @Override
-        public void applyAsProjectile(Level level, Entity entity){
+        public void applyAsProjectile(Level level, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 living.hurt(level.damageSources().magic(), 1.0F);
-                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN,10, 10));
+                living.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 10, 10));
             }
         }
     }

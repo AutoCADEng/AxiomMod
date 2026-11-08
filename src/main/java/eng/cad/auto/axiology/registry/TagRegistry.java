@@ -31,7 +31,7 @@ public class TagRegistry {
                     ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "modular_tool")
             );
 
-    public static void register(IEventBus modEventBus){
+    public static void register(IEventBus modEventBus) {
         modEventBus.register(HOT_BLOCKS);
         modEventBus.register(HOT_FLUIDS);
         modEventBus.register(TOOL_FUEL_FLUIDS);

@@ -16,7 +16,10 @@ import java.util.UUID;
 
 public class BeamEffectRenderer {
     private static final HashMap<UUID, AbstractBeamEffect<?>> activeBeams = new HashMap();
-    private BeamEffectRenderer(){};
+
+    private BeamEffectRenderer() {
+    }
+
     public static void init(IEventBus eventBus) {
         eventBus.addListener(BeamEffectRenderer::onRenderLevel);
     }
@@ -25,7 +28,7 @@ public class BeamEffectRenderer {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
         if (activeBeams.isEmpty()) return;
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null){
+        if (mc.level == null) {
             activeBeams.clear();
             return;
         }
@@ -40,7 +43,7 @@ public class BeamEffectRenderer {
         while (it.hasNext()) {
             AbstractBeamEffect<?> beam = it.next();
             float age = currentTime - beam.creationTick;
-            if (age >= beam.lifespan || beam.dead){
+            if (age >= beam.lifespan || beam.dead) {
                 it.remove();
                 continue;
             }
@@ -50,15 +53,16 @@ public class BeamEffectRenderer {
         }
     }
 
-    public static void addBeam(AbstractBeamEffect<?> beam){
+    public static void addBeam(AbstractBeamEffect<?> beam) {
         activeBeams.put(beam.id, beam);
     }
 
-    public static void killBeam(UUID id){
-        if(!activeBeams.containsKey(id)) return;
+    public static void killBeam(UUID id) {
+        if (!activeBeams.containsKey(id)) return;
         activeBeams.get(id).dead = true;
     }
-    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect<?> beam, Vec3 camera_pos, float age){
+
+    private static void drawBeam(VertexConsumer vertexConsumer, PoseStack.Pose pose, AbstractBeamEffect<?> beam, Vec3 camera_pos, float age) {
         if (beam.positions.isEmpty()) return;
         Vec3 startPosWorld = beam.positions.get(0);
         Vec3 endPosWorld = beam.positions.get(beam.positions.size() - 1);
@@ -71,10 +75,10 @@ public class BeamEffectRenderer {
         Vec3 initialDirection = nextPositionCamera.subtract(initialPositionCamera).normalize();
         Vec3 cameraDirection = new Vec3(Minecraft.getInstance().gameRenderer.getMainCamera().getLookVector());
         Vec3 initialPerpendicular = initialDirection.cross(cameraDirection).normalize();
-        drawVertex(vertexConsumer, pose, initialPositionCamera.subtract(initialPerpendicular.scale(beam.evaluateWave(0, age))),  beam.tint);
+        drawVertex(vertexConsumer, pose, initialPositionCamera.subtract(initialPerpendicular.scale(beam.evaluateWave(0, age))), beam.tint);
         drawVertex(vertexConsumer, pose, initialPositionCamera.add(initialPerpendicular.scale(beam.evaluateWave(0, age))), beam.tint);
 
-        for (int idx = 1; idx<= segments; idx++){
+        for (int idx = 1; idx <= segments; idx++) {
             float curvePosition = (float) idx / segments;
             float lastCurvePosition = (float) (idx - 1) / segments;
 
@@ -86,7 +90,7 @@ public class BeamEffectRenderer {
             Vec3 direction = positionCamera.subtract(lastPositionCamera).normalize();
             Vec3 perpendicular = direction.cross(cameraDirection).normalize();
 
-            float fadeMod =  1 - (age/(float) beam.lifespan);
+            float fadeMod = 1 - (age / (float) beam.lifespan);
             int fadedColor = ((int) (((beam.tint >> 24) & 0xFF) * fadeMod) << 24) | (beam.tint & 0x00FFFFFF);
             drawVertex(vertexConsumer, pose, positionCamera.subtract(perpendicular.scale(beam.evaluateWave(curvePosition, age))), fadedColor);
             drawVertex(vertexConsumer, pose, positionCamera.add(perpendicular.scale(beam.evaluateWave(curvePosition, age))), fadedColor);
@@ -96,7 +100,7 @@ public class BeamEffectRenderer {
     private static void drawVertex(VertexConsumer c, PoseStack.Pose pose, Vec3 position, int rgb) {
         float a = ((rgb >> 24) & 0xFF) / 255.0F;
         float r = ((rgb >> 16) & 0xFF) / 255.0F;
-        float g = ((rgb >> 8)  & 0xFF) / 255.0F;
+        float g = ((rgb >> 8) & 0xFF) / 255.0F;
         float b = ((rgb >> 0) & 0xFF) / 255.0F;
         c.vertex(pose.pose(),
                         (float) position.x,

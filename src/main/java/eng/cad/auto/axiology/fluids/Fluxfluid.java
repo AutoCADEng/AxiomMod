@@ -14,19 +14,20 @@ public class Fluxfluid {
         public void onEntityInside(Level level, BlockPos pos, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 double X = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
-                double Y = living.getY() + (double)(living.getRandom().nextInt(8) - 4);
+                double Y = living.getY() + (double) (living.getRandom().nextInt(8) - 4);
                 double Z = living.getZ() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
 
                 living.randomTeleport(X, Y, Z, true);
             }
         }
+
         @Override
-        public void applyAsProjectile(Level level, Entity entity){
+        public void applyAsProjectile(Level level, Entity entity) {
             if (!level.isClientSide && entity instanceof LivingEntity living) {
                 living.hurt(level.damageSources().magic(), 1.0F);
 
                 double X = living.getX() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
-                double Y = living.getY() + (double)(living.getRandom().nextInt(8) - 4);
+                double Y = living.getY() + (double) (living.getRandom().nextInt(8) - 4);
                 double Z = living.getZ() + (living.getRandom().nextDouble() - 0.5D) * 16.0D;
 
                 living.randomTeleport(X, Y, Z, true);

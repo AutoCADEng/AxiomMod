@@ -6,11 +6,12 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class InfusionContext{
+public class InfusionContext {
     public Level level;
     public BlockPos alterPos;
     public @Nullable ServerPlayer player;
-    public InfusionContext(Level level, BlockPos alterPos, @Nullable ServerPlayer getPlayer){
+
+    public InfusionContext(Level level, BlockPos alterPos, @Nullable ServerPlayer getPlayer) {
         this.level = level;
         this.alterPos = alterPos;
         this.player = getPlayer;

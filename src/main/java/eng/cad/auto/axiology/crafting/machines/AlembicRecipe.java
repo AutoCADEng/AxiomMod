@@ -24,16 +24,16 @@ public class AlembicRecipe extends AbstractMachineRecipe<AlembicRecipe> {
         return AlembicType.INSTANCE;
     }
 
-    public static class AlembicType extends AbstractMachineRecipe.MachineType<AlembicRecipe>{
+    public static class AlembicType extends AbstractMachineRecipe.MachineType<AlembicRecipe> {
         public static AlembicType INSTANCE = new AlembicType();
     }
 
-    public static class AlembicSerializer extends AbstractMachineRecipe.MachineSerializer<AlembicRecipe>{
+    public static class AlembicSerializer extends AbstractMachineRecipe.MachineSerializer<AlembicRecipe> {
         public static AlembicSerializer INSTANCE = new AlembicSerializer();
 
         @Override
         protected AlembicRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
-            return new AlembicRecipe(inputs,outputs, recipeId);
+            return new AlembicRecipe(inputs, outputs, recipeId);
         }
     }
 }

@@ -10,6 +10,7 @@ import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,13 +22,13 @@ public class MultiblockStructure {
     public final ArrayList<String[]> shapeList;
     public Vec3i rootPos;
 
-    public MultiblockStructure(HashMap<Character, ArrayList<Block>> blockMap, ArrayList<String[]> shapeList, Vec3i rootPos){
+    public MultiblockStructure(HashMap<Character, ArrayList<Block>> blockMap, ArrayList<String[]> shapeList, Vec3i rootPos) {
         this.blockMap = blockMap;
         this.shapeList = shapeList;
         this.rootPos = rootPos;
     }
 
-    public static MultiblockStructure fromJson(JsonObject jsonObject){
+    public static MultiblockStructure fromJson(JsonObject jsonObject) {
         HashMap<Character, ArrayList<Block>> newBlockMap = new HashMap<>();
         JsonObject keys = jsonObject.getAsJsonObject("key");
         for (Map.Entry<String, JsonElement> resourceKey : keys.entrySet()) {
@@ -35,7 +36,7 @@ public class MultiblockStructure {
             JsonArray values = resourceKey.getValue().getAsJsonArray();
             ArrayList<Block> validBlocks = new ArrayList<>();
 
-            for (JsonElement element: values.asList()){
+            for (JsonElement element : values.asList()) {
                 String resourceKeyLookup = element.getAsString();
                 ResourceLocation resource = ResourceLocation.tryParse(resourceKeyLookup);
                 if (ForgeRegistries.BLOCKS.containsKey(resource)) {
@@ -50,16 +51,16 @@ public class MultiblockStructure {
         JsonArray rootArray = jsonObject.get("root").getAsJsonArray();
         JsonArray multiblockShape = jsonObject.get("shape").getAsJsonArray();
         ArrayList<String[]> shape = new ArrayList<>();
-        for (JsonElement element: multiblockShape.asList()){
+        for (JsonElement element : multiblockShape.asList()) {
             JsonArray layers = element.getAsJsonArray();
 
             //"You disgust me" - Spy TF2
             shape.add(layers.asList().stream().map(JsonElement::getAsString).collect(Collectors.toCollection(ArrayList::new)).toArray(String[]::new));
         }
-        return new MultiblockStructure(newBlockMap, shape, new Vec3i(rootArray.get(0).getAsInt(),rootArray.get(1).getAsInt(),rootArray.get(2).getAsInt()));
+        return new MultiblockStructure(newBlockMap, shape, new Vec3i(rootArray.get(0).getAsInt(), rootArray.get(1).getAsInt(), rootArray.get(2).getAsInt()));
     }
 
-    public static class JsonListener extends SimpleJsonResourceReloadListener{
+    public static class JsonListener extends SimpleJsonResourceReloadListener {
         private static final Gson GSON = new GsonBuilder().create();
         private static final JsonListener INSTANCE = new JsonListener();
 
@@ -67,18 +68,18 @@ public class MultiblockStructure {
             super(GSON, "multiblock");
         }
 
-        public static JsonListener getInstance(){
+        public static JsonListener getInstance() {
             return INSTANCE;
         }
 
         @Override
-        protected void apply (Map <ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller){
+        protected void apply(Map<ResourceLocation, JsonElement> map, ResourceManager resourceManager, ProfilerFiller profilerFiller) {
             for (Map.Entry<ResourceLocation, JsonElement> entry : map.entrySet()) {
                 ResourceLocation location = entry.getKey();
                 JsonElement json = entry.getValue();
                 if (json.isJsonObject()) {
-                    MultiblockRegistry.Structures.put(location, ()-> MultiblockStructure.fromJson(json.getAsJsonObject()));
-                } else{
+                    MultiblockRegistry.Structures.put(location, () -> MultiblockStructure.fromJson(json.getAsJsonObject()));
+                } else {
                     AxiomMod.LOGGER.error("Failed to parse JSON for {}, JsonElement is not a JsonObject!", location.toString());
                 }
             }

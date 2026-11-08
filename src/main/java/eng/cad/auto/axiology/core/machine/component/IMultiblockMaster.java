@@ -19,10 +19,10 @@ public interface IMultiblockMaster {
 
     HashSet<BlockPos> getFollowerPositions();
 
-    default void validateStructure(BlockPos masterPos, Level level){
+    default void validateStructure(BlockPos masterPos, Level level) {
         if (level == null) return;
         var machineStructure = getStructure(level, masterPos);
-        if (machineStructure == null){
+        if (machineStructure == null) {
             updateStructureValidity(false);
             return;
         }
@@ -43,7 +43,7 @@ public interface IMultiblockMaster {
         for (int layer = 0; layer < y; layer++) {
             for (int row = 0; row < z; row++) {
                 for (int col = 0; col < x; col++) {
-                    if (!validateBlock(new BlockPos(col, layer, row), machineStructure, level, rotation, masterPos)){
+                    if (!validateBlock(new BlockPos(col, layer, row), machineStructure, level, rotation, masterPos)) {
                         updateStructureValidity(false);
                         clearFollowers(level);
                         return;
@@ -55,7 +55,7 @@ public interface IMultiblockMaster {
         updateStructureValidity(true);
     }
 
-    default boolean validateBlock(BlockPos relativeFollowerPos, MultiblockStructure structure, Level level, Rotation rotation, BlockPos masterPos){
+    default boolean validateBlock(BlockPos relativeFollowerPos, MultiblockStructure structure, Level level, Rotation rotation, BlockPos masterPos) {
         BlockPos structurePos = new BlockPos(relativeFollowerPos.getX(), -relativeFollowerPos.getY(), relativeFollowerPos.getZ());
         BlockPos relativePos = structurePos.subtract(structure.rootPos);
         BlockPos rotatedPos = relativePos.rotate(rotation);
@@ -63,14 +63,14 @@ public interface IMultiblockMaster {
         Block blockAtPos = level.getBlockState(worldPos).getBlock();
 
         char buildKey = structure.shapeList.get(relativeFollowerPos.getY())[relativeFollowerPos.getZ()].charAt(relativeFollowerPos.getX());
-        if (!structure.blockMap.get(buildKey).contains(blockAtPos)){
+        if (!structure.blockMap.get(buildKey).contains(blockAtPos)) {
             return false;
         }
         getFollowerPositions().add(worldPos);
         return true;
     }
 
-    default MultiblockStructure getStructure(Level level, BlockPos pos){
+    default MultiblockStructure getStructure(Level level, BlockPos pos) {
         if (!(level.getBlockEntity(pos) instanceof BaseMachine<?> machine)) return null;
         var supplier = MultiblockRegistry.Structures.get(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, machine.getName() + "_multiblock"));
         if (supplier == null) return null;
@@ -81,8 +81,8 @@ public interface IMultiblockMaster {
     default NonNullList<BaseMachine<? extends IMultiblockFollower>> getFollowers(Level level) {
         NonNullList<BaseMachine<? extends IMultiblockFollower>> followerEntities = NonNullList.create();
         if (level == null) return followerEntities;
-        for (BlockPos followerPos:getFollowerPositions()){
-            if ((level.getBlockEntity(followerPos) instanceof IMultiblockFollower followerEntity)){
+        for (BlockPos followerPos : getFollowerPositions()) {
+            if ((level.getBlockEntity(followerPos) instanceof IMultiblockFollower followerEntity)) {
                 if (!(level.getBlockEntity(followerPos) instanceof BaseMachine<?> follower)) continue;
                 followerEntities.add((BaseMachine<? extends IMultiblockFollower>) follower); // Fighting with the compiler here >:( Feel free to replace
             }
@@ -90,8 +90,8 @@ public interface IMultiblockMaster {
         return followerEntities;
     }
 
-    default void clearFollowers(Level level){
-        for (BaseMachine<? extends IMultiblockFollower> follower: getFollowers(level)){
+    default void clearFollowers(Level level) {
+        for (BaseMachine<? extends IMultiblockFollower> follower : getFollowers(level)) {
             if (!(follower instanceof IMultiblockFollower followerEntity)) return;
             followerEntity.clearMaster();
         }

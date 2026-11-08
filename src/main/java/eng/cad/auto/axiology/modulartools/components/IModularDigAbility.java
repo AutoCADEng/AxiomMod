@@ -9,5 +9,6 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public interface IModularDigAbility {
     void onDig(ItemStack item, Level level, BlockState blockState, BlockPos blockPos, LivingEntity player, Integer integer);
+
     void digDropEvent(BlockDropEvent event);
 }

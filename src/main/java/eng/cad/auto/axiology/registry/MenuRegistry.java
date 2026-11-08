@@ -19,7 +19,7 @@ public class MenuRegistry {
     public static final MachineUI CHEMICAL_REACTOR = new MachineUI(ChemicalReactor.name, MachineRegistry.CHEMICAL_REACTOR.blockEntity);
     public static final MachineUI FERMENTER = new MachineUI(Fermenter.name, MachineRegistry.FERMENTER.blockEntity);
 
-    public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenu(String name, IContainerFactory<T> menuFactory){
+    public static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenu(String name, IContainerFactory<T> menuFactory) {
         return MENUS.register(name, () -> IForgeMenuType.create(menuFactory));
     }
 }

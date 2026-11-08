@@ -14,22 +14,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
 public interface IRightClickable {
-   default InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result){
-      if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
-      if (hand == InteractionHand.OFF_HAND) return InteractionResult.CONSUME;
-      if (!(level.getBlockEntity(blockPos) instanceof BaseMachine machine)) return InteractionResult.CONSUME;
+    default InteractionResult rightClick(BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand hand, BlockHitResult result) {
+        if (player.isShiftKeyDown()) return InteractionResult.CONSUME;
+        if (hand == InteractionHand.OFF_HAND) return InteractionResult.CONSUME;
+        if (!(level.getBlockEntity(blockPos) instanceof BaseMachine machine)) return InteractionResult.CONSUME;
 
-      if (level.getBlockEntity(blockPos) instanceof GuiMachine<?> guiMachine) {
-         if (guiMachine.openScreen(guiMachine, blockState, level, blockPos, player, hand, result) == InteractionResult.SUCCESS) return InteractionResult.SUCCESS;
-      }
+        if (level.getBlockEntity(blockPos) instanceof GuiMachine<?> guiMachine) {
+            if (guiMachine.openScreen(guiMachine, blockState, level, blockPos, player, hand, result) == InteractionResult.SUCCESS)
+                return InteractionResult.SUCCESS;
+        }
 
-      if (machine instanceof ISlotFluid fluid) {
-         if (CommonRightClickBehaviour.bucketInHand(fluid.getFluidSlots().getFluidInTank(0).getAmount(), machine, blockState, level, blockPos, player, hand, result)) return InteractionResult.SUCCESS;
-      }
-      if (machine instanceof ISlotItem) {
-         if (CommonRightClickBehaviour.itemInHand(0, machine, blockState, level, blockPos, player, hand, result))
-            return InteractionResult.SUCCESS;
-      }
-      return InteractionResult.CONSUME;
-   }
+        if (machine instanceof ISlotFluid fluid) {
+            if (CommonRightClickBehaviour.bucketInHand(fluid.getFluidSlots().getFluidInTank(0).getAmount(), machine, blockState, level, blockPos, player, hand, result))
+                return InteractionResult.SUCCESS;
+        }
+        if (machine instanceof ISlotItem) {
+            if (CommonRightClickBehaviour.itemInHand(0, machine, blockState, level, blockPos, player, hand, result))
+                return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.CONSUME;
+    }
 }

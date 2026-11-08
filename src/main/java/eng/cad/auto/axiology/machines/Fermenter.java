@@ -133,6 +133,41 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
         ClientRender.fluids(guiGraphics, screen, fermenter);
     }
 
+    @Override
+    public FluidStackHandler getFluidSlots() {
+        return this.fluids;
+    }
+
+    @Override
+    public ExtendedItemStackHandler getItemSlots() {
+        return this.items;
+    }
+
+    @Override
+    public DataSlotHandler getDataSlots() {
+        return this.data;
+    }
+
+    @Override
+    public int[] getLastSyncedData() {
+        return dataSync;
+    }
+
+    @Override
+    public void setLastSyncedData(int[] data) {
+        this.dataSync = data;
+    }
+
+    @Override
+    public long getLastSyncTime() {
+        return lastSync;
+    }
+
+    @Override
+    public void setLastSyncTime(long time) {
+        lastSync = time;
+    }
+
     @OnlyIn(Dist.CLIENT)
     private static final class ClientRender {
         static final Vector2i PROGRESS_COORDS = new Vector2i(61, 17);
@@ -192,41 +227,6 @@ public class Fermenter extends GuiMachine<Fermenter> implements IMachineProgress
             int blue = (color & 0x000000FF);
             RenderSystem.setShaderColor(red / 255f, green / 255f, blue / 255f, alpha / 255f);
         }
-    }
-
-    @Override
-    public FluidStackHandler getFluidSlots() {
-        return this.fluids;
-    }
-
-    @Override
-    public ExtendedItemStackHandler getItemSlots() {
-        return this.items;
-    }
-
-    @Override
-    public DataSlotHandler getDataSlots() {
-        return this.data;
-    }
-
-    @Override
-    public int[] getLastSyncedData() {
-        return dataSync;
-    }
-
-    @Override
-    public void setLastSyncedData(int[] data) {
-        this.dataSync = data;
-    }
-
-    @Override
-    public long getLastSyncTime() {
-        return lastSync;
-    }
-
-    @Override
-    public void setLastSyncTime(long time) {
-        lastSync = time;
     }
 
     public static class MachineBlock extends BaseMachineBlock {

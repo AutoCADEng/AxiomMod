@@ -23,8 +23,8 @@ public class FermenterRecipeCategory implements IRecipeCategory<FermenterRecipe>
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/fermenter_menu.png");
 
     private static final int TRIM = 4;
-    private static final int WIDTH = 176-TRIM*2;
-    private static final int HEIGHT = 80-TRIM;
+    private static final int WIDTH = 176 - TRIM * 2;
+    private static final int HEIGHT = 80 - TRIM;
 
     private static final Vector2i TANK_0 = new Vector2i(55, 23).sub(TRIM, TRIM);
     private static final Vector2i TANK_1 = new Vector2i(126, 23).sub(TRIM, TRIM);
@@ -68,9 +68,28 @@ public class FermenterRecipeCategory implements IRecipeCategory<FermenterRecipe>
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<FermenterRecipe> getRecipeType() { return AxiologyJEI.FERMENTER_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.fermenter"); }
-    @Override public IDrawable getIcon() { return icon; }
-    @Override public int getWidth() { return WIDTH; }
-    @Override public int getHeight() { return HEIGHT; }
+    @Override
+    public RecipeType<FermenterRecipe> getRecipeType() {
+        return AxiologyJEI.FERMENTER_RECIPE_TYPE;
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.translatable("axiology.jei.fermenter");
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 }

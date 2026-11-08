@@ -10,14 +10,15 @@ import java.util.HashMap;
 public class BlockPlaceAreaListeners {
     static HashMap<BlockPos, TickingMachine<?>> listeners = new HashMap<>();
 
-    public static void bindListener(TickingMachine<?> listener){
+    public static void bindListener(TickingMachine<?> listener) {
         listeners.put(listener.getBlockPos(), listener);
     }
-    public static void unbindListener(TickingMachine<?> listener){
+
+    public static void unbindListener(TickingMachine<?> listener) {
         listeners.remove(listener.getBlockPos());
     }
 
-    public static void onBlockPlacedArea(BlockEvent.EntityPlaceEvent event){
+    public static void onBlockPlacedArea(BlockEvent.EntityPlaceEvent event) {
         BlockPos breakPos = event.getPos();
         if (!listeners.containsKey(breakPos)) return;
         if (!(listeners.get(breakPos) instanceof ISubscribeBlockPlacedInArea eventBlock)) return;

@@ -31,7 +31,7 @@ public class ArcanePedestal extends Hatch<ArcanePedestal> implements ISlotItem, 
         this.data = new DataSlotHandler("isItemHidden");
         this.items = new ExtendedItemStackHandler(new SlotConfig[]{
                 new SlotConfig(SlotIORestriction.INPUT, 1)
-            }
+        }
         );
         refreshCapabilities();
     }

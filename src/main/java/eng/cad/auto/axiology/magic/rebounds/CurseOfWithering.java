@@ -16,6 +16,6 @@ public class CurseOfWithering extends AbstractRebound {
         context.player.sendSystemMessage(
                 Component.translatable("curse.wither").withStyle(ChatFormatting.DARK_PURPLE)
         );
-        context.player.addEffect(new MobEffectInstance(MobEffects.WITHER,300,1));
+        context.player.addEffect(new MobEffectInstance(MobEffects.WITHER, 300, 1));
     }
 }

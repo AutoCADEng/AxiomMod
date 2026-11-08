@@ -22,12 +22,8 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
     private final int tint;
     private final ResourceLocation texture;
     private B beam;
-    private Level level;
-    private UUID id;
-    @SuppressWarnings("unchecked")
-    protected T self() {
-        return (T) this;
-    }
+    private final Level level;
+    private final UUID id;
 
     protected AbstractBeamPacket() {
         this(null, new Vector3f(), new Vector3f(), null, 0xFFFFFFFF, null);
@@ -45,15 +41,22 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
         this.texture = texture;
         this.id = id;
     }
+
     public AbstractBeamPacket(UUID id, Vector3f castFrom, Vector3f castTo, int tint, Level level) {
-        this(id, castFrom,castTo,null,tint,level);
+        this(id, castFrom, castTo, null, tint, level);
     }
+
+    @SuppressWarnings("unchecked")
+    protected T self() {
+        return (T) this;
+    }
+
     public abstract B getBeam();
 
     @Override
     public void encode(FriendlyByteBuf buffer) {
         buffer.writeUUID(id);
-        buffer.writeResourceLocation(texture == null? ResourceLocation.parse("minecraft:air"):texture);
+        buffer.writeResourceLocation(texture == null ? ResourceLocation.parse("minecraft:air") : texture);
         buffer.writeVarInt(tint);
         buffer.writeVector3f(castFrom);
         buffer.writeVector3f(castTo);

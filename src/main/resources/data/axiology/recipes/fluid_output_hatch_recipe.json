@@ -1,17 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": ["BLB", "LAL", "BHB"],
+  "pattern": [
+    "BLB",
+    "LAL",
+    "BHB"
+  ],
   "key": {
     "B": {
-      "item" : "minecraft:bucket"
+      "item": "minecraft:bucket"
     },
-    "L" : {
-      "tag" : "minecraft:logs"
+    "L": {
+      "tag": "minecraft:logs"
     },
-    "H" : {
+    "H": {
       "item": "minecraft:hopper"
     },
-    "A" : {
+    "A": {
       "item": "axiology:blazing_ingot"
     }
   },

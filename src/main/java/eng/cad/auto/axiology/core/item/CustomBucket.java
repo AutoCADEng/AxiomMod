@@ -23,24 +23,12 @@ import java.util.Optional;
 
 
 public class CustomBucket extends BucketItem {
-    private int color;
+    private final int color;
+
     public CustomBucket(RegistryObject<Fluid> fluid, Properties properties, int color) {
         super(fluid, properties);
         this.color = color;
     }
-
-    @Override @ParametersAreNullableByDefault
-    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
-        AxiomMod.LOGGER.info("Initialized capability for {}", stack.getDisplayName());
-        return new FluidBucketWrapper(stack);
-    }
-
-
-    public int getColor() {
-        return color;
-    }
-
-    //Move to a dedicated fluid helper class at some point?
 
     public static boolean fluidToItem(BaseMachine blockEntity, Player player, InteractionHand interactionHand) {
         if (!(blockEntity instanceof ISlotFluid tank)) return false;
@@ -55,7 +43,7 @@ public class CustomBucket extends BucketItem {
                 true
         );
 
-        if (result.isSuccess()){
+        if (result.isSuccess()) {
             player.setItemInHand(interactionHand, result.result);
         }
 
@@ -78,5 +66,18 @@ public class CustomBucket extends BucketItem {
             player.setItemInHand(interactionHand, result.getResult());
         }
         return result.isSuccess();
+    }
+
+    //Move to a dedicated fluid helper class at some point?
+
+    @Override
+    @ParametersAreNullableByDefault
+    public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt) {
+        AxiomMod.LOGGER.info("Initialized capability for {}", stack.getDisplayName());
+        return new FluidBucketWrapper(stack);
+    }
+
+    public int getColor() {
+        return color;
     }
 }

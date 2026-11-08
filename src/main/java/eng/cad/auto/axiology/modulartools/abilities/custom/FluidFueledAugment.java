@@ -23,6 +23,7 @@ public class FluidFueledAugment extends ModularToolAugment implements IModularDu
      * Filter for IModularFluidInventories
      * Excludes fluids that are not tagged by "tool_fuel_fluid"
      * Sum up all valid fuel per tank per IModularFluidInventory
+     *
      * @param ItemStack of the modular tool being checked
      * @return returns the total burnable fuel in a modular tool
      */
@@ -31,17 +32,18 @@ public class FluidFueledAugment extends ModularToolAugment implements IModularDu
         TagKey<Fluid> valid_fuels = TagKey.create(Registries.FLUID, ResourceLocation.parse("axiology:tool_fuel_fluids"));
 
         int fuel = IModularTool.getAugments(stack).keySet().stream()
-            .filter(key-> key instanceof IModularFluidInventory fluidTank)
-            .map(key-> (IModularFluidInventory) key)
-            .mapToInt(fluidModule -> {
-                    int validFuel = 0;
-                    for (int idx = 0; idx < fluidModule.getTanks().getTanks(); idx++) {
-                        if (!fluidModule.getTanks().getFluidInTank(idx).getFluid().defaultFluidState().is(valid_fuels)) continue;
-                        validFuel += fluidModule.getTanks().getFluidInTank(idx).getAmount();
-                    }
-                    return validFuel;
-                }
-            ).sum();
+                .filter(key -> key instanceof IModularFluidInventory fluidTank)
+                .map(key -> (IModularFluidInventory) key)
+                .mapToInt(fluidModule -> {
+                            int validFuel = 0;
+                            for (int idx = 0; idx < fluidModule.getTanks().getTanks(); idx++) {
+                                if (!fluidModule.getTanks().getFluidInTank(idx).getFluid().defaultFluidState().is(valid_fuels))
+                                    continue;
+                                validFuel += fluidModule.getTanks().getFluidInTank(idx).getAmount();
+                            }
+                            return validFuel;
+                        }
+                ).sum();
 
         return fuel;
     }

@@ -15,18 +15,18 @@ import javax.annotation.Nullable;
 public interface IRecipeMachine<T extends AbstractMachineRecipe<T>> {
     RecipeType<T> recipeType();
 
-    default CustomCraftingContainer buildContainer(TickingMachine machine){
+    default CustomCraftingContainer buildContainer(TickingMachine machine) {
         CustomCraftingContainer contents = new CustomCraftingContainer(machine);
         if (machine instanceof ISlotFluid fluidMachine) {
             FluidStackHandler fluidStackHandler = fluidMachine.getFluidSlots();
-            for(int idx = 0; idx<fluidStackHandler.getTanks(); idx++){
+            for (int idx = 0; idx < fluidStackHandler.getTanks(); idx++) {
                 contents.addTank(fluidStackHandler.getFluidInTank(idx));
             }
         }
 
         if (machine instanceof ISlotItem itemMachine) {
             ItemStackHandler itemStackHandler = itemMachine.getItemSlots();
-            for(int idx = 0; idx<itemStackHandler.getSlots(); idx++){
+            for (int idx = 0; idx < itemStackHandler.getSlots(); idx++) {
                 contents.addSlot(itemStackHandler.getStackInSlot(idx));
             }
         }

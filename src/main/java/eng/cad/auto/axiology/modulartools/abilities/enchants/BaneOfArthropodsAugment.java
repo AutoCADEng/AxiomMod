@@ -18,14 +18,13 @@ public class BaneOfArthropodsAugment extends ModularToolAugment implements IModu
 
     @Override
     public List<ItemEnchantment> getEnchantments() {
-        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:bane_of_arthropods")),1);
+        ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:bane_of_arthropods")), 1);
         return List.of(enchantment);
     }
 
     @Override
     public boolean isCompatible(ModularToolAugment ability) {
         if (ability instanceof SharpnessAugment) return false;
-        if (ability instanceof SmiteAugment) return false;
-        return true;
+        return !(ability instanceof SmiteAugment);
     }
 }

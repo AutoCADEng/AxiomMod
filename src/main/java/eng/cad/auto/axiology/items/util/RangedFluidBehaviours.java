@@ -15,8 +15,10 @@ import java.util.HashMap;
 
 public class RangedFluidBehaviours {
     public static HashMap<Fluid, IRangedFluidBehaviour> FLUIDS = new HashMap<>();
-    public static IRangedFluidBehaviour GENERIC_BEHAVIOUR = new IRangedFluidBehaviour(){};
-    public static void init(){
+    public static IRangedFluidBehaviour GENERIC_BEHAVIOUR = new IRangedFluidBehaviour() {
+    };
+
+    public static void init() {
         FLUIDS.put(Fluids.LAVA, new IRangedFluidBehaviour() {
             @Override
             public void applyAsProjectile(Level level, Entity entity) {
@@ -35,11 +37,11 @@ public class RangedFluidBehaviours {
                 }
             }
         });
-        for (FluidHolder fluid: FluidRegistry.Fluid_Holders.values()){
+        for (FluidHolder fluid : FluidRegistry.Fluid_Holders.values()) {
             FLUIDS.put(fluid.SOURCE.get(), fluid.behaviour);
         }
 
-        for (Fluid fluid: ForgeRegistries.FLUIDS.getValues()){
+        for (Fluid fluid : ForgeRegistries.FLUIDS.getValues()) {
             if (FLUIDS.containsKey(fluid)) continue;
             FLUIDS.put(fluid, GENERIC_BEHAVIOUR);
         }

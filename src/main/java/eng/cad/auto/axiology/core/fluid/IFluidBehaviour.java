@@ -5,6 +5,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public interface IFluidBehaviour {
-    default void onEntityInside(Level level, BlockPos pos, Entity entity){
+    default void onEntityInside(Level level, BlockPos pos, Entity entity) {
     }
 }

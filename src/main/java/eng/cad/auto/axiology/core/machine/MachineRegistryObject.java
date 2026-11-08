@@ -15,11 +15,10 @@ import net.minecraftforge.registries.RegistryObject;
 import java.util.function.Supplier;
 
 public class MachineRegistryObject {
+    public final String name;
     public RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity;
     public RegistryObject<Item> blockItem;
     public RegistryObject<Block> block;
-
-    public final String name;
 
     public MachineRegistryObject(String name, BaseMachine.MachineFactory factory, BlockFactory blockFactory) {
         this(name, factory, blockFactory, () -> BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK).noOcclusion());

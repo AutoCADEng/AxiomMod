@@ -21,7 +21,7 @@ public class FluidRegistry {
     public static final HashMap<String, RegistryObject<? extends Fluid>> FLUIDLIST = new HashMap<>();
     public static final HashMap<String, FluidHolder> Fluid_Holders = new HashMap<>();
 
-    public static void init(){
+    public static void init() {
         Fluid_Holders.put(Ethanol.Dilute.name, new FluidHolder(Ethanol.Dilute.name, Ethanol.Dilute.color, MapColor.COLOR_BLACK, null));
         Fluid_Holders.put(Ethanol.name, new FluidHolder(Ethanol.name, Ethanol.color, MapColor.COLOR_BLACK, null));
 
@@ -37,20 +37,19 @@ public class FluidRegistry {
         Fluid_Holders.put(Tar.name, new FluidHolder(Tar.name, Tar.color, MapColor.COLOR_BLACK, new Tar.CustomFluidBehaviour()));
     }
 
-
-    private void registerAxiomFluid(String name, int color){
-        new FluidHolder(name, color, MapColor.COLOR_BLACK);
-    }
-
-    public static <T extends Fluid> RegistryObject<T> registerFluid(String name, Supplier<T> fluid){
+    public static <T extends Fluid> RegistryObject<T> registerFluid(String name, Supplier<T> fluid) {
         RegistryObject<T> newFluid = FLUIDS.register(name, fluid);
         FLUIDLIST.put(name, newFluid);
         return newFluid;
     }
 
-    public static <T extends Block> RegistryObject<T> registerFluidBlock(String name, Supplier<T> block){
+    public static <T extends Block> RegistryObject<T> registerFluidBlock(String name, Supplier<T> block) {
         RegistryObject<T> blockObject = BlockRegistry.BLOCKS.register(name, block);
         return blockObject;
+    }
+
+    private void registerAxiomFluid(String name, int color) {
+        new FluidHolder(name, color, MapColor.COLOR_BLACK);
     }
 
 }

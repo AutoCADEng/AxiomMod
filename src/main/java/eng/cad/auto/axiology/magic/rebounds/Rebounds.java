@@ -10,7 +10,7 @@ public class Rebounds {
     public static final ArrayList<AbstractRebound> REBOUNDS = new ArrayList<>();
     public static Rebounds INSTANCE = new Rebounds();
 
-    private Rebounds(){
+    private Rebounds() {
         REBOUNDS.add(new CurseOfBlindness());
         REBOUNDS.add(new CurseOfFire());
         REBOUNDS.add(new CurseOfFoodRot());
@@ -19,8 +19,8 @@ public class Rebounds {
         REBOUNDS.add(new CurseOfWithering());
     }
 
-    public static AbstractRebound randomEffect(){
+    public static AbstractRebound randomEffect() {
         if (Minecraft.getInstance().level == null) return new CurseOfNothing();
-        return REBOUNDS.get(Minecraft.getInstance().level.getRandom().nextInt(0,REBOUNDS.size()));
+        return REBOUNDS.get(Minecraft.getInstance().level.getRandom().nextInt(0, REBOUNDS.size()));
     }
 }

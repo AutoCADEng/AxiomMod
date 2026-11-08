@@ -9,15 +9,15 @@ import net.minecraft.network.chat.Component;
 
 public class BackpackAugment extends ModularToolAugment implements IModularItemInventory {
     ExtendedItemStackHandler itemInventory = new ExtendedItemStackHandler(new SlotConfig[]{
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64),
-            new SlotConfig(SlotIORestriction.IN_OUT,64)
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64),
+            new SlotConfig(SlotIORestriction.IN_OUT, 64)
     });
 
     @Override

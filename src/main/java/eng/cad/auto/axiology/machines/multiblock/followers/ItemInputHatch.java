@@ -15,6 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ItemInputHatch extends Hatch<ItemInputHatch> implements ISlotItem, IRightClickable {
     public static String name = "item_input_hatch";
+
     public ItemInputHatch(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.items = new ExtendedItemStackHandler(new SlotConfig[]{

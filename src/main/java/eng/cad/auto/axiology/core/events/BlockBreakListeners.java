@@ -10,14 +10,15 @@ import java.util.HashMap;
 public class BlockBreakListeners {
     static HashMap<BlockPos, TickingMachine<?>> listeners = new HashMap<>();
 
-    public static void bindListener(TickingMachine<?> listener){
+    public static void bindListener(TickingMachine<?> listener) {
         listeners.put(listener.getBlockPos(), listener);
     }
-    public static void unbindListener(TickingMachine<?> listener){
+
+    public static void unbindListener(TickingMachine<?> listener) {
         listeners.remove(listener.getBlockPos());
     }
 
-    public static void onBlockBreak(BlockEvent.BreakEvent event){
+    public static void onBlockBreak(BlockEvent.BreakEvent event) {
         BlockPos breakPos = event.getPos();
         if (!listeners.containsKey(breakPos)) return;
         if (!(listeners.get(breakPos) instanceof ISubscribeBlockBreak eventBlock)) return;

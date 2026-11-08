@@ -27,8 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 public abstract class BaseMachineBlock extends BaseEntityBlock {
-    protected final RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity;
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    protected final RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity;
 
     public BaseMachineBlock(Properties properties, RegistryObject<BlockEntityType<? extends BaseMachine<?>>> blockEntity) {
         super(properties);
@@ -62,7 +62,7 @@ public abstract class BaseMachineBlock extends BaseEntityBlock {
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return context.getPlayer().isShiftKeyDown()?
+        return context.getPlayer().isShiftKeyDown() ?
                 defaultBlockState().setValue(FACING, context.getHorizontalDirection().getOpposite())
                 : defaultBlockState().setValue(FACING, context.getHorizontalDirection());
     }
@@ -75,7 +75,6 @@ public abstract class BaseMachineBlock extends BaseEntityBlock {
             }
         });
     }
-
 
 
 }

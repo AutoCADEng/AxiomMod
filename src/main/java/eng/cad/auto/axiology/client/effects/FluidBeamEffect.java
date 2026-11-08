@@ -16,33 +16,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
+public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect> {
 
     static final HashMap<ResourceLocation, Integer> FluidColorCache = new HashMap<>();
-    @Override
-    public FluidBeamEffect createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
-        return new FluidBeamEffect()
-                .setTexture(texture)
-                .setUUID(id)
-                .addPos(castFrom.add(0.1f,0,-0.1f))
-                .addPos(castTo)
-                .setWidth(0.1f)
-                .minSegments(100)
-                .maxSegments(300)
-                .setLifespan(20)
-                .setSpeed(0f)
-                .setTime(level.getGameTime())
-                .doFade()
-                .addWave(new Wave()
-                    .setAmplitude(0.03f)
-                    .setWavelength(1f)
-                    .setOffset(0.5f));
-    }
-
-    public FluidBeamEffect setTexture(ResourceLocation var){
-        setTint(getAverageColour(var));
-        return this;
-    }
 
     private static int getAverageColour(ResourceLocation texture) {
         if (FluidColorCache.containsKey(texture)) return FluidColorCache.get(texture);
@@ -72,8 +48,8 @@ public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
             for (int y = 0; y < image.getHeight(); y++) {
                 int color = image.getPixelRGBA(x, y);
 
-                r += (color >> 0)  & 0xFF;
-                g += (color >> 8)  & 0xFF;
+                r += (color >> 0) & 0xFF;
+                g += (color >> 8) & 0xFF;
                 b += (color >> 16) & 0xFF;
                 a += (color >> 24) & 0xFF;
             }
@@ -83,13 +59,38 @@ public class FluidBeamEffect extends AbstractBeamEffect<FluidBeamEffect>{
 
         int tint = ext.getTintColor();
         if (((tint >> 24) & 0xFF) == 0) tint |= 0xFF000000;
-        int a_tint = (int)(a / pixels) * ((tint >> 24) & 0xFF) / 255;
-        int r_tint = (int)(r / pixels) * ((tint >> 16) & 0xFF) / 255;
-        int g_tint = (int)(g / pixels) * ((tint >> 8)  & 0xFF) / 255;
-        int b_tint = (int)(b / pixels) * ( tint & 0xFF) / 255;
+        int a_tint = (int) (a / pixels) * ((tint >> 24) & 0xFF) / 255;
+        int r_tint = (int) (r / pixels) * ((tint >> 16) & 0xFF) / 255;
+        int g_tint = (int) (g / pixels) * ((tint >> 8) & 0xFF) / 255;
+        int b_tint = (int) (b / pixels) * (tint & 0xFF) / 255;
         int color = (a_tint << 24) | (r_tint << 16) | (g_tint << 8) | b_tint;
         FluidColorCache.put(texture, color);
         return color;
+    }
+
+    @Override
+    public FluidBeamEffect createBeam(ResourceLocation texture, int tint, Vector3f castFrom, Vector3f castTo, Level level, UUID id) {
+        return new FluidBeamEffect()
+                .setTexture(texture)
+                .setUUID(id)
+                .addPos(castFrom.add(0.1f, 0, -0.1f))
+                .addPos(castTo)
+                .setWidth(0.1f)
+                .minSegments(100)
+                .maxSegments(300)
+                .setLifespan(20)
+                .setSpeed(0f)
+                .setTime(level.getGameTime())
+                .doFade()
+                .addWave(new Wave()
+                        .setAmplitude(0.03f)
+                        .setWavelength(1f)
+                        .setOffset(0.5f));
+    }
+
+    public FluidBeamEffect setTexture(ResourceLocation var) {
+        setTint(getAverageColour(var));
+        return this;
     }
 
 }

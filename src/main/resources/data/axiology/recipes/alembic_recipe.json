@@ -1,17 +1,21 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [" G ", "GBG", "IMI"],
+  "pattern": [
+    " G ",
+    "GBG",
+    "IMI"
+  ],
   "key": {
     "I": {
-      "item" : "minecraft:nether_brick_slab"
+      "item": "minecraft:nether_brick_slab"
     },
-    "B" : {
+    "B": {
       "item": "minecraft:brewing_stand"
     },
-    "G" : {
+    "G": {
       "item": "minecraft:glass_bottle"
     },
-    "M" : {
+    "M": {
       "item": "axiology:mundane_machine_frame"
     }
   },

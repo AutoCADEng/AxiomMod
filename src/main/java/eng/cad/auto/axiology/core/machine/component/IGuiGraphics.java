@@ -14,9 +14,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 
 public interface IGuiGraphics {
-    public void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, MachineUI.Screen screen);
+    void UIRenderLogic(GuiGraphics guiGraphics, float tick, int mouse_x, int mouse_y, MachineUI.Screen screen);
 
-    default <T extends GuiMachine> InteractionResult openScreen(T machine, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result){
+    default <T extends GuiMachine> InteractionResult openScreen(T machine, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult result) {
         if (machine == null) return InteractionResult.CONSUME;
         if (level.isClientSide()) return InteractionResult.CONSUME;
         if (!(player instanceof ServerPlayer serverPlayer)) return InteractionResult.CONSUME;

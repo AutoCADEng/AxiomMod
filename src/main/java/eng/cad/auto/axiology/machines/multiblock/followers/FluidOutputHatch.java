@@ -15,6 +15,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class FluidOutputHatch extends Hatch<FluidOutputHatch> implements ISlotFluid, IRightClickable {
     public static String name = "fluid_output_hatch";
+
     public FluidOutputHatch(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
         this.fluids = new FluidStackHandler(new SlotConfig[]{

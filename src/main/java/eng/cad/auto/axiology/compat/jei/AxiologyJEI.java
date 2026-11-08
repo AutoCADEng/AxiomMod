@@ -13,19 +13,22 @@ import net.minecraft.resources.ResourceLocation;
 
 @JeiPlugin
 public class AxiologyJEI implements IModPlugin {
+    public static final RecipeType<FermenterRecipe> FERMENTER_RECIPE_TYPE = new RecipeType<FermenterRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "fermenter_recipe"), FermenterRecipe.class);
+    public static final RecipeType<SoakerRecipe> SOAKER_RECIPE_TYPE = new RecipeType<SoakerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "soaker_recipe"), SoakerRecipe.class);
+    public static final RecipeType<AlembicRecipe> ALEMBIC_RECIPE_TYPE = new RecipeType<AlembicRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "alembic_recipe"), AlembicRecipe.class);
+    public static final RecipeType<ChemicalReactorRecipe> CHEMICAL_REACTOR_RECIPE_TYPE = new RecipeType<ChemicalReactorRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "chemical_reactor_recipe"), ChemicalReactorRecipe.class);
+    public static final RecipeType<PyrolyzerRecipe> PYROLYZER_RECIPE_TYPE = new RecipeType<PyrolyzerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "pyrolyzer_recipe"), PyrolyzerRecipe.class);
     private static IJeiRuntime jeiRuntime;
-    public static final RecipeType<FermenterRecipe> FERMENTER_RECIPE_TYPE = new RecipeType<FermenterRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"fermenter_recipe"), FermenterRecipe.class);
-    public static final RecipeType<SoakerRecipe> SOAKER_RECIPE_TYPE = new RecipeType<SoakerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"soaker_recipe"), SoakerRecipe.class);
-    public static final RecipeType<AlembicRecipe> ALEMBIC_RECIPE_TYPE = new RecipeType<AlembicRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"alembic_recipe"), AlembicRecipe.class);
-    public static final RecipeType<ChemicalReactorRecipe> CHEMICAL_REACTOR_RECIPE_TYPE = new RecipeType<ChemicalReactorRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"chemical_reactor_recipe"), ChemicalReactorRecipe.class);
-    public static final RecipeType<PyrolyzerRecipe> PYROLYZER_RECIPE_TYPE = new RecipeType<PyrolyzerRecipe>(ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID,"pyrolyzer_recipe"), PyrolyzerRecipe.class);
 
-
+    public static IJeiRuntime getJeiRuntime() {
+        return jeiRuntime;
+    }
 
     @Override
     public ResourceLocation getPluginUid() {
         return ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "axiom_jei_plugin");
     }
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new FermenterRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
@@ -34,13 +37,10 @@ public class AxiologyJEI implements IModPlugin {
         registration.addRecipeCategories(new ChemicalReactorRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new PyrolyzerRecipeCategory(registration.getJeiHelpers().getGuiHelper()));
     }
+
     @Override
     public void onRuntimeAvailable(IJeiRuntime runtime) {
         jeiRuntime = runtime;
-    }
-
-    public static IJeiRuntime getJeiRuntime() {
-        return jeiRuntime;
     }
 
     @Override

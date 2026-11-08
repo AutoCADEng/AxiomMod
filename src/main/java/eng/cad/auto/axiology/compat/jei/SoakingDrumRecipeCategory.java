@@ -28,8 +28,8 @@ public class SoakingDrumRecipeCategory implements IRecipeCategory<SoakerRecipe> 
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/soaking_drum_menu.png");
 
     private static final int TRIM = 4;
-    private static final int WIDTH = 176-TRIM*2;
-    private static final int HEIGHT = 80-TRIM;
+    private static final int WIDTH = 176 - TRIM * 2;
+    private static final int HEIGHT = 80 - TRIM;
 
     private static final Vector2i TANK_0 = new Vector2i(59, 27).sub(TRIM, TRIM);
     private static final Vector2i TANK_1 = new Vector2i(98, 27).sub(TRIM, TRIM);
@@ -55,7 +55,7 @@ public class SoakingDrumRecipeCategory implements IRecipeCategory<SoakerRecipe> 
         NonNullList<UniversalSlot> inputs = recipe.craftingIngredients;
         NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
-        switch (inputs.get(0).getType()){
+        switch (inputs.get(0).getType()) {
             case ITEM -> builder.addInputSlot(SLOT_0.x, SLOT_0.y).addItemStack(inputs.get(0).getItem());
             case ITEM_TAG -> {
                 List<ItemStack> stacks = ForgeRegistries.ITEMS.tags().getTag(inputs.get(0).getItemTag()).stream()
@@ -71,16 +71,15 @@ public class SoakingDrumRecipeCategory implements IRecipeCategory<SoakerRecipe> 
                 .addFluidStack(inputs.get(1).getFluid().getFluid(), inputs.get(1).getFluid().getAmount());
 
 
-
-        switch (outputs.get(0).getType()){
+        switch (outputs.get(0).getType()) {
             case ITEM -> builder.addOutputSlot(SLOT_1.x, SLOT_1.y).addItemStack(outputs.get(0).getItem());
 
             case FLUID -> {
                 FluidStack fluid = outputs.get(0).getFluid();
                 builder.addOutputSlot(TANK_1.x, TANK_1.y)
-                    .setFluidRenderer(fluid.getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
-                    .setOverlay(glassOverlay, 0, 0)
-                    .addFluidStack(fluid.getFluid(), fluid.getAmount());
+                        .setFluidRenderer(fluid.getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
+                        .setOverlay(glassOverlay, 0, 0)
+                        .addFluidStack(fluid.getFluid(), fluid.getAmount());
             }
         }
     }
@@ -90,9 +89,28 @@ public class SoakingDrumRecipeCategory implements IRecipeCategory<SoakerRecipe> 
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<SoakerRecipe> getRecipeType() { return AxiologyJEI.SOAKER_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.soaker"); }
-    @Override public IDrawable getIcon() { return icon; }
-    @Override public int getWidth() { return WIDTH; }
-    @Override public int getHeight() { return HEIGHT; }
+    @Override
+    public RecipeType<SoakerRecipe> getRecipeType() {
+        return AxiologyJEI.SOAKER_RECIPE_TYPE;
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.translatable("axiology.jei.soaker");
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 }

@@ -12,6 +12,7 @@ public class ClientItemColorer {
     public static void init(IEventBus modEventBus) {
         modEventBus.addListener(ClientItemColorer::setup);
     }
+
     private static void setup(RegisterColorHandlersEvent.Item event) {
         //Shard Shader
 //        event.register(

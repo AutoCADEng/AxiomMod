@@ -19,8 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.HashMap;
 
-public class MachineRegistry
-{
+public class MachineRegistry {
     public static final DeferredRegister<BlockEntityType<?>> MACHINES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, AxiomMod.MODID);
     public static final HashMap<String, MachineRegistryObject> MACHINELIST = new HashMap<>();
 
@@ -37,7 +36,7 @@ public class MachineRegistry
     public static final MachineRegistryObject PYROLYZER = registerMachine(new MachineRegistryObject(Pyrolyzer.name, Pyrolyzer::new, Pyrolyzer.MachineBlock::new));
 
 
-    public static MachineRegistryObject registerMachine(MachineRegistryObject machine){
+    public static MachineRegistryObject registerMachine(MachineRegistryObject machine) {
         MACHINELIST.put(machine.name, machine);
         return machine;
     }

@@ -67,7 +67,7 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        if(!(validateMachine(level, pos, getName()) instanceof ChemicalReactor blockEntity)) return;
+        if (!(validateMachine(level, pos, getName()) instanceof ChemicalReactor blockEntity)) return;
 
         ChemicalReactorRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
@@ -125,6 +125,36 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
         if (!(screen.getMenu().blockEntity instanceof ChemicalReactor reactor)) return;
         ClientRender.progressBar(guiGraphics, screen, reactor);
         ClientRender.fluids(guiGraphics, screen, reactor);
+    }
+
+    @Override
+    public FluidStackHandler getFluidSlots() {
+        return this.fluids;
+    }
+
+    @Override
+    public DataSlotHandler getDataSlots() {
+        return this.data;
+    }
+
+    @Override
+    public int[] getLastSyncedData() {
+        return dataSync;
+    }
+
+    @Override
+    public void setLastSyncedData(int[] data) {
+        this.dataSync = data;
+    }
+
+    @Override
+    public long getLastSyncTime() {
+        return lastSync;
+    }
+
+    @Override
+    public void setLastSyncTime(long time) {
+        lastSync = time;
     }
 
     @OnlyIn(Dist.CLIENT)
@@ -189,36 +219,6 @@ public class ChemicalReactor extends GuiMachine<ChemicalReactor> implements IMac
             int blue = (color & 0x000000FF);
             RenderSystem.setShaderColor(red / 255f, green / 255f, blue / 255f, alpha / 255f);
         }
-    }
-
-    @Override
-    public FluidStackHandler getFluidSlots() {
-        return this.fluids;
-    }
-
-    @Override
-    public DataSlotHandler getDataSlots() {
-        return this.data;
-    }
-
-    @Override
-    public int[] getLastSyncedData() {
-        return dataSync;
-    }
-
-    @Override
-    public void setLastSyncedData(int[] data) {
-        this.dataSync = data;
-    }
-
-    @Override
-    public long getLastSyncTime() {
-        return lastSync;
-    }
-
-    @Override
-    public void setLastSyncTime(long time) {
-        lastSync = time;
     }
 
     public static class MachineBlock extends GuiMachineBlock {

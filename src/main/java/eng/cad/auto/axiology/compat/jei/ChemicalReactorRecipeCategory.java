@@ -23,8 +23,8 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalRe
     private static final ResourceLocation LOCATION = ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "menu/chemical_reactor_menu.png");
 
     private static final int TRIM = 4;
-    private static final int WIDTH = 176-TRIM*2;
-    private static final int HEIGHT = 80-TRIM;
+    private static final int WIDTH = 176 - TRIM * 2;
+    private static final int HEIGHT = 80 - TRIM;
 
     private static final Vector2i TANK_0 = new Vector2i(50, 22).sub(TRIM, TRIM);
     private static final Vector2i TANK_1 = new Vector2i(69, 22).sub(TRIM, TRIM);
@@ -50,14 +50,14 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalRe
         NonNullList<UniversalSlot> outputs = recipe.craftingOutputs;
 
         builder.addInputSlot(TANK_0.x, TANK_0.y)
-            .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
-            .setOverlay(glassOverlay, 0, 0)
-            .addFluidStack(inputs.get(0).getFluid().getFluid(), inputs.get(0).getFluid().getAmount());
+                .setFluidRenderer(inputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
+                .setOverlay(glassOverlay, 0, 0)
+                .addFluidStack(inputs.get(0).getFluid().getFluid(), inputs.get(0).getFluid().getAmount());
 
         builder.addOutputSlot(TANK_1.x, TANK_1.y)
-            .setFluidRenderer(inputs.get(1).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
-            .setOverlay(glassOverlay, 0, 0)
-            .addFluidStack(inputs.get(1).getFluid().getFluid(), inputs.get(1).getFluid().getAmount());
+                .setFluidRenderer(inputs.get(1).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
+                .setOverlay(glassOverlay, 0, 0)
+                .addFluidStack(inputs.get(1).getFluid().getFluid(), inputs.get(1).getFluid().getAmount());
 
         builder.addOutputSlot(TANK_2.x, TANK_2.y)
                 .setFluidRenderer(outputs.get(0).getFluid().getAmount(), false, TANK_SIZE.x, TANK_SIZE.y)
@@ -71,9 +71,28 @@ public class ChemicalReactorRecipeCategory implements IRecipeCategory<ChemicalRe
         background.draw(guiGraphics);
     }
 
-    @Override public RecipeType<ChemicalReactorRecipe> getRecipeType() { return AxiologyJEI.CHEMICAL_REACTOR_RECIPE_TYPE; }
-    @Override public Component getTitle() { return Component.translatable("axiology.jei.chemical.reactor"); }
-    @Override public IDrawable getIcon() { return icon; }
-    @Override public int getWidth() { return WIDTH; }
-    @Override public int getHeight() { return HEIGHT; }
+    @Override
+    public RecipeType<ChemicalReactorRecipe> getRecipeType() {
+        return AxiologyJEI.CHEMICAL_REACTOR_RECIPE_TYPE;
+    }
+
+    @Override
+    public Component getTitle() {
+        return Component.translatable("axiology.jei.chemical.reactor");
+    }
+
+    @Override
+    public IDrawable getIcon() {
+        return icon;
+    }
+
+    @Override
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
+    }
 }

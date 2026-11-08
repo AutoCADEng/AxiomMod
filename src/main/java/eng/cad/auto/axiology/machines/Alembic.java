@@ -24,10 +24,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.NotNull;
 
-public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable{
+public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, IMachineProgress, IRecipeMachine<AlembicRecipe>, ISlotFluid, ISlotData, IMachinePersistable, ITickable, IClientTickable {
     public static final String name = "alembic";
     int[] dataSync = new int[0];
     long lastSync = 0;
+
     public Alembic(BlockEntityType<?> blockEntityType, BlockPos blockPos, BlockState blockState) {
         super(blockEntityType, blockPos, blockState);
 
@@ -51,11 +52,11 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
 
     @Override
     public void serverTick(Level level, BlockPos pos, BlockState state) {
-        if(!(validateMachine(level, pos, getName()) instanceof Alembic blockEntity)) return;
+        if (!(validateMachine(level, pos, getName()) instanceof Alembic blockEntity)) return;
         updateHeatState(level, pos, blockEntity);
         AlembicRecipe activeRecipe = findRecipe(blockEntity, level, null);
 
-        if (activeRecipe == null || !isHeated(blockEntity)){
+        if (activeRecipe == null || !isHeated(blockEntity)) {
             resetProgress(blockEntity);
             return;
         }
@@ -67,8 +68,9 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
             return;
         }
 
-        if (level.random.nextFloat() < 0.1F) level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
-        incrementProgress(blockEntity,1);
+        if (level.random.nextFloat() < 0.1F)
+            level.playSound(null, pos, SoundEvents.BREWING_STAND_BREW, SoundSource.BLOCKS, 1.0F, 1.0F);
+        incrementProgress(blockEntity, 1);
     }
 
 
@@ -102,7 +104,7 @@ public class Alembic extends TickingMachine<Alembic> implements IHeatedMachine, 
 
     @Override
     public int maxProgress() {
-        return 24000/60;
+        return 24000 / 60;
     }
 
     @Override

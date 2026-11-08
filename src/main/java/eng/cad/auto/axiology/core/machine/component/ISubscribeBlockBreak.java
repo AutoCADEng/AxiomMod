@@ -5,11 +5,11 @@ import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraftforge.event.level.BlockEvent;
 
 public interface ISubscribeBlockBreak {
-    default void bindBlockBreakEvent(TickingMachine<?> listener){
+    default void bindBlockBreakEvent(TickingMachine<?> listener) {
         BlockBreakListeners.bindListener(listener);
     }
 
-    default void unbindBlockBreakEvent(TickingMachine<?> listener){
+    default void unbindBlockBreakEvent(TickingMachine<?> listener) {
         BlockBreakListeners.unbindListener(listener);
     }
 

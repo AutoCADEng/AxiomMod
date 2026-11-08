@@ -24,16 +24,16 @@ public class PyrolyzerRecipe extends AbstractMachineRecipe<PyrolyzerRecipe> {
         return PyrolyzerType.INSTANCE;
     }
 
-    public static class PyrolyzerType extends AbstractMachineRecipe.MachineType<PyrolyzerRecipe>{
+    public static class PyrolyzerType extends AbstractMachineRecipe.MachineType<PyrolyzerRecipe> {
         public static PyrolyzerType INSTANCE = new PyrolyzerType();
     }
 
-    public static class PyrolyzerSerializer extends AbstractMachineRecipe.MachineSerializer<PyrolyzerRecipe>{
+    public static class PyrolyzerSerializer extends AbstractMachineRecipe.MachineSerializer<PyrolyzerRecipe> {
         public static PyrolyzerSerializer INSTANCE = new PyrolyzerSerializer();
 
         @Override
         protected PyrolyzerRecipe create(NonNullList<UniversalSlot> inputs, NonNullList<UniversalSlot> outputs, ResourceLocation recipeId, @Nullable FriendlyByteBuf extra) {
-            return new PyrolyzerRecipe(inputs,outputs, recipeId);
+            return new PyrolyzerRecipe(inputs, outputs, recipeId);
         }
     }
 }
