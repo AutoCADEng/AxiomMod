@@ -1,7 +1,6 @@
 package eng.cad.auto.axiology.modulartools.components;
 
 import eng.cad.auto.axiology.core.events.BlockDropEvent;
-import eng.cad.auto.axiology.modulartools.ItemEnchantment;
 import eng.cad.auto.axiology.registry.AugmentsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
@@ -62,8 +62,8 @@ public interface IModularTool {
         stack.removeTagKey("StoredEnchantments");
         for (ModularToolAugment augment : getAugments(stack).keySet()) {
             if (!(augment instanceof IModularEnchantment modularEnchantment)) continue;
-            for (ItemEnchantment enchant : modularEnchantment.getEnchantments()) {
-                stack.enchant(enchant.enchantment(), getAugments(stack).get(modularEnchantment));
+            for (Enchantment enchant : modularEnchantment.getEnchantments()) {
+                stack.enchant(enchant, getAugments(stack).get(modularEnchantment));
             }
         }
     }

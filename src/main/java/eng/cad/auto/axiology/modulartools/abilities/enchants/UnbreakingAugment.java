@@ -1,6 +1,5 @@
 package eng.cad.auto.axiology.modulartools.abilities.enchants;
 
-import eng.cad.auto.axiology.modulartools.ItemEnchantment;
 import eng.cad.auto.axiology.modulartools.components.IModularEnchantment;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
