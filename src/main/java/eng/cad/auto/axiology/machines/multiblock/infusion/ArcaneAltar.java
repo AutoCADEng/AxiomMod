@@ -100,8 +100,9 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
                 // TODO add a fluid equivalent if/when we make a tank variant of ArcanePedestal
             }
             InfusionRecipe activeRecipe = findRecipe(this, level, infusionContainers);
-            if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE))
-                performModuleRitual(activeRecipe, this, level);
+            if (activeRecipe != null) {
+                if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)) performModuleRitual(activeRecipe, this, level);
+            }
             getDataSlots().set("isActive", 0);
             return;
         }
