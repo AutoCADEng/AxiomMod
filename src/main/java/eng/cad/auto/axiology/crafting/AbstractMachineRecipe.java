@@ -157,7 +157,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     }
 
     private <G extends BaseMachine<?>> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?> recipe) {
-        int required
+        int required;
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
