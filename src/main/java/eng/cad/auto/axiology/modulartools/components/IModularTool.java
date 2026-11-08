@@ -14,6 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -61,7 +62,7 @@ public interface IModularTool {
         stack.removeTagKey("Enchantments");
         stack.removeTagKey("StoredEnchantments");
         for (ModularToolAugment augment : getAugments(stack).keySet()) {
-            if (!(augment instanceof IModularEnchantment modularEnchantment)) return;
+            if (!(augment instanceof IModularEnchantment modularEnchantment)) continue;
             for (ItemEnchantment enchant : modularEnchantment.getEnchantments()) {
                 stack.enchant(enchant.enchantment(), getAugments(stack).get(modularEnchantment));
             }
@@ -73,14 +74,14 @@ public interface IModularTool {
         return getAugments(tool).entrySet().stream().mapToInt(set -> set.getKey().getCost() * set.getValue()).sum();
     }
 
-    static boolean addModule(ItemStack tool, ModularToolAugment augment) {
+    static boolean addModule(ItemStack tool, ModularToolAugment augment, int softCap) {
         if (augment == null) return false;
         if (getAugmentCount(tool) >= getMaxAugments(tool)) return false;
 
         Map<ModularToolAugment, Integer> current = getAugments(tool);
         int level = current.getOrDefault(augment, 0);
         if (level >= augment.maxStackable()) return false;
-
+        if (level >= softCap) return false;
         for (ModularToolAugment existing : current.keySet()) {
             if (!existing.isCompatible(augment) || !augment.isCompatible(existing)) return false;
         }
