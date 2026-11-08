@@ -53,8 +53,8 @@ public class FluidHolder {
     private ForgeFlowingFluid.Properties fluidProps() {
         return new ForgeFlowingFluid.Properties(
                 () -> FLUIDTYPE.get(),
-                () -> (ForgeFlowingFluid) SOURCE.get(),
-                () -> (ForgeFlowingFluid) FLOWING.get())
+                () -> SOURCE.get(),
+                () -> FLOWING.get())
                 .block(BLOCK)
                 .bucket(BUCKET)
                 .tickRate(2);
