@@ -1,9 +1,11 @@
 package eng.cad.auto.axiology.core.machine;
 
-import eng.cad.auto.axiology.core.*;
+import eng.cad.auto.axiology.core.DataSlotHandler;
+import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
+import eng.cad.auto.axiology.core.ISlotData;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.core.machine.component.IClientTickable;
 import eng.cad.auto.axiology.core.machine.component.ITickable;
-import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;

@@ -1,14 +1,16 @@
 package eng.cad.auto.axiology.machines;
 
-import eng.cad.auto.axiology.core.*;
+import eng.cad.auto.axiology.core.DataSlotHandler;
+import eng.cad.auto.axiology.core.ISlotData;
+import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.component.*;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.AlembicRecipe;
-import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;

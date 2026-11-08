@@ -1,9 +1,9 @@
 package eng.cad.auto.axiology.items;
 
-import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
 import eng.cad.auto.axiology.core.fluid.IRangedFluidBehaviour;
 import eng.cad.auto.axiology.core.network.AxiologyNetwork;
 import eng.cad.auto.axiology.core.network.packet.FluidBeamSyncPacket;
+import eng.cad.auto.axiology.items.util.RangedFluidBehaviours;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;

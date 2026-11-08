@@ -1,11 +1,10 @@
 package eng.cad.auto.axiology.compat.jei;
 
 import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import eng.cad.auto.axiology.crafting.machines.FermenterRecipe;
 import eng.cad.auto.axiology.machines.Alembic;
-import eng.cad.auto.axiology.machines.Fermenter;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.axiology.core.slot.UniversalSlot;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;

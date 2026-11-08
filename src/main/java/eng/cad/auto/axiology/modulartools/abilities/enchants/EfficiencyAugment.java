@@ -21,4 +21,9 @@ public class EfficiencyAugment extends ModularToolAugment implements IModularEnc
         ItemEnchantment enchantment = new ItemEnchantment(ForgeRegistries.ENCHANTMENTS.getValue(ResourceLocation.parse("minecraft:efficiency")),1);
         return List.of(enchantment);
     }
+
+    @Override
+    public int maxStackable() {
+        return 9;
+    }
 }

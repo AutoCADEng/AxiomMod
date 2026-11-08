@@ -1,6 +1,5 @@
 package eng.cad.auto.axiology.modulartools.components;
 
-import eng.cad.auto.axiology.core.ExtendedItemStackHandler;
 import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.nbt.CompoundTag;
 

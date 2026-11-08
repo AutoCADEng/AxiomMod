@@ -2,9 +2,9 @@ package eng.cad.auto.axiology.core.machine;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.registry.BlockRegistry;
 import eng.cad.auto.axiology.registry.ItemRegistry;
 import eng.cad.auto.axiology.registry.MachineRegistry;
-import eng.cad.auto.axiology.registry.BlockRegistry;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;

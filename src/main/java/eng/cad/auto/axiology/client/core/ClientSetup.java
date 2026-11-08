@@ -1,11 +1,11 @@
 package eng.cad.auto.axiology.client.core;
 
+import eng.cad.auto.axiology.core.MachineUI;
 import eng.cad.auto.axiology.core.machine.MachineRegistryObject;
 import eng.cad.auto.axiology.fluids.*;
 import eng.cad.auto.axiology.machines.ChemicalReactor;
 import eng.cad.auto.axiology.machines.Fermenter;
 import eng.cad.auto.axiology.registry.*;
-import eng.cad.auto.axiology.core.MachineUI;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;

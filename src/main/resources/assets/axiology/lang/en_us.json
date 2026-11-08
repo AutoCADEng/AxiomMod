@@ -11,5 +11,14 @@
   "tooltip.axiology.cursed_tool.curse": "Cursed: Applies wither %s for %s seconds on target",
   "tooltip.axiology.blazing_tools.smelt": "Molten Core: Automatically smelts drops",
   "tooltip.axiology.blazing_tools.burn": "Piping Hot: Ignites enemies for %s seconds on hit",
-  "tooltip.axiology.fluxed_tools.auto_collect": "Arcane Grasp: Teleports block and item drops to your inventory"
+  "tooltip.axiology.fluxed_tools.auto_collect": "Arcane Grasp: Teleports block and item drops to your inventory",
+  "tooltip.axiology.modulartools.tooltip": "Modular Complexity : %s/%s",
+  "tooltip.axiology.modulartools.tooltip.module": "%s : %s/%s",
+  "axiology.modulartools.efficiency": "Speed",
+  "axiology.modulartools.fortune": "Fortune",
+  "axiology.modulartools.arthropods": "Bane of Arthropods",
+  "axiology.modulartools.sharpness": "Sharpness",
+  "axiology.modulartools.silk_touch": "Silky",
+  "axiology.modulartools.smite": "Smite",
+  "axiology.modulartools.unbreaking": "Sturdy"
 }

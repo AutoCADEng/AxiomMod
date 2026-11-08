@@ -1,10 +1,11 @@
 package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
-
-
 import eng.cad.auto.axiology.crafting.machines.*;
-import eng.cad.auto.axiology.machines.*;
+import eng.cad.auto.axiology.machines.Alembic;
+import eng.cad.auto.axiology.machines.ChemicalReactor;
+import eng.cad.auto.axiology.machines.Fermenter;
+import eng.cad.auto.axiology.machines.SoakingDrum;
 import eng.cad.auto.axiology.machines.multiblock.Pyrolyzer;
 import eng.cad.auto.axiology.machines.multiblock.infusion.ArcaneAltar;
 import net.minecraft.world.item.crafting.RecipeSerializer;

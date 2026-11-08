@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.core.fluid;
 
-import eng.cad.auto.axiology.fluids.AbstractFluidBehaviour;
 import eng.cad.auto.axiology.core.item.CustomBucket;
+import eng.cad.auto.axiology.fluids.AbstractFluidBehaviour;
 import eng.cad.auto.axiology.registry.FluidRegistry;
 import eng.cad.auto.axiology.registry.ItemRegistry;
 import net.minecraft.core.BlockPos;

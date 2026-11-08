@@ -3,8 +3,6 @@ package eng.cad.auto.axiology.machines.renderers;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.machines.SoakingDrum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LightTexture;

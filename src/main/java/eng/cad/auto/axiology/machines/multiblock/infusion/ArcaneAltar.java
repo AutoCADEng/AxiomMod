@@ -9,19 +9,19 @@ import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.BaseMaster;
 import eng.cad.auto.axiology.core.machine.component.*;
+import eng.cad.auto.axiology.core.network.AxiologyNetwork;
+import eng.cad.auto.axiology.core.network.packet.InfusionSyncPacket;
+import eng.cad.auto.axiology.core.network.packet.KillBeamPacket;
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.core.slot.UniversalSlot;
+import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
 import eng.cad.auto.axiology.crafting.machines.InfusionRecipe;
 import eng.cad.auto.axiology.magic.rebounds.Rebounds;
 import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
 import eng.cad.auto.axiology.magic.rebounds.core.InfusionContext;
 import eng.cad.auto.axiology.modulartools.components.IModularTool;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
-import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.core.network.AxiologyNetwork;
-import eng.cad.auto.axiology.core.network.packet.InfusionSyncPacket;
-import eng.cad.auto.axiology.core.network.packet.KillBeamPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -44,6 +44,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
 import java.util.*;
 
 public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, ISlotData, IMachineProgress, ITickable, IRightClickable, IRecipeMachine<InfusionRecipe> {
@@ -87,7 +88,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
                 // TODO add a fluid equivalent if/when we make a tank variant of ArcanePedestal
             }
             InfusionRecipe activeRecipe = findRecipe(this, level, infusionContainers);
-            performRitual(activeRecipe, this, level);
+            if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)) performModuleRitual(activeRecipe, this, level);
             getDataSlots().set("isActive", 0);
             return;
         }
@@ -121,7 +122,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         }
     }
 
-    private void performRitual(InfusionRecipe activeRecipe, ArcaneAltar entity, Level level) {
+    private void performModuleRitual(InfusionRecipe activeRecipe, ArcaneAltar entity, Level level) {
         var followers = getFollowers(level);
         if (activeRecipe != null && activeRecipe.validate(entity, followers, activeRecipe)) {
             ArrayList<BaseMachine<? extends IMultiblockFollower>> followerList = new ArrayList<>(followers);

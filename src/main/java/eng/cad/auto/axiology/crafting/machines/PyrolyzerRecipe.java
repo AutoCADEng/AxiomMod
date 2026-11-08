@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.crafting.machines;
 
-import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
 import eng.cad.auto.axiology.core.slot.UniversalSlot;
+import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

@@ -1,11 +1,11 @@
 package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
+import eng.cad.auto.axiology.core.item.ToolTiers;
 import eng.cad.auto.axiology.items.AxiomShard;
+import eng.cad.auto.axiology.items.SuperSoaker;
 import eng.cad.auto.axiology.items.toolsets.BlazingTools;
 import eng.cad.auto.axiology.items.toolsets.CursedTools;
-import eng.cad.auto.axiology.items.SuperSoaker;
-import eng.cad.auto.axiology.core.item.ToolTiers;
 import eng.cad.auto.axiology.items.toolsets.EtchedTools;
 import eng.cad.auto.axiology.items.toolsets.FluxedTools;
 import net.minecraft.world.item.BlockItem;

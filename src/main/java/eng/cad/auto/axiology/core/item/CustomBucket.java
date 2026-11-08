@@ -3,7 +3,6 @@ package eng.cad.auto.axiology.core.item;
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -18,7 +17,6 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import net.minecraftforge.items.wrapper.PlayerInvWrapper;
 import net.minecraftforge.registries.RegistryObject;
-
 
 import javax.annotation.ParametersAreNullableByDefault;
 import java.util.Optional;

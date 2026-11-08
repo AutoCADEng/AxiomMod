@@ -1,9 +1,9 @@
 package eng.cad.auto.axiology.core;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.core.machine.component.IGuiGraphics;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.GuiMachine;
+import eng.cad.auto.axiology.core.machine.component.IGuiGraphics;
 import eng.cad.auto.axiology.core.network.AxiologyNetwork;
 import eng.cad.auto.axiology.core.network.packet.MachineFluidSyncPacket;
 import eng.cad.auto.axiology.registry.MenuRegistry;
@@ -16,7 +16,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;

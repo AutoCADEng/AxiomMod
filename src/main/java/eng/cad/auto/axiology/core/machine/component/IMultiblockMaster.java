@@ -3,8 +3,8 @@ package eng.cad.auto.axiology.core.machine.component;
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.registry.MultiblockRegistry;
 import eng.cad.auto.axiology.core.machine.MultiblockStructure;
+import eng.cad.auto.axiology.registry.MultiblockRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
+
 import java.util.HashSet;
 
 public interface IMultiblockMaster {

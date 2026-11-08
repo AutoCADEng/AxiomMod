@@ -2,7 +2,6 @@ package eng.cad.auto.axiology.magic.rebounds;
 
 import eng.cad.auto.axiology.magic.rebounds.core.AbstractRebound;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.item.crafting.RecipeType;
 
 import java.util.ArrayList;
 

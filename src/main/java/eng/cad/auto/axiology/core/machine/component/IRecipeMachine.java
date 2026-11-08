@@ -1,11 +1,11 @@
 package eng.cad.auto.axiology.core.machine.component;
 
-import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
+import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.crafting.AbstractMachineRecipe;
 import eng.cad.auto.axiology.crafting.core.CustomCraftingContainer;
-import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.ItemStackHandler;

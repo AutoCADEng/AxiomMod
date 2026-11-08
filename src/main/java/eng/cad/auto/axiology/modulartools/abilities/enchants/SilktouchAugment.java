@@ -27,4 +27,13 @@ public class SilktouchAugment extends ModularToolAugment implements IModularEnch
         if (ability instanceof FortuneAugment) return false;
         return true;
     }
+
+    @Override
+    public int maxStackable() {
+        return 1;
+    }
+    @Override
+    public int getCost() {
+        return 8;
+    }
 }

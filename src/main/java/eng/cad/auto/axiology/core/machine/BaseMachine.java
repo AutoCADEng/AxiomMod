@@ -1,9 +1,9 @@
 package eng.cad.auto.axiology.core.machine;
 
 import eng.cad.auto.axiology.core.*;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.core.machine.component.IMachinePersistable;
 import eng.cad.auto.axiology.core.machine.component.ISidedMachine;
-import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

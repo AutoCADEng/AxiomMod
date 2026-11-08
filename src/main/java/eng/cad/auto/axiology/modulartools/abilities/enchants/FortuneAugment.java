@@ -27,4 +27,9 @@ public class FortuneAugment extends ModularToolAugment implements IModularEnchan
         if (ability instanceof SilktouchAugment) return false;
         return true;
     }
+
+    @Override
+    public int getCost() {
+        return 3;
+    }
 }

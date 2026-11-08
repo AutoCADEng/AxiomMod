@@ -2,6 +2,7 @@ package eng.cad.auto.axiology.machines;
 
 import eng.cad.auto.axiology.core.*;
 import eng.cad.auto.axiology.core.blocks.BaseMachineBlock;
+import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import eng.cad.auto.axiology.core.machine.BaseMachine;
 import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.machine.component.*;
@@ -9,7 +10,6 @@ import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
 import eng.cad.auto.axiology.crafting.machines.SoakerRecipe;
 import eng.cad.auto.axiology.registry.RecipeRegistry;
-import eng.cad.auto.axiology.core.fluid.FluidStackHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;

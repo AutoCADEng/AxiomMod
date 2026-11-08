@@ -1,8 +1,8 @@
 package eng.cad.auto.axiology.items.util;
 
-import eng.cad.auto.axiology.registry.FluidRegistry;
 import eng.cad.auto.axiology.core.fluid.FluidHolder;
 import eng.cad.auto.axiology.core.fluid.IRangedFluidBehaviour;
+import eng.cad.auto.axiology.registry.FluidRegistry;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;

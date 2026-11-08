@@ -2,8 +2,6 @@ package eng.cad.auto.axiology.core;
 
 import eng.cad.auto.axiology.core.slot.SlotConfig;
 import eng.cad.auto.axiology.core.slot.SlotIORestriction;
-import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 public class ExtendedItemStackHandler extends ItemStackHandler{

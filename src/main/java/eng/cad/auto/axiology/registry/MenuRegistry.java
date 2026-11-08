@@ -1,7 +1,6 @@
 package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
-import eng.cad.auto.axiology.core.DataSlotHandler;
 import eng.cad.auto.axiology.core.MachineUI;
 import eng.cad.auto.axiology.machines.ChemicalReactor;
 import eng.cad.auto.axiology.machines.Fermenter;

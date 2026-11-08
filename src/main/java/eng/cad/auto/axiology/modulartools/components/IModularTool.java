@@ -1,6 +1,7 @@
 package eng.cad.auto.axiology.modulartools.components;
 
 import eng.cad.auto.axiology.core.events.BlockDropEvent;
+import eng.cad.auto.axiology.modulartools.ItemEnchantment;
 import eng.cad.auto.axiology.registry.AugmentsRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -12,14 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public interface IModularTool {
     static final String NBT_KEY = "Augments";
     static int getMaxAugments(ItemStack tool){
-        return 9;
+        return 16;
     }
 
     static Map<ModularToolAugment, Integer> getAugments(ItemStack stack) {
@@ -47,21 +47,33 @@ public interface IModularTool {
     static void setLevel(ItemStack stack, ModularToolAugment augment, int level) {
         ResourceLocation id = AugmentsRegistry.REGISTRY.get().getKey(augment);
         if (id == null) return;
-
         CompoundTag root = stack.getOrCreateTag();
         CompoundTag augments = root.getCompound(NBT_KEY);
         if (level <= 0) augments.remove(id.toString());
         else augments.putInt(id.toString(), level);
         root.put(NBT_KEY, augments);
+        refreshTool(stack);
     }
 
+    static void refreshTool(ItemStack stack) {
+        stack.removeTagKey("Enchantments");
+        stack.removeTagKey("StoredEnchantments");
+        for (ModularToolAugment augment : getAugments(stack).keySet()){
+            if (!(augment instanceof IModularEnchantment modularEnchantment)) return;
+            for (ItemEnchantment enchant:modularEnchantment.getEnchantments()){
+                stack.enchant(enchant.enchantment(), getAugments(stack).get(modularEnchantment));
+            }
+        }
+    }
+
+
     static int getAugmentCount(ItemStack tool) {
-        return getAugments(tool).values().stream().mapToInt(Integer::intValue).sum();
+        return getAugments(tool).entrySet().stream().mapToInt(set-> set.getKey().getCost()*set.getValue()).sum();
     }
 
     static boolean addModule(ItemStack tool, ModularToolAugment augment) {
         if (augment == null) return false;
-        if (getAugmentCount(tool) >= IModularTool.getMaxAugments(tool)) return false;
+        if (getAugmentCount(tool) >= getMaxAugments(tool)) return false;
 
         Map<ModularToolAugment, Integer> current = getAugments(tool);
         int level = current.getOrDefault(augment, 0);

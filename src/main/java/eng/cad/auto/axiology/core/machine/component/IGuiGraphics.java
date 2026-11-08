@@ -1,7 +1,7 @@
 package eng.cad.auto.axiology.core.machine.component;
 
-import eng.cad.auto.axiology.core.machine.GuiMachine;
 import eng.cad.auto.axiology.core.MachineUI;
+import eng.cad.auto.axiology.core.machine.GuiMachine;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;

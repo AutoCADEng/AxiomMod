@@ -1,10 +1,9 @@
 package eng.cad.auto.axiology.core.machine.component;
 
-import eng.cad.auto.axiology.core.machine.BaseMachine;
-import eng.cad.auto.axiology.core.machine.TickingMachine;
 import eng.cad.auto.axiology.core.ISlotData;
 import eng.cad.auto.axiology.core.ISlotFluid;
 import eng.cad.auto.axiology.core.ISlotItem;
+import eng.cad.auto.axiology.core.machine.BaseMachine;
 import net.minecraft.nbt.CompoundTag;
 
 public interface IMachinePersistable {
