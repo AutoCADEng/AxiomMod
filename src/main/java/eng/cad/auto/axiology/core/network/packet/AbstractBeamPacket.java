@@ -22,7 +22,6 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
     private final int tint;
     private final ResourceLocation texture;
     private B beam;
-    private final Level level;
     private final UUID id;
 
     protected AbstractBeamPacket() {
@@ -37,7 +36,6 @@ public abstract class AbstractBeamPacket<T extends AbstractBeamPacket<T, B>, B e
         this.castFrom = castFrom;
         this.castTo = castTo;
         this.tint = tint;
-        this.level = level;
         this.texture = texture;
         this.id = id;
     }

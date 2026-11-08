@@ -24,7 +24,7 @@ public class FluidFueledAugment extends ModularToolAugment implements IModularDu
      * Excludes fluids that are not tagged by "tool_fuel_fluid"
      * Sum up all valid fuel per tank per IModularFluidInventory
      *
-     * @param ItemStack of the modular tool being checked
+     * @param stack ItemStack of the modular tool being checked
      * @return returns the total burnable fuel in a modular tool
      */
     @Override

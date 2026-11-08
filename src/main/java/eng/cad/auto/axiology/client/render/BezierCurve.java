@@ -2,7 +2,6 @@ package eng.cad.auto.axiology.client.render;
 
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +25,12 @@ public class BezierCurve {
         return pointSet.get(0);
     }
 
-    public BezierCurve add(Vector3f vec) {
+    public BezierCurve add(Vector3f vec){
         points.add(vec);
         return this;
     }
 
-    public BezierCurve add(Vec3 vec) {
+    public BezierCurve add(Vec3 vec){
         return add(vec.toVector3f());
     }
 }
