@@ -2,6 +2,8 @@ package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.modulartools.abilities.custom.*;
+import eng.cad.auto.axiology.modulartools.abilities.custom.tiers.*;
+import eng.cad.auto.axiology.modulartools.abilities.custom.tools.*;
 import eng.cad.auto.axiology.modulartools.abilities.enchants.*;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.resources.ResourceKey;
@@ -31,6 +33,20 @@ public class AugmentsRegistry {
     public static final RegistryObject<ModularToolAugment> SMELT_ITEMS = MODULES.register("smelt_items", SmeltItemsAugment::new);
     public static final RegistryObject<ModularToolAugment> TANK = MODULES.register("tank", TankAugment::new);
     public static final RegistryObject<ModularToolAugment> TELEPORT_ITEMS = MODULES.register("teleport_items", TeleportItemsAugment::new);
+
+    public static final RegistryObject<ModularToolAugment> AXE = MODULES.register("axe", AxeAugment::new);
+    public static final RegistryObject<ModularToolAugment> HOE = MODULES.register("hoe", HoeAugment::new);
+    public static final RegistryObject<ModularToolAugment> SWORD = MODULES.register("sword", SwordAugment::new);
+    public static final RegistryObject<ModularToolAugment> SHOVEL = MODULES.register("shovel", ShovelAugment::new);
+    public static final RegistryObject<ModularToolAugment> PICKAXE = MODULES.register("pickaxe", PickaxeAugment::new);
+    public static final RegistryObject<ModularToolAugment> SHEARS = MODULES.register("shears", ShearsAugment::new);
+
+    public static final RegistryObject<ModularToolAugment> GOLD = MODULES.register("gold", GoldAugment::new);
+    public static final RegistryObject<ModularToolAugment> DIAMOND = MODULES.register("diamond", DiamondAugment::new);
+    public static final RegistryObject<ModularToolAugment> WOOD = MODULES.register("wood", WoodAugment::new);
+    public static final RegistryObject<ModularToolAugment> STONE = MODULES.register("stone", StoneAugment::new);
+    public static final RegistryObject<ModularToolAugment> IRON = MODULES.register("iron", IronAugment::new);
+    public static final RegistryObject<ModularToolAugment> NETHERITE = MODULES.register("netherite", NetheriteAugment::new);
 
     public static void init(IEventBus modEventBus) {
         MODULES.register(modEventBus);

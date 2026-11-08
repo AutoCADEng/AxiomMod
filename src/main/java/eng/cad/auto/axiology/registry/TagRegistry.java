@@ -30,7 +30,16 @@ public class TagRegistry {
                     Registries.ITEM,
                     ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "modular_tool")
             );
-
+    public static final TagKey<Block> SHEARABLES =
+            TagKey.create(
+                    Registries.BLOCK,
+                    ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "shearable")
+            );
+    public static final TagKey<Block> TILLABLE =
+            TagKey.create(
+                    Registries.BLOCK,
+                    ResourceLocation.fromNamespaceAndPath(AxiomMod.MODID, "tillable")
+            );
     public static void register(IEventBus modEventBus) {
         modEventBus.register(HOT_BLOCKS);
         modEventBus.register(HOT_FLUIDS);
@@ -38,3 +47,4 @@ public class TagRegistry {
         modEventBus.register(MODULAR_TOOL);
     }
 }
+

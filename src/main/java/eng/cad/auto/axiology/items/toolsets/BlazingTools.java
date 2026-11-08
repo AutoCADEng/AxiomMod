@@ -19,6 +19,9 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TODO MIGRATE THIS TO THE MODULAR SYSTEM AT SOME POINT
+ */
 public class BlazingTools {
     public static String name = "blazing";
     public static int BURN_TIME = 5;

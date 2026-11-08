@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -68,7 +67,6 @@ public interface IModularTool {
             }
         }
     }
-
 
     static int getAugmentCount(ItemStack tool) {
         return getAugments(tool).entrySet().stream().mapToInt(set -> set.getKey().getCost() * set.getValue()).sum();

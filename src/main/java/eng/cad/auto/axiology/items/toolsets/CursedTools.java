@@ -13,7 +13,9 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
+/**
+ * TODO MIGRATE THIS TO THE MODULAR SYSTEM AT SOME POINT
+ */
 public class CursedTools {
     // Effective Hit Points (Base Durability of 1000) (95CI) = (1731, 2269)
     public static int CHANCE = 10;

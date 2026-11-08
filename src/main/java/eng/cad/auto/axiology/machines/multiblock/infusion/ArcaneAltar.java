@@ -47,7 +47,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 import java.util.*;
 
-public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, ISlotData, IMachineProgress, ITickable, IRightClickable, IRecipeMachine<InfusionRecipe> {
+public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements IMachinePersistable, ISlotItem, ISlotData, IMachineProgress, ITickable, IRightClickable, IRecipeMachine<InfusionRecipe> {
     public static String name = "arcane_altar";
     public static int MAX_PEDESTAL_RADIUS = 5;
     int[] lastSyncData;
@@ -101,7 +101,15 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
             }
             InfusionRecipe activeRecipe = findRecipe(this, level, infusionContainers);
             if (activeRecipe != null) {
-                if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)) performModuleRitual(activeRecipe, this, level);
+                if (activeRecipe.getCraftingOutput().get(0).getType() == UniversalSlot.Kind.MODULE) {
+                    performModuleRitual(activeRecipe, this, level);
+                }
+                else {
+                    performModuleRitual(activeRecipe, this, level); // placeholder
+                }
+            } else {
+                // Won't do anything but call the fail code (wipe and curse) because the recipe isn't valid!
+                performModuleRitual(activeRecipe, this, level);
             }
             getDataSlots().set("isActive", 0);
             return;
@@ -196,7 +204,6 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         var pedestals = getFollowers(level).stream()
                 .filter(follower -> level.getBlockEntity(follower.getBlockPos()) instanceof ArcanePedestal)
                 .map(follower -> (ArcanePedestal) follower)
-                .filter(obj -> true)
                 .filter(machine -> !machine.getItemSlots().getStackInSlot(0).isEmpty())
                 .toList();
         return !pedestals.isEmpty() && pedestals.stream().allMatch(machine -> machine.getDataSlots().get("isItemHidden") == 1);

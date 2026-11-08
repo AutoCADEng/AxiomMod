@@ -18,7 +18,9 @@ import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
+/**
+ * TODO MIGRATE THIS TO THE MODULAR SYSTEM AT SOME POINT
+ */
 public class FluxedTools {
     public static String name = "fluxed";
 

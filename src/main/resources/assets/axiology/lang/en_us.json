@@ -19,5 +19,14 @@
   "axiology.modulartools.sharpness": "Sharpness",
   "axiology.modulartools.silk_touch": "Silky",
   "axiology.modulartools.smite": "Smite",
-  "axiology.modulartools.unbreaking": "Sturdy"
+  "axiology.modulartools.unbreaking": "Sturdy",
+  "axiology.modulartools.pickaxe_expansion": "Pickaxing",
+  "axiology.modulartools.axe_expansion": "Axing",
+  "axiology.modulartools.shear_expansion": "Shearing",
+  "axiology.modulartools.hoe_expansion": "Hoeing",
+  "axiology.modulartools.plating.gold": "Gold Plated",
+  "axiology.modulartools.plating.iron": "Iron Plated",
+  "axiology.modulartools.plating.wood": "Wood Embossed",
+  "axiology.modulartools.plating.stone": "Stone Encrusted",
+  "axiology.modulartools.plating.diamond": "Diamond Encrusted"
 }
