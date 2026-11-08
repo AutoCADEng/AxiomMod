@@ -23,8 +23,8 @@ public class ClientSetup {
 
     private static void clientSetup(final FMLClientSetupEvent event) {
         //Machine UIs
-        event.enqueueWork(() -> MenuScreens.register(MenuRegistry.CHEMICAL_REACTOR.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.CHEMICAL_REACTOR.createScreen(ChemicalReactor.name, menu, inv, title)));
-        event.enqueueWork(() -> MenuScreens.register(MenuRegistry.FERMENTER.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.FERMENTER.createScreen(Fermenter.name, menu, inv, title)));
+        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.CHEMICAL_REACTOR.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.CHEMICAL_REACTOR.createScreen(ChemicalReactor.name, menu, inv, title)));
+        event.enqueueWork(() -> MenuScreens.<MachineUI.Menu, MachineUI.Screen>register(MenuRegistry.FERMENTER.MENU_TYPE.get(), (menu, inv, title) -> MenuRegistry.FERMENTER.createScreen(Fermenter.name, menu, inv, title)));
 
         // Fluid Renderers
         for (RegistryObject<? extends Fluid> fluid : FluidRegistry.FLUIDLIST.values()) {
