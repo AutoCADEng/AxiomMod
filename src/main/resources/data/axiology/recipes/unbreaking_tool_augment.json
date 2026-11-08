@@ -1,0 +1,37 @@
+{
+  "type": "axiology:arcane_altar",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "#axiology:modular_tool",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:obsidian",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:obsidian",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:obsidian",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:obsidian",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "type": "module",
+      "input": "axiology:unbreaking",
+      "count": 1
+    }
+  ]
+}
