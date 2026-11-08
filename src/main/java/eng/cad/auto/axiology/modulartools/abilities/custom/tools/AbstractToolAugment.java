@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.modulartools.abilities.custom.tools;
 
 import eng.cad.auto.axiology.modulartools.components.IModularTool;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
-import eng.cad.auto.axiology.modulartools.components.tiers.IModularTierUpgrade;
+import eng.cad.auto.axiology.modulartools.components.IModularTierUpgrade;
 import net.minecraft.world.item.*;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.modulartools.components.tiers;
+package eng.cad.auto.axiology.modulartools.components;
 
 import net.minecraft.world.item.Tier;
 
