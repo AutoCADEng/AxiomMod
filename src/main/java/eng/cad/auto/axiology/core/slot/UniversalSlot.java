@@ -33,7 +33,7 @@ public class UniversalSlot {
 
     private final ItemStack item;
     private final ModularToolAugment modularToolAbility;
-    Kind type = Kind.EMPTY;
+    Kind type;
     private SmartTag tag = new SmartTag(null, 0);
     private UniversalSlot() {
         type = Kind.EMPTY;
