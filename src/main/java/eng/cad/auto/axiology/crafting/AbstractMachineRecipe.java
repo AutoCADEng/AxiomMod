@@ -101,7 +101,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     }
 
     private <G extends BaseMachine<? extends IMultiblockFollower>> void produce(UniversalSlot recipeOutput, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?> recipe) {
-        int required = 0;
+        int required;
 
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
@@ -157,7 +157,7 @@ public abstract class AbstractMachineRecipe<T extends AbstractMachineRecipe<T>> 
     }
 
     private <G extends BaseMachine<?>> void consume(UniversalSlot target, ArrayList<G> followers, BaseMachine<?> blockEntity, BaseRecipe<?, ?> recipe) {
-        int required = 0;
+        int required
         ArrayList<BaseMachine<?>> machines = new ArrayList<>();
         machines.add(blockEntity);
 
