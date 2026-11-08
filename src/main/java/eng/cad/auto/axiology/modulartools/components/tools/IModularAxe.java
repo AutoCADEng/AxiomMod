@@ -6,6 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.state.BlockState;
 
+//TODO candidate for merging
 public interface IModularAxe {
     AxeItem getAxe(ItemStack stackInHand);
     default public InteractionResult useAsAxe(UseOnContext context) {
