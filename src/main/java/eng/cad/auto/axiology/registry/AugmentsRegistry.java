@@ -2,7 +2,7 @@ package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.modulartools.abilities.custom.*;
-import eng.cad.auto.axiology.modulartools.abilities.custom.tiers.MaterialAugment;
+import eng.cad.auto.axiology.modulartools.abilities.custom.MaterialAugment;
 import eng.cad.auto.axiology.modulartools.abilities.custom.tools.*;
 import eng.cad.auto.axiology.modulartools.abilities.enchants.*;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
@@ -31,6 +31,7 @@ public class AugmentsRegistry {
     public static final RegistryObject<ModularToolAugment> SILK_TOUCH = MODULES.register("silk_touch", SilktouchAugment::new);
     public static final RegistryObject<ModularToolAugment> SMITE = MODULES.register("smite", SmiteAugment::new);
     public static final RegistryObject<ModularToolAugment> BANE_OF_ARTHROPODS = MODULES.register("bane_of_arthropods", BaneOfArthropodsAugment::new);
+
     public static final RegistryObject<ModularToolAugment> BACKPACK = MODULES.register("backpack", BackpackAugment::new);
     public static final RegistryObject<ModularToolAugment> BATTERY = MODULES.register("battery", BatteryAugment::new);
     public static final RegistryObject<ModularToolAugment> SMELT_ITEMS = MODULES.register("smelt_items", SmeltItemsAugment::new);
@@ -55,9 +56,6 @@ public class AugmentsRegistry {
         return MODULES.register(name, () -> new MaterialAugment(Component.translatable("axiology.modulartools.plating." + name), tier));
     }
 
-    public static RegistryObject<ModularToolAugment> registerMaterialModule(Component component, String name, Tier tier) {
-        return MODULES.register(name, () -> new MaterialAugment(component, tier));
-    }
     public static void init(IEventBus modEventBus) {
         MODULES.register(modEventBus);
     }

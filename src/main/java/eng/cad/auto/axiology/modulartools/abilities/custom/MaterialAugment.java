@@ -1,4 +1,4 @@
-package eng.cad.auto.axiology.modulartools.abilities.custom.tiers;
+package eng.cad.auto.axiology.modulartools.abilities.custom;
 
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
 import net.minecraft.network.chat.Component;
