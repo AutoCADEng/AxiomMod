@@ -1,0 +1,57 @@
+{
+  "type": "axiology:arcane_altar",
+  "inputs": [
+    {
+      "type": "item",
+      "input": "#axiology:modular_tool",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:feather",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:feather",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:sugar",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:sugar",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:blaze_powder",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "minecraft:blaze_powder",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:treated_bark",
+      "count": 1
+    },
+    {
+      "type": "item",
+      "input": "axiology:treated_bark",
+      "count": 1
+    }
+  ],
+  "outputs": [
+    {
+      "type": "module",
+      "input": "axiology:efficiency",
+      "count": 5
+    }
+  ]
+}

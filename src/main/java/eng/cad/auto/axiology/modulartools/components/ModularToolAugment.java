@@ -28,4 +28,21 @@ public abstract class ModularToolAugment {
     public ChatFormatting getColor() {
         return ChatFormatting.GREEN;
     }
+
+    public static class CraftingStack{
+        ModularToolAugment augment;
+        int count;
+        public CraftingStack(ModularToolAugment augment, int count){
+            this.augment = augment;
+            this.count = count;
+        }
+
+        public ModularToolAugment getModule(){
+            return augment;
+        }
+
+        public int getSoftCap(){
+            return count;
+        }
+    }
 }

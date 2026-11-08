@@ -32,7 +32,7 @@ public class UniversalSlot {
     private final FluidStack fluid;
 
     private final ItemStack item;
-    private final ModularToolAugment modularToolAbility;
+    private final ModularToolAugment.CraftingStack modularToolAbility;
     Kind type;
     private SmartTag tag = new SmartTag(null, 0);
     private UniversalSlot() {
@@ -63,7 +63,7 @@ public class UniversalSlot {
         modularToolAbility = null;
     }
 
-    public UniversalSlot(ModularToolAugment module) {
+    public UniversalSlot(ModularToolAugment.CraftingStack module) {
         this.item = ItemStack.EMPTY;
         this.fluid = FluidStack.EMPTY;
         this.type = Kind.MODULE;
@@ -108,7 +108,7 @@ public class UniversalSlot {
                         .map(RegistryObject::get)
                         .findFirst()
                         .orElse(null);
-                ingredient = new UniversalSlot(ability);
+                ingredient = new UniversalSlot(new ModularToolAugment.CraftingStack(ability, count));
             }
             default -> {
                 AxiomMod.LOGGER.error("JSON ERROR: {} is not a valid UniversalSlot type (item, fluid, module)", type);
@@ -255,8 +255,8 @@ public class UniversalSlot {
         return fluid == null ? FluidStack.EMPTY : fluid;
     }
 
-    public ModularToolAugment getModule() {
-        return modularToolAbility == null ? ModularToolAugment.EMPTY : modularToolAbility;
+    public ModularToolAugment.CraftingStack getModule() {
+        return modularToolAbility == null ? new ModularToolAugment.CraftingStack(ModularToolAugment.EMPTY, 0) : modularToolAbility;
     }
 
     /**

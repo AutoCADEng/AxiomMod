@@ -18,12 +18,12 @@
     },
     {
       "type": "item",
-      "input": "minecraft:obsidian",
+      "input": "axiology:treated_bark",
       "count": 1
     },
     {
       "type": "item",
-      "input": "minecraft:obsidian",
+      "input": "axiology:treated_bark",
       "count": 1
     }
   ],
@@ -31,7 +31,7 @@
     {
       "type": "module",
       "input": "axiology:unbreaking",
-      "count": 1
+      "count": 3
     }
   ]
 }

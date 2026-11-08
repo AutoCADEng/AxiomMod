@@ -144,7 +144,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
             activeRecipe.consumeIngredients(entity, followerList, activeRecipe);
             if (activeRecipe.getCraftingOutput().get(0).is(UniversalSlot.Kind.MODULE)) {
                 if (copyOfItem.getItem() instanceof IModularTool moddableTool) {
-                    if (!IModularTool.addModule(copyOfItem, activeRecipe.getCraftingOutput().get(0).getModule())) {
+                    if (!IModularTool.addModule(copyOfItem, activeRecipe.getCraftingOutput().get(0).getModule().getModule(), activeRecipe.getCraftingOutput().get(0).getModule().getSoftCap())) {
                         failed = true;
                         applyRebound(entity);
                     }

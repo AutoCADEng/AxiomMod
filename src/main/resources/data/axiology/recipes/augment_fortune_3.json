@@ -8,50 +8,40 @@
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "minecraft:emerald",
       "count": 1
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "minecraft:emerald",
       "count": 1
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "minecraft:diamond",
       "count": 1
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "minecraft:diamond",
       "count": 1
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "axiology:treated_bark",
       "count": 1
     },
     {
       "type": "item",
-      "input": "axiology:blazing_ingot",
-      "count": 1
-    },
-    {
-      "type": "item",
-      "input": "axiology:blazing_ingot",
-      "count": 1
-    },
-    {
-      "type": "item",
-      "input": "axiology:blazing_ingot",
+      "input": "axiology:treated_bark",
       "count": 1
     }
   ],
   "outputs": [
     {
       "type": "module",
-      "input": "axiology:efficiency",
-      "count": 1
+      "input": "axiology:fortune",
+      "count": 3
     }
   ]
 }
