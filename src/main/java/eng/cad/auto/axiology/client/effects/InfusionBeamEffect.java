@@ -27,7 +27,6 @@ public class InfusionBeamEffect extends AbstractBeamEffect<InfusionBeamEffect> {
         TextureAtlasSprite sprite = Minecraft.getInstance().getItemRenderer()
                 .getItemModelShaper().getItemModel(item).getParticleIcon();
         NativeImage image = sprite.contents().getOriginalImage();
-        if (image == null) return 0xAAFFFFFF;
         long r = 0, g = 0, b = 0, a = 0;
         int pixels = image.getWidth() * image.getHeight();
         for (int x = 0; x < image.getWidth(); x++) {

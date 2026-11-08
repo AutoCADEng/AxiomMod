@@ -45,7 +45,6 @@ public class SuperSoaker extends ItemFluidContainer {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        if (player == null) return InteractionResultHolder.fail(ItemStack.EMPTY);
         ItemStack superSoaker = player.getItemInHand(hand);
         return activateAbility(level, player, superSoaker) ? InteractionResultHolder.pass(superSoaker) : InteractionResultHolder.fail(superSoaker);
     }

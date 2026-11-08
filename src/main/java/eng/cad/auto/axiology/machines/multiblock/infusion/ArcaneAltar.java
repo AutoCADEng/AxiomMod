@@ -195,7 +195,7 @@ public class ArcaneAltar extends BaseMaster<ArcaneAltar> implements ISlotItem, I
         var pedestals = getFollowers(level).stream()
                 .filter(follower -> level.getBlockEntity(follower.getBlockPos()) instanceof ArcanePedestal)
                 .map(follower -> (ArcanePedestal) follower)
-                .filter(Objects::nonNull)
+                .filter(obj -> true)
                 .filter(machine -> !machine.getItemSlots().getStackInSlot(0).isEmpty())
                 .toList();
         return !pedestals.isEmpty() && pedestals.stream().allMatch(machine -> machine.getDataSlots().get("isItemHidden") == 1);
