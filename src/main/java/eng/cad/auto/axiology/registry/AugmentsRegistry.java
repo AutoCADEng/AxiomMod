@@ -2,12 +2,15 @@ package eng.cad.auto.axiology.registry;
 
 import eng.cad.auto.axiology.AxiomMod;
 import eng.cad.auto.axiology.modulartools.abilities.custom.*;
-import eng.cad.auto.axiology.modulartools.abilities.custom.tiers.*;
+import eng.cad.auto.axiology.modulartools.abilities.custom.tiers.MaterialAugment;
 import eng.cad.auto.axiology.modulartools.abilities.custom.tools.*;
 import eng.cad.auto.axiology.modulartools.abilities.enchants.*;
 import eng.cad.auto.axiology.modulartools.components.ModularToolAugment;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -41,13 +44,20 @@ public class AugmentsRegistry {
     public static final RegistryObject<ModularToolAugment> PICKAXE = MODULES.register("pickaxe", PickaxeAugment::new);
     public static final RegistryObject<ModularToolAugment> SHEARS = MODULES.register("shears", ShearsAugment::new);
 
-    public static final RegistryObject<ModularToolAugment> GOLD = MODULES.register("gold", GoldAugment::new);
-    public static final RegistryObject<ModularToolAugment> DIAMOND = MODULES.register("diamond", DiamondAugment::new);
-    public static final RegistryObject<ModularToolAugment> WOOD = MODULES.register("wood", WoodAugment::new);
-    public static final RegistryObject<ModularToolAugment> STONE = MODULES.register("stone", StoneAugment::new);
-    public static final RegistryObject<ModularToolAugment> IRON = MODULES.register("iron", IronAugment::new);
-    public static final RegistryObject<ModularToolAugment> NETHERITE = MODULES.register("netherite", NetheriteAugment::new);
+    public static final RegistryObject<ModularToolAugment> GOLD = registerMaterialModule("gold", Tiers.GOLD);
+    public static final RegistryObject<ModularToolAugment> DIAMOND = registerMaterialModule("diamond", Tiers.DIAMOND);
+    public static final RegistryObject<ModularToolAugment> WOOD = registerMaterialModule("wood", Tiers.WOOD);
+    public static final RegistryObject<ModularToolAugment> STONE = registerMaterialModule("stone", Tiers.STONE);
+    public static final RegistryObject<ModularToolAugment> IRON = registerMaterialModule("iron", Tiers.IRON);
+    public static final RegistryObject<ModularToolAugment> NETHERITE = registerMaterialModule("netherite", Tiers.NETHERITE);
 
+    private static RegistryObject<ModularToolAugment> registerMaterialModule(String name, Tier tier) {
+        return MODULES.register(name, () -> new MaterialAugment(Component.translatable("axiology.modulartools.plating." + name), tier));
+    }
+
+    public static RegistryObject<ModularToolAugment> registerMaterialModule(Component component, String name, Tier tier) {
+        return MODULES.register(name, () -> new MaterialAugment(component, tier));
+    }
     public static void init(IEventBus modEventBus) {
         MODULES.register(modEventBus);
     }
